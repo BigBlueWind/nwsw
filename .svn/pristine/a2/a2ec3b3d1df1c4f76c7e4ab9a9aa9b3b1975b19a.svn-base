@@ -1,0 +1,455 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';
+          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    function addRowMultiColStatus(tableID, sno, data) {
+        if (data.col[0].value == "" || data.col[0].value == null || data.col[0].value == "0") {
+            return;
+        }
+        var table = document.getElementById(tableID);
+        var maintable = document.getElementById("maintable");
+        var div = document.getElementById("maindiv");
+        if( parseInt(div.style.width)< 840)
+            div.style.width = parseInt(div.style.width) + 300;
+        maintable.width = "100%";
+        var mainrow = maintable.rows[0];
+        var maincell = mainrow.insertCell(mainrow.cells.length);
+        maincell.align = "center";
+        maincell.width = "300px";
+        maincell.className = "tblTitleBg";
+        maincell.innerHTML = "Cell";
+        mainrow = maintable.rows[1];
+        maincell = mainrow.insertCell(mainrow.cells.length);
+        maintable.rows[2].cells[0].colSpan = maintable.rows[2].cells[0].colSpan + 1;
+        table.width = "100%";
+        table.border = "0";
+        table.cellpadding = "0";
+        table.cellspacing = "0";
+        table.overflow = "auto";
+
+        if (table != null) {
+            for (var row = 0; row < data.col.length; row++) {
+                var rowinsert = table.rows[row];
+                var cell = rowinsert.insertCell(rowinsert.cells.length);
+                cell.align = "left";
+                cell.width = "300px";
+                $(cell).append(InsertMap(data.col[row].param, sno, ""));
+                $(document.body).append(InsertHiddenField(data.col[row].param, sno, "Hidden"));
+                $("#" + data.col[row].param + sno).val(data.col[row].value); 
+                $("#" + data.col[row].param + sno + "Hidden").val(data.col[row].value);                
+            }
+        }
+    }
+
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        UpdateMultiColTable('eutraNeighCellConfig', 'eutraNeighCellConfigTable');
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";
+            var colchange1 = "false";
+            var colchange2 = "false";
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = "true";
+                        if (this.name.substring(this.name.length - 1, this.name.length) == "1") {
+                            colchange1 = "true";
+                        }
+                        else {
+                            colchange2 = "true";
+                        }
+                    }
+                }
+            });
+            if (change == "true") {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true)
+                                msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id.substring(0, this.id.length - 1)) + " " + this.name.substring(this.name.length - 1, this.name.length), this.getAttribute("min"), this.getAttribute("max"));
+                        }
+                    }
+                });
+                if (msg != "") {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                    alert(msg);
+                }
+                else {
+                    if (colchange1 == "true") {                        
+                        var query = "key=eutraNeighCellConfig&webGuiRow=1";
+                        var disabledparams = new Array();
+                        var count = 0;
+                        var sTime = "";
+                        $(':text, :password, select').each(function() {
+                            if ($(this).attr("disabled") == false) {
+                                if (this.name.substring(this.name.length - 1, this.name.length) == "1") {
+                                    query = query + "&" + this.name.substring(0, this.name.length - 1) + "=" + $(this).val();
+                                }
+                                else {
+                                    disabledparams[count++] = this.id;
+                                    $(this).attr("disabled", true);
+                                }
+                            }
+                        });
+                        sTime = new Date();                        
+                        $.post(sessionID + "-LTEWebSet.fcgi", query, function(response) { PrintStatus(response, sTime) }, "json");
+                        $(':text, :password, select').each(function() {
+                            for (var i = 0; i < count; i++) {
+                                if (this.id == disabledparams[i])
+                                    $(this).attr("disabled", false);
+                            }
+                        });
+                    }
+                    if (colchange2 == "true") {                        
+                        var query = "key=eutraNeighCellConfig&webGuiRow=2";
+                        var disabledparams = new Array();
+                        var count = 0;
+                        var sTime = "";
+                        $(':text, :password, select').each(function() {
+                            if ($(this).attr("disabled") == false) {
+                                if (this.name.substring(this.name.length - 1, this.name.length) == "2") {
+                                    query = query + "&" + this.name.substring(0, this.name.length - 1) + "=" + $(this).val();
+                                }
+                                else {
+                                    disabledparams[count++] = this.id;
+                                    $(this).attr("disabled", true);
+                                }
+                            }
+                        });
+                        sTime = new Date();                       
+                        $.post(sessionID + "-LTEWebSet.fcgi", query, function(response) { PrintStatus(response, sTime) }, "json");
+                        $(':text, :password, select').each(function() {
+                            for (var i = 0; i < count; i++) {
+                                if (this.id == disabledparams[i])
+                                    $(this).attr("disabled", false);
+                            }
+                        });
+                    }
+                }
+                $(':text, :password, select').each(function() {
+                    $(this).attr('disabled', false);
+                });
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#eutraNeighCellConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });
+
+function PrintStatus(response, sTime) {
+    $("#cmdMsg").hide();
+    if (response != null && response != undefined) {
+        if (response.result == "SUCCESS") {
+            DISPLAY("eutraNeighCellConfig", response, null);
+            UpdateValues();
+        }
+        else {
+            result = response.data;            
+            if (response.data == "User Logged out due to INACTIVITY.") {
+                alert("Session Timed Out Due To INACTIVITY!!!");
+                parent.window.location.replace("lte_login.htm");
+            }
+        }
+        var eTime = new Date();
+        execTime = eTime - sTime;
+        STATUS("SET", "eutraNeighCellConfig", sTime, eTime, response.result, response.data);
+    }
+}
+
+function UpdateValues() {
+    $(':text, :password, select').each(function() {
+        $('#' + this.id + 'Hidden').val($(this).val());
+    });
+}
+
+function MapIdName(fieldName) {
+    switch (fieldName) {
+        case "neibourIndex": return "Neighbour Cell Profile Identifier";
+        case "neighEutraEnbId": return "Neighbour eNB Identity";
+        case "neighEutraCellId": return "Neighbour Cell Identity";
+        case "neighEutraPhyCellId": return "Neighbour Physical Cell Identity";
+        case "neighEutraTac": return "Neighbour Cell Tracking Area Code";
+        case "neighEutraPlmnMcc": return "Neighbour Cell MCC";
+        case "neighEutraPlmnMnc": return "Neighbour Cell MNC";
+        case "cellIndividualOffset": return "Cell Individual Offset";            
+    }
+}
+
+function InsertHiddenField(fieldName, instance, hidden) {
+    return "<input id=\"" + fieldName + instance + hidden + "\"" + " name=\"" + fieldName + instance + hidden + "\"" + "type=\"hidden\" class=\"lteinput\">";
+}
+
+function InsertMap(fieldName, instance, hidden) {
+    switch (fieldName) {
+        case "neibourIndex": return "<input id=\"neibourIndex" + instance + hidden + "\"" + " name=\"neibourIndex" + instance + hidden + "\"" + "type=\"text\" class=\"lteinput\" validate=\"IntRangeChk\" min=\"1\" max=\"2\"/> (1 ~ 2)";
+        case "neighEutraEnbId": return "<input id=\"neighEutraEnbId" + instance + hidden + "\"" + " name=\"neighEutraEnbId" + instance + hidden + "\"" + " type=\"text\" class=\"lteinput\" validate=\"IntRangeChk\" min=\"1\" max=\"1048575\"/> (1 ~ 1048575)";
+        case "isUsed": return "<select name=\"isUsed" + instance + hidden + "\"" + " id=\"isUsed" + instance + hidden + "\"" +" class=\"lteinput\"><option value=\"0\">FALSE</option><option value=\"1\">TRUE</option></select>";
+        case "neighEutraCellId": return "<input id=\"neighEutraCellId" + instance + hidden + "\"" + " name=\"neighEutraCellId" + instance + hidden + "\"" + " type=\"text\" class=\"lteinput\" validate=\"IntRangeChk\" min=\"1\" max=\"255\"/> (1 ~ 255)";
+        case "neighEutraPhyCellId": return "<input id=\"neighEutraPhyCellId" + instance + hidden + "\"" + " name=\"neighEutraPhyCellId" + instance + hidden + "\" type=\"text\" class=\"lteinput\" validate=\"IntRangeChk\" min=\"0\" max=\"503\"/> (0 ~ 503)";
+        case "neighEutraTac": return "<input id=\"neighEutraTac" + instance + hidden + "\"" + "name=\"neighEutraTac" + instance + hidden + "\"" + " type=\"text\" class=\"lteinput\" validate=\"IntRangeChk\" min=\"0\" max=\"65535\"/> (0 ~ 65535)";
+        case "neighEutraPlmnMcc": return "<input id=\"neighEutraPlmnMcc" + instance + hidden + "\"" + " name=\"neighEutraPlmnMcc" + instance + hidden + "\"" + " type=\"text\" class=\"lteinput\" validate=\"IntegerStrLengthRangeValidate\" min=\"3\" max=\"3\"/> (3 Characters)";
+        case "neighEutraPlmnMnc": return "<input id=\"neighEutraPlmnMnc" + instance + hidden + "\"" + " name=\"neighEutraPlmnMnc" + instance + hidden + "\"" + " type=\"text\" class=\"lteinput\" validate=\"IntegerStrLengthRangeValidate\" min=\"2\" max=\"3\"/> (2 ~ 3 Characters)";
+        case "neighCellMeasBandwidth": return "<select id=\"neighCellMeasBandwidth" + instance + hidden + "\"" +  " name=\"neighCellMeasBandwidth" + instance + hidden + "\"" + " class=\"lteinput\">                              <option value=\"0\">5MHz</option> \
+                                <option value=\"1\">10MHz</option> \
+                                <option value=\"2\">20MHz</option>\
+                                <option value=\"3\">Same As Own Cell</option> </select>";
+
+        case "intraFreqNeighCellQOffsetCell": return "<select id=\"intraFreqNeighCellQOffsetCell" + instance + hidden + "\"" + " name=\"cellIndividualOffset" + instance + hidden + "\"" + "class=\"lteinput\">\
+                                <option value=\"1\">dBminus24</option>\
+                                <option value=\"2\">dBminus22</option>\
+                                <option value=\"3\">dBminus20</option>\
+                                <option value=\"4\">dBminus18</option> \
+                                <option value=\"5\">dBminus14</option>\
+                                <option value=\"6\">dBminus12</option> \
+                                <option value=\"7\">dBminus10</option>\
+                                <option value=\"8\">dBminus8</option> \
+                                <option value=\"9\">dBminus6</option>\
+                                <option value=\"10\">dBminus5</option>\
+                                <option value=\"11\">dBminus4</option>\
+                                <option value=\"12\">dBminus3</option> \
+                                <option value=\"13\">dBminus2</option>\
+                                <option value=\"14\">dBminus1</option> \
+                                <option value=\"15\">dB0</option>\
+                                <option value=\"16\">dB1</option>   \
+                                <option value=\"17\">dB2</option>\
+                                <option value=\"18\">dB3</option>\
+                                <option value=\"19\">dB4</option>\
+                                <option value=\"20\">dB5</option> \
+                                <option value=\"21\">dB6</option>\
+                                <option value=\"22\">dB8</option> \
+                                <option value=\"23\">dB10</option>\
+                                <option value=\"24\">dB12</option>  \
+                                <option value=\"25\">dB14</option>\
+                                <option value=\"26\">dB16</option> \
+                                <option value=\"27\">dB18</option>\
+                                <option value=\"28\">dB20</option> \
+                                <option value=\"29\">dB22</option>\
+                                <option value=\"30\">dB24</option>  </select>";
+
+        case "cellIndividualOffset": return "<select id=\"cellIndividualOffset" + instance + hidden + "\"" + " name=\"cellIndividualOffset" + instance + hidden + "\"" + "class=\"lteinput\">\
+                                <option value=\"1\">dBminus24</option>\
+                                <option value=\"2\">dBminus22</option>\
+                                <option value=\"3\">dBminus20</option>\
+                                <option value=\"4\">dBminus18</option> \
+                                <option value=\"5\">dBminus14</option>\
+                                <option value=\"6\">dBminus12</option> \
+                                <option value=\"7\">dBminus10</option>\
+                                <option value=\"8\">dBminus8</option> \
+                                <option value=\"9\">dBminus6</option>\
+                                <option value=\"10\">dBminus5</option>\
+                                <option value=\"11\">dBminus4</option>\
+                                <option value=\"12\">dBminus3</option> \
+                                <option value=\"13\">dBminus2</option>\
+                                <option value=\"14\">dBminus1</option> \
+                                <option value=\"15\">dB0</option>\
+                                <option value=\"16\">dB1</option>   \
+                                <option value=\"17\">dB2</option>\
+                                <option value=\"18\">dB3</option>\
+                                <option value=\"19\">dB4</option>\
+                                <option value=\"20\">dB5</option> \
+                                <option value=\"21\">dB6</option>\
+                                <option value=\"22\">dB8</option> \
+                                <option value=\"23\">dB10</option>\
+                                <option value=\"24\">dB12</option>  \
+                                <option value=\"25\">dB14</option>\
+                                <option value=\"26\">dB16</option> \
+                                <option value=\"27\">dB18</option>\
+                                <option value=\"28\">dB20</option> \
+                                <option value=\"29\">dB22</option>\
+                                <option value=\"30\">dB24</option>  </select>";                               
+    }
+}
+            
+
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > Neighbour Cell </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="maindiv" style="margin-left:10px;width:250px;height:615px">
+        <form name='eutraNeighCellConfig' id='eutraNeighCellConfig' action="">
+        <table id="maintable" width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp Neighbour Cell Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table id='eutraNeighCellConfigTable' width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class="conTblRowBg1">
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Neighbour Cell Profile Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Is Used
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Neighbour eNB Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                           
+                        </tr>                        
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Neighbour Cell Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Neighbour Physical Cell Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Neighbour Cell MCC
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                              Neighbour Cell MNC
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Neighbour Cell Tracking Area Code
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Neighbour Cell Measurement Bandwidth 
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Cell Individual Offset
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Intra Frequency Neighbor Cell Offset
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                        </tr>                                       
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

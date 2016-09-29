@@ -1,0 +1,95 @@
+ -- @file    COUNTER-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:54 PM
+ --
+
+COUNTER-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, ProfileId, CounterId          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY                  FROM SNMPv2-SMI
+       TruthValue                                    FROM SNMPv2-TC;
+
+counterConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Contains configuration parameter for L2CounterConfig"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 71 }
+
+counterConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF CounterConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Contains configuration parameter for L2CounterConfig
+            This is a MULTI ROW Table"
+       ::= { counterConfig 1 }
+
+counterConfigEntry OBJECT-TYPE
+       SYNTAX      CounterConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Contains configuration parameter for L2CounterConfig"
+       INDEX  { index }
+       ::= { counterConfigTable 1 }
+
+CounterConfigEntry ::= 
+   SEQUENCE {
+       index         RowNumber,
+       counterId     CounterId,
+       profileId     ProfileId,
+       isEnabled     TruthValue
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]
+           [Change_Condition : RO ]"
+       ::= { counterConfigEntry 1 }
+
+counterId OBJECT-TYPE
+       SYNTAX      CounterId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Counter Id]
+           [Change_Condition : RO ]"
+       ::= { counterConfigEntry 2 }
+
+profileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Profile Id]
+           [Change_Condition : RO ]"
+       ::= { counterConfigEntry 3 }
+
+isEnabled OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Counter ID enable or disable]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { counterConfigEntry 4 }
+
+END

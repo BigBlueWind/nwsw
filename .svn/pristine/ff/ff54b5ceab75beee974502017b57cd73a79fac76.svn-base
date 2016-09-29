@@ -1,0 +1,363 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/mapping.js'></script>
+    <script type='text/javascript'>
+        var interval = "";
+        var sessionID = parent.sessionID;
+        function addRowMultiColStatus(tableID, sno, data) {
+            if (data.col[0].value == "" || data.col[0].value == null || data.col[0].value == "0") {
+                return;
+            }
+            var table = document.getElementById(tableID);
+            var maintable = document.getElementById("maintable");
+            var div = document.getElementById("maindiv");
+            div.style.width = parseInt(div.style.width) + 150;
+            maintable.width = "100%";
+            var mainrow = maintable.rows[0];
+            var maincell = mainrow.insertCell(mainrow.cells.length);
+            maincell.align = "center";
+            maincell.width = "150px";
+            maincell.className = "tblTitleBg";                    
+            maincell.innerHTML = "Interface";
+            mainrow = maintable.rows[1];
+            maincell = mainrow.insertCell(mainrow.cells.length);
+            maintable.rows[2].cells[0].colSpan =  maintable.rows[2].cells[0].colSpan + 1;   
+	        table.width = "100%";
+            table.border = "0";
+            table.cellpadding = "0";
+            table.cellspacing = "0";
+            table.overflow = "auto";
+          
+            if (table != null) {                                
+                for (var row = 0; row < data.col.length - 1; row++) 
+                {
+                    var rowinsert = table.rows[row];
+                    var cell = rowinsert.insertCell(rowinsert.cells.length);
+                    cell.align = "center";
+		            cell.width = "150px";
+		            cell.innerHTML = SetMultiColMapping("ethernetCounters", data.col[row+1].param, data.col[row+1].value);
+                }                
+            }            
+        }
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });
+            UpdateMultiColTable('ethernetCounters', 'ethernetCountersTable');
+            var interval = '';
+            $('#rfrshInt').change(function() {
+                if ($('#rfrshInt').val() != 'NONE') {
+                    if (interval != '')
+                        clearInterval(interval);
+                    interval = setInterval('UpdateMultiColTable("ethernetCounters", "ethernetCountersTable")', $('#rfrshInt').val() * 1000);
+                }
+                else
+                    clearInterval(interval);
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#ethernetCounters", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Monitor &gt; Ethernet Counters</span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td>
+        </tr>
+    </table>
+    <div style='margin-left: 10px; margin-top: 10px;'>
+        <table cellspacing='0' cellpadding='2' border='0' width='1043px' style='margin-top: 10px'>
+            <tbody>
+                <tr>
+                    <td align='left' style='font-size: smaller;'>
+                        Automatic Refresh Interval (Seconds)&nbsp;&nbsp; :
+                        <select name='rfrshInt' id='rfrshInt'>
+                            <option value='NONE'>NONE</option>
+                            <option value='5'>5</option>
+                            <option value='10'>10</option>
+                            <option value='15'>15</option>
+                            <option value='30'>30</option>
+                            <option value='60'>60</option>
+                        </select>
+                    </td>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="maindiv" style='margin-left: 10px; margin-top: 10px; width: 250px;'>
+        <form name='ethernetCounters' id='ethernetCounters' action=''>
+        <table id="maintable" width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg' width="225px">
+                    &nbsp; Ethernet Counters
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table id='ethernetCountersTable' width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='219px' align='left'>
+                                Interface Description
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Type
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Maximum Transmission Unit
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Speed
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Physical Address
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Admin status
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center' >
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Operational Status
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Last changed
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Incoming Octets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Incoming Unicast Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Incoming Non Unicast Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Incoming Discarded Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Incoming Errored Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Incoming Unknown Protocol Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Outgoing Octets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Outgoing Unicast Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'  width='219px' align='left'>
+                                Interface Outgoing Non-Unicast Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                           
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='219px' align='left'>
+                                Interface Outgoing Discarded Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='219px' align='left'>
+                                Interface Outgoing Errored Packets
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='219px' align='left'>
+                                Interface Queue Length
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='219px' align='left'>
+                                Last Collected At
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>                            
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>
+

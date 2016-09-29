@@ -1,0 +1,48 @@
+LVECTORS 0x00000000
+{
+    LVECTORS 0x00000000
+    {
+       vectors_l.o(+RO, +FIRST)
+    }
+}
+
+ROOT 0x8000000 
+{
+    ROOT_RO 0x8000000 
+    { 
+       lcorecfg.o(+RO, +FIRST)
+       mmutable.o(+RO)
+       *(+RO) 
+    }
+}
+
+IMAGE_DATA 0x8500000
+{
+	ROOT_RWZI 0x8500000
+        {
+            *(+RW, +ZI) 
+        }
+
+        STACK_HEAP 0x8800000
+        {
+            defheap.o (+RW,+ZI)
+            appheap.o (+ZI)
+            *(.SHAREDSECT.)
+        }
+
+        NCNB_DATA 0x9300000
+        {
+;	     mmutable.o(+RO)
+             ncnbdata.o (+ZI, +RW)
+             ncnbheap.o (+ZI, +RW)
+             *(.NCNBSECT.)
+        }
+}
+
+HVECTORS 0xFFFF0000
+{
+    HVECTORS 0xFFFF0000
+    {
+       vectors_h.o(+RO, +FIRST)
+    }
+}

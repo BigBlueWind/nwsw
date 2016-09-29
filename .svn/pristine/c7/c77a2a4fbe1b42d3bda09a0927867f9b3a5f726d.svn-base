@@ -1,0 +1,97 @@
+ -- @file    LOG-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+LOG-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ModuleId                                     FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+logConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "This table is used to change the log levels in ENB SW.
+Each row contains corresponde to a module and lists the log levels for that module.
+Hence the MaxRows is equal to the number of modules in ENB."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 64 }
+
+logConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF LogConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "This table is used to change the log levels in ENB SW.
+Each row contains corresponde to a module and lists the log levels for that module.
+Hence the MaxRows is equal to the number of modules in ENB.
+            This is a MULTI ROW Table"
+       ::= { logConfig 1 }
+
+logConfigEntry OBJECT-TYPE
+       SYNTAX      LogConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to log configuration."
+       INDEX  { moduleId }
+       ::= { logConfigTable 1 }
+
+LogConfigEntry ::= 
+   SEQUENCE {
+       moduleId     ModuleId,
+       logMask1     Unsigned32
+   }
+
+moduleId OBJECT-TYPE
+       SYNTAX      ModuleId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]
+           [Change_Condition : RO ]"
+       ::= { logConfigEntry 1 }
+
+logMask1 OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             32 bit unsigned integer by using that we can enable or disable 32 different type of events. Bits detail from LSB to MSB given below:
+             1.LogError
+             2. LogDebug
+             3. LogProcedure
+             4. LogTransaction
+             5. LogCounter
+             6. LogState
+             7. LogConfig
+             8. LogOs
+             9. LogTimer
+             10. LogTimeout
+             11. LogMsgIn01(msgHeader only)
+             12. LogMsgIn02(msgHeader+IEs)
+             13. LogMsgIn03(msgHeader+selective IEs)
+             14. LogMsgOut01(msgHeader only)
+             15. LogMsgOut02(msgHeader+IEs)
+             16. LogMsgOut03(msgHeader+selective IEs)
+             17. LogFunc
+             18. LogProfile
+             19. LogEventIn
+             20. LogEventOut
+             21-32. Reserved for future use.]
+           [Change_Condition : RW ]"
+       DEFVAL { 65 }
+       ::= { logConfigEntry 2 }
+
+END

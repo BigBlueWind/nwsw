@@ -1,0 +1,212 @@
+ -- @file    SYS-INFO3-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+SYS-INFO3-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                                          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32, Integer32          FROM SNMPv2-SMI
+       TruthValue                                                              FROM SNMPv2-TC;
+
+sysInfo3Config MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "System Information Block Type 3 configuration (for cell reselection)"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 65 }
+
+sysInfo3ConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SysInfo3ConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "System Information Block Type 3 configuration (for cell reselection)
+            This is a SINGLE ROW Table"
+       ::= { sysInfo3Config 1 }
+
+sysInfo3ConfigEntry OBJECT-TYPE
+       SYNTAX      SysInfo3ConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to sysInfo3 configuration."
+       INDEX  { sysInfo3ProfileId }
+       ::= { sysInfo3ConfigTable 1 }
+
+SysInfo3ConfigEntry ::= 
+   SEQUENCE {
+       sysInfo3ProfileId           ProfileId,
+       qHyst                       INTEGER,
+       threshServingLow            Unsigned32,
+       cellReselectionPriority     Unsigned32,
+       qRxLevMin                   Integer32,
+       pMax                        Integer32,
+       sIntraSearch                Unsigned32,
+       allowMeasBw                 INTEGER,
+       neighCellConfig             Unsigned32,
+       tReselectionEutra           Unsigned32,
+       presenceAntennaPort1        TruthValue
+   }
+
+sysInfo3ProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { sysInfo3ConfigEntry 1 }
+
+qHyst OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   dB0(0),
+                   dB1(1),
+                   dB2(2),
+                   dB3(3),
+                   dB4(4),
+                   dB5(5),
+                   dB6(6),
+                   dB8(7),
+                   dB10(8),
+                   dB12(9),
+                   dB14(10),
+                   dB16(11),
+                   dB18(12),
+                   dB20(13),
+                   dB22(14),
+                   dB24(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter specifies the hysteresis value for ranking criteria. i.e, scaling factor for Qhyst in sf-High for High-mobility state and sf-Medium for Medium-mobility state]
+           [Change_Condition : RW ]"
+       DEFVAL { dB3 }
+       ::= { sysInfo3ConfigEntry 2 }
+
+threshServingLow OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 31 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter specifies the threshold for serving frequency used in reselection evaluation towards lower priority E-UTRAN frequency or RAT]
+           [Change_Condition : RW ]"
+       DEFVAL { 10 }
+       ::= { sysInfo3ConfigEntry 3 }
+
+cellReselectionPriority OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 7 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The parameter concerns the absolute priority of the concerned carrier frequency/ set of frequencies (GERAN), as used by the cell reselection procedure. Corresponds with parameter 'priority' in TS 36.304 [4]. Value 0 means: lowest priority.]
+           [Change_Condition : RW ]"
+       DEFVAL { 7 }
+       ::= { sysInfo3ConfigEntry 4 }
+
+qRxLevMin OBJECT-TYPE
+       SYNTAX      Integer32 (-70 ..-22 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The parameter is used to indicate for cell re-selection the required minimum received RSRP level in the (E-UTRA) cell. Corresponds to parameter Qrxlevmin in 36.304 [4]. Actual value Qrxlevmin = IE value * 2 [dBm]]
+           [Change_Condition : RW ]"
+       DEFVAL { -65 }
+       ::= { sysInfo3ConfigEntry 5 }
+
+pMax OBJECT-TYPE
+       SYNTAX      Integer32 (-30 .. 33 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Value applicable for the intra-frequency neighbouring E-UTRA cells
+             P-Max is used to limit the UE's uplink transmission power on a carrier frequency and is used to calculate the parameter Pcompensation defined in TS 36.304 [4]. ]
+           [Change_Condition : RW ]"
+       DEFVAL { 33 }
+       ::= { sysInfo3ConfigEntry 6 }
+
+sIntraSearch OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 31 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter specifies the threshold (in dB) for intra-frequency measurements.]
+           [Change_Condition : RW ]"
+       DEFVAL { 2 }
+       ::= { sysInfo3ConfigEntry 7 }
+
+allowMeasBw OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   mbw6(0),
+                   mbw15(1),
+                   mbw25(2),
+                   mbw50(3),
+                   mbw75(4),
+                   mbw100(5),
+                   sameAsOwnCellDlBw(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This Parameter is used to indicate the maximum allowed measurement bandwidth on a carrier frequency as defined by the parameter The values mbw6, mbw15, mbw25, mbw50, mbw75, mbw100 indicate 6, 15, 25, 50, 75 and 100 resource blocks respectively. If set to 'SameAsOwnCellDlBw',  the parameter is not boradcast in SIB3 and UE considers the value to be same as dlBandwidth in MIB ]
+           [Change_Condition : RW ]"
+       DEFVAL { sameAsOwnCellDlBw }
+       ::= { sysInfo3ConfigEntry 8 }
+
+neighCellConfig OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 3 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Provides information related to MBSFN and TDD UL/DL configuration of neighbour cells of this frequency
+             00: Not all neighbour cells have the same MBSFN subframe allocation as serving cell
+             10: The MBSFN subframe allocations of all neighbour cells are identical to or subsets of that in the serving cell
+             01: No MBSFN subframes are present in all neighbour cells
+             11: Different UL/DL allocation in neighbouring cells for TDD compared to the serving cell]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { sysInfo3ConfigEntry 9 }
+
+tReselectionEutra OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 7 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter concerns the cell reselection timer TreselectionRAT for E-UTRA, UTRA, GERAN or CDMA2000. Value in seconds]
+           [Change_Condition : RW ]"
+       DEFVAL { 1 }
+       ::= { sysInfo3ConfigEntry 10 }
+
+presenceAntennaPort1 OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter indicates whether all the neighbouring cells use Antenna Port 1. When set to TRUE, the UE may assume that at least two cell-specific antenna ports are used in all neighbouring cells.]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { sysInfo3ConfigEntry 11 }
+
+END

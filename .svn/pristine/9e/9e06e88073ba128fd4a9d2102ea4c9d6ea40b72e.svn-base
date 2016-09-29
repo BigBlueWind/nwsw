@@ -1,0 +1,69 @@
+#!/bin/csh
+#
+# update all files
+#
+set PRROOT=/vobs/core_prd/gprs/s1ap/src
+set CP_CMD=cp
+
+if($#argv == 1) then
+  if($1 == "--link") then
+    set CP_CMD="cp -s"
+  endif
+  if($1 == "-n") then
+    set PRROOT=/vobs/core_prd/gprs/s1ap/src
+  endif
+  if($1 == "-view") then
+    set PRROOT=/vobs/core_prd/gprs/s1ap/src
+  endif
+endif
+
+
+# S1AP Product files
+echo "Copying files from sz directory"
+$CP_CMD $PRROOT/sz/* .
+
+# S1AP Product files
+echo "Copying files from sq directory"
+$CP_CMD $PRROOT/sq/* .
+
+#S1AP acceptance files
+echo "Copying files from acc directory"
+$CP_CMD $PRROOT/acc/* .
+
+#S1AP  Sample files
+echo "Copying files from sample directory"
+$CP_CMD $PRROOT/sample/* .
+
+#S1AP XML Files
+echo "Copying files from xml directory"
+$CP_CMD $PRROOT/xml/szac_cmd1.xml .
+$CP_CMD $PRROOT/xml/szac_cmd2.xml .
+$CP_CMD $PRROOT/xml/szac_tc1.xml .
+$CP_CMD $PRROOT/xml/szac_tc2.xml .
+$CP_CMD $PRROOT/xml/szac_tc3.xml .
+$CP_CMD $PRROOT/xml/szac_tc4.xml .
+$CP_CMD $PRROOT/xml/szac_tc5.xml .
+$CP_CMD $PRROOT/xml/szac_tc6.xml .
+$CP_CMD $PRROOT/xml/szac_tc7.xml .
+$CP_CMD $PRROOT/xml/szac_tc8.xml .
+$CP_CMD $PRROOT/xml/szac_tc9.xml .
+$CP_CMD $PRROOT/xml/szac_tc10.xml .
+$CP_CMD $PRROOT/xml/szac_tc11.xml .
+$CP_CMD $PRROOT/xml/szac_tc12.xml .
+$CP_CMD $PRROOT/xml/szac_tg1.xml .
+$CP_CMD $PRROOT/xml/szac_tg2.xml .
+$CP_CMD $PRROOT/xml/szac_tg3.xml .
+$CP_CMD $PRROOT/xml/szac_tg4.xml .
+$CP_CMD $PRROOT/xml/szac_tg5.xml .
+$CP_CMD $PRROOT/xml/szac_tg6.xml .
+$CP_CMD $PRROOT/xml/szac_tg7.xml .
+$CP_CMD $PRROOT/xml/szac_tg8.xml .
+$CP_CMD $PRROOT/xml/szac_tg9.xml .
+$CP_CMD $PRROOT/xml/szac_tg10.xml .
+$CP_CMD $PRROOT/xml/szac_tg11.xml .
+$CP_CMD $PRROOT/xml/szac_tg12.xml .
+
+#S1AP build files
+echo "Copying files from build directory"
+$CP_CMD $PRROOT/build/* .
+

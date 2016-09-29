@@ -1,0 +1,273 @@
+ -- @file    PM-COUNTER-LOG-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+PM-COUNTER-LOG-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI
+       TruthValue                            FROM SNMPv2-TC;
+
+pmCounterLogConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to control performance management features on ENB: 
+1. Select the counter group to be collected 
+2. Configure the interval at which counter-snap shots should be taken.
+ 3. Interval at which counter-files should be created. The 'sampleInterval' field indicates how often the samples should be collected. ENB will take a snap-shot of the counters at each sampleInterval and store it in file. The collected counters are stored in files. The files are listed in PmFileTable. EMS can upload files listed here."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 63 }
+
+pmCounterLogConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF PmCounterLogConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to control performance management features on ENB: 
+1. Select the counter group to be collected 
+2. Configure the interval at which counter-snap shots should be taken.
+ 3. Interval at which counter-files should be created. The 'sampleInterval' field indicates how often the samples should be collected. ENB will take a snap-shot of the counters at each sampleInterval and store it in file. The collected counters are stored in files. The files are listed in PmFileTable. EMS can upload files listed here.
+            This is a SINGLE ROW Table"
+       ::= { pmCounterLogConfig 1 }
+
+pmCounterLogConfigEntry OBJECT-TYPE
+       SYNTAX      PmCounterLogConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An Entry containing information applicable to performance management"
+       INDEX  { pmProfileId }
+       ::= { pmCounterLogConfigTable 1 }
+
+PmCounterLogConfigEntry ::= 
+   SEQUENCE {
+       pmProfileId                     ProfileId,
+       sampleInterval                  INTEGER,
+       pmFileCreationInterval          INTEGER,
+       collectMacGenCounters           TruthValue,
+       collectMacUplaneCounters        TruthValue,
+       collectRlcGenCounters           TruthValue,
+       collectPdcpGenCounters          TruthValue,
+       collectPdcpUplaneCounters       TruthValue,
+       collectGtpGenCounters           TruthValue,
+       collectSctpGenCounters          TruthValue,
+       collectS1apGenCounters          TruthValue,
+       collectS1apPeerNodeCounters     TruthValue,
+       collectRrcGenCounters           TruthValue,
+       collectRrcCellCounters          TruthValue,
+       collectRrmCounters              TruthValue,
+       collectIPCounters               TruthValue,
+       collectEthernetCounters         TruthValue
+   }
+
+pmProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             index is the unique row identifier.]
+           [Change_Condition : RW ]"
+       DEFVAL { 1 }
+       ::= { pmCounterLogConfigEntry 1 }
+
+sampleInterval OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-1min(1),
+                   e-5min(2),
+                   e-10min(3),
+                   e-15min(4),
+                   e-30min(5),
+                   e-1h(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             It is the interval at which counter snap-shot should be taken.]
+           [Change_Condition : RW ]"
+       DEFVAL { e-10min }
+       ::= { pmCounterLogConfigEntry 2 }
+
+pmFileCreationInterval OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-1h(1),
+                   e-2h(2),
+                   e-4h(3),
+                   e-8h(4)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             It is the interval at which a counter file will be generated.
+             For example: if set to 2 hours, the file will contain counters collected in the last 2 hours at the sampleInterval.]
+           [Change_Condition : RW ]"
+       DEFVAL { e-2h }
+       ::= { pmCounterLogConfigEntry 3 }
+
+collectMacGenCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means MAC general counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 4 }
+
+collectMacUplaneCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means MAC user plane based counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 5 }
+
+collectRlcGenCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means RLC general counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 6 }
+
+collectPdcpGenCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means PDCP general counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 7 }
+
+collectPdcpUplaneCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means PDCP user plane based counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 8 }
+
+collectGtpGenCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means GTP general counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 9 }
+
+collectSctpGenCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means SCTP general counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 10 }
+
+collectS1apGenCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means S1AP general counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 11 }
+
+collectS1apPeerNodeCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means S1AP peer node based counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 12 }
+
+collectRrcGenCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means RRC general counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 13 }
+
+collectRrcCellCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means RRC cell based counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 14 }
+
+collectRrmCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means RRM counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 15 }
+
+collectIPCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means IPv4, IPv6 counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 16 }
+
+collectEthernetCounters OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means Ethernet counters will be collected after every SnapShot Interval and saved in statistics log file.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { pmCounterLogConfigEntry 17 }
+
+END

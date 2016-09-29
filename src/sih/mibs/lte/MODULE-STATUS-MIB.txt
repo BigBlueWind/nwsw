@@ -1,0 +1,165 @@
+ -- @file    MODULE-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+MODULE-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, ModuleId, VersionString, DateAndTimeStamp, String64          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32                                     FROM SNMPv2-SMI
+       TruthValue                                                                   FROM SNMPv2-TC;
+
+moduleStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Run status of SW modules. In terms of mapping to OS, a module can be a process, a thread or a user-space task."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 124 }
+
+moduleStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF ModuleStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Run status of SW modules. In terms of mapping to OS, a module can be a process, a thread or a user-space task.
+            This is a MULTI ROW Table"
+       ::= { moduleStatus 1 }
+
+moduleStatusEntry OBJECT-TYPE
+       SYNTAX      ModuleStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry contains the module status objects."
+       INDEX  { index }
+       ::= { moduleStatusTable 1 }
+
+ModuleStatusEntry ::= 
+   SEQUENCE {
+       index                      RowNumber,
+       moduleIdString             ModuleId,
+       moduleDesc                 String64,
+       version                    VersionString,
+       isRunning                  TruthValue,
+       processOrTaskId            Unsigned32,
+       memUsage                   Unsigned32,
+       startedAt                  DateAndTimeStamp,
+       numRestartsDueToErrors     Unsigned32,
+       restartReason              INTEGER,
+       lastHealthCheckAt          DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { moduleStatusEntry 1 }
+
+moduleIdString OBJECT-TYPE
+       SYNTAX      ModuleId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             A unique identifier of each module.]"
+       ::= { moduleStatusEntry 2 }
+
+moduleDesc OBJECT-TYPE
+       SYNTAX      String64
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Brief description of the module specifying what it does]"
+       ::= { moduleStatusEntry 3 }
+
+version OBJECT-TYPE
+       SYNTAX      VersionString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The software version of the module in release.revision.bugfix.vendor.svnversion format.]"
+       ::= { moduleStatusEntry 4 }
+
+isRunning OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Current operational state of the module. TRUE means the module is running i.e. it is a valid OS task/process exists for the module]"
+       ::= { moduleStatusEntry 5 }
+
+processOrTaskId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The identifier of the process (i.e. pid) or task (i.e taskId) allocated by Operating System for the module]"
+       ::= { moduleStatusEntry 6 }
+
+memUsage OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 1048576 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Present VmSize memory of module in KB (has static, heap and shared memory values combined)]"
+       ::= { moduleStatusEntry 7 }
+
+startedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Time at which the module was started at ENB (YYYYMMDDHHNNSSTTT format) ]"
+       ::= { moduleStatusEntry 8 }
+
+numRestartsDueToErrors OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 100 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates the number of times a module had to be restarted due to errors or abnormal conditions such as crash, no response to health check.]"
+       ::= { moduleStatusEntry 9 }
+
+restartReason OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   operatorCmd(1),
+                   crash(2),
+                   noResponseToHealthCheck(3),
+                   unkown(4)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The reason for which the module was restarted. Note that the words started and restarted are used synonymously.]"
+       ::= { moduleStatusEntry 10 }
+
+lastHealthCheckAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time at which health check was performed. (YYYYMMDDHHNNSSTTT format)]"
+       ::= { moduleStatusEntry 11 }
+
+END

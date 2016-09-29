@@ -1,0 +1,130 @@
+ -- @file    ENB-ADDRESSES-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:57 PM
+ --
+
+ENB-ADDRESSES-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, EthernetMACAddress                          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, IpAddress          FROM SNMPv2-SMI;
+
+enbAddresses MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "This table contains parameters that need to be set when a product is shipped to customer. These parameters will typically be changed only at pre-installation time and very rarely there after."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 205 }
+
+enbAddressesTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EnbAddressesEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "This table contains parameters that need to be set when a product is shipped to customer. These parameters will typically be changed only at pre-installation time and very rarely there after.
+            This is a SINGLE ROW Table"
+       ::= { enbAddresses 1 }
+
+enbAddressesEntry OBJECT-TYPE
+       SYNTAX      EnbAddressesEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing parameters that need to be set when a product is shipped to customer."
+       INDEX  { uniqueProductId }
+       ::= { enbAddressesTable 1 }
+
+EnbAddressesEntry ::= 
+   SEQUENCE {
+       backhaulPortMacAddress             EthernetMACAddress,
+       debugPortMacAddress                EthernetMACAddress,
+       uniqueProductId                    OCTET STRING,
+       staticIPAddressUsedAtDebugPort     IpAddress,
+       netmaskForDebugPort                IpAddress,
+       radioHeadIpAddress                 IpAddress,
+       radioHeadMacAddress                EthernetMACAddress
+   }
+
+backhaulPortMacAddress OBJECT-TYPE
+       SYNTAX      EthernetMACAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ethernet MAC address used by BS at backhaul port]
+           [Change_Condition : RW ]"
+       DEFVAL { "b1:b2:b3:b4:b5:b6" }
+       ::= { enbAddressesEntry 1 }
+
+debugPortMacAddress OBJECT-TYPE
+       SYNTAX      EthernetMACAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ethernet MAC address used by BS at debug port]
+           [Change_Condition : RW ]"
+       DEFVAL { "d1:d2:d3:d4:d5:d6" }
+       ::= { enbAddressesEntry 2 }
+
+uniqueProductId OBJECT-TYPE
+SYNTAX      OCTET STRING (SIZE (4..50))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             A unique identifier of the product assigned by manufacturer. This is the same as product serial number.]
+           [Change_Condition : RO ]"
+       ::= { enbAddressesEntry 3 }
+
+staticIPAddressUsedAtDebugPort OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IP address assigned to Ethernet interface connected to debug-port]
+           [Change_Condition : RO ]"
+       ::= { enbAddressesEntry 4 }
+
+netmaskForDebugPort OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             NetMask used to configure static IP for Debug port]
+           [Change_Condition : RO ]"
+       ::= { enbAddressesEntry 5 }
+
+radioHeadIpAddress OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IP address assigned to Radio Head for configuration and management.
+             Used between ENB-BS application and Radio-Head application: both internal to BS.]
+           [Change_Condition : RO ]"
+       ::= { enbAddressesEntry 6 }
+
+radioHeadMacAddress OBJECT-TYPE
+       SYNTAX      EthernetMACAddress
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MAC address assigned to Radio Head for Configuration and Management (C&M) over Ethernet
+             Required even if C&M is done over CPRI.]
+           [Change_Condition : RO ]"
+       ::= { enbAddressesEntry 7 }
+
+END

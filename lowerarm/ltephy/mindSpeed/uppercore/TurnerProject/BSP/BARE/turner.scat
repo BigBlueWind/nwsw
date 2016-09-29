@@ -1,0 +1,31 @@
+; turner.scat
+;
+; Default scatter file
+
+MMU_TLB 0x4000
+{
+    MMU_TLB 0x4000
+    {
+        mmu.o (+ZI)
+    }
+}
+
+TurnerFirmware 0x10000
+{
+	Turner 0x10000 0x800000
+	{
+		* (+RO, +RW, +ZI)
+	}
+
+    ;;
+    ;; TODO: Area order is vital, otherwise heap extent returns error
+    ;;       Investigate possible solution
+    ;; 
+    ARM_LIB_HEAP 0x800000 EMPTY 0x200000-0x8000
+    {
+    }
+
+    ARM_LIB_STACK 0xA00000 EMPTY -0x8000
+    {
+    }
+}

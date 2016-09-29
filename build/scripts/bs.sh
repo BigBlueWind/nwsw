@@ -1,0 +1,435 @@
+#!/bin/bash 
+# Purpose: start, stop pwav-bs
+#
+# 09July2010, Manu: Created
+
+# commands: start, stop, restart, status, collectlogs, config , bslock ,bsunlock, startcli
+# This is the script for 4gmx environment. The difference in bs_x86.sh and bs_4gmx.sh are: 
+# 1. in list of exes, exes = { radioup.exe/lowerarm.exe } . Rest all executables will remain same.
+# NOTE:: Any change in this file should also be replicated in bs_x86.sh
+#set -x
+cmd=$1;
+prefix=$2
+export PICOBS_HOME=$PWD/..
+#For WIH
+export TZ=PST
+exes=(cp.exe gtp.exe  bsm.exe deh.exe fth.exe lth.exe pmh.exe cih.exe wih.exe sih.exe prm.exe lighttpd.exe );
+Secs=5
+
+# Function for extracting the PATH of the running exes (inst_A or inst_B)
+updateInstPath()
+{  
+runningInstPath="-"
+isL2L3config=0;
+while read LINE
+do
+str=$(echo $LINE|cut -d ';' -f1|tr -d ' ')
+if [[ $str == *swType* ]];
+then
+swtype=$(echo $str|cut -d '=' -f2)
+    if [ $swtype -eq 1 ];
+    then
+    isL2L3config=1; # set to 1 when the swtype is equal to 1 
+    else
+      isL2L3config=0;
+    fi
+fi
+if [[ $str == *isRunning* ]];
+then
+    if [ $isL2L3config -eq 1 ];
+     then
+     isRunning=$(echo $str|cut -d '=' -f2)
+        if [ $isRunning -eq 1 ];
+           then
+            read LINE
+            runningInstPath=$(echo $LINE|cut -d '"' -f2);
+            break
+        fi
+     fi
+fi
+
+done<./sw_package.cfg
+
+if [[ $runningInstPath == "-" ]];
+then
+echo "no instace is running"
+runningInstPath=$PWD/../rel/inst_A
+fi
+
+}
+
+updateInstPath
+ 
+usage()
+{
+    echo "usage: $0 start|stop|status|restart|collectlogs|lock|unlock|alarms|logmsgcnt|cli|instancestatus|clean|dumplogs";
+    # NOTE Do not add 'config' option above.
+    # This option is only for dev team.
+
+    echo "start             - start enb executables with default logrotate config"
+    echo "stop              - kill enb executables (not graceful stop)"
+    echo "status            - show which exes are running and not running"
+    echo "restart           - stop + start"
+    echo "collectlogs       - collect ENB logs"
+    echo "lock              - lock ENB using CLI"
+    echo "unlock            - unlock ENB using CLI"
+    echo "alarms            - To get the Alarms"
+    echo "logmsgcnt         - To send the SIGUSR1 to all from modules"
+    echo "cli               - start CLI"
+    echo "instancestatus    - Get the status Of CLI instances are running"
+    echo "clean             - To clean all logs and coredumps"
+    echo "dumplogs          - Dump logs from shared memory to file and stop"
+    exit;
+}
+
+stopbs()
+{
+    pkill -9 "bs.sh"
+    exit;
+}
+
+printEnbStatus()
+{
+  numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+  if [[ $numCLIInstances -eq 3 ]]; then 
+    echo "All $numCLIInstances instances of CLI are running. Cannot show status"
+  else 
+    if [[ `pgrep prm.exe` ]]; then
+      $runningInstPath/bin/cih.exe --rootDir $runningInstPath  -q -c "get 106" >enbStatus.txt
+      cmdOut=$(echo `cat enbStatus.txt`)
+      if [[ $cmdOut == *ADMINSTATE_LOCKED* ]]; then
+         echo "Admin State: LOCKED"
+      elif [[ $cmdOut == *ADMINSTATE_UNLOCKED* ]]; then
+        if [[ $cmdOut == *OPERATIONALSTATE_ENABLED* ]]; then
+          echo -e "\nAdmin State: UNLOCKED"
+          echo "Operational State: ENABLED"
+        else
+          echo  -e "\nAdmin State: UNLOCKED"
+          echo "Operational State: DISABLED"
+          $0 alarms
+        fi
+      else
+        echo -e "\neNodeB did not respond for GET on EnbStatus."
+      fi
+      rm enbStatus.txt
+    else
+      echo -e "\neNodeB is not Running.\n";
+   fi
+ fi
+}
+trap stopbs 3 #SIGQUIT handler
+
+
+setEnv()
+{
+  unixSockDir="/tmp/enb"
+  if [ ! -d $unixSockDir ]; then
+    echo -n "creating $unixSockDir for unix sockets ..."
+    mkdir $unixSockDir && echo "DONE" || { echo "FAILED ... EXITING"; exit; }
+  fi
+  # setting the unix socket buffer
+  echo -e "Setting System Configuration..."
+  sysctl -q net.unix.max_dgram_qlen=5000  
+  sysctl -w net.core.rmem_max=16777216
+  sysctl -w net.core.rmem_default=16777216
+  sysctl -w net.core.wmem_max=16777216
+  sysctl -w net.core.wmem_default=16777216
+  sysctl -q net.ipv4.conf.all.arp_ignore=1
+  sysctl -q net.ipv4.conf.all.arp_announce=2
+  sysctl -w net.ipv4.route.flush=1
+  route add -net 192.168.1.0 netmask 255.255.255.0 dev eth1 2> /dev/null  
+  #echo core_%e_%t > /proc/sys/kernel/core_pattern
+  ulimit -c unlimited
+  ipcs -ma | grep root > $PICOBS_HOME/run/ipcrm.txt
+  awk '{system("ipcrm -m" $2);}' < $PICOBS_HOME/run/ipcrm.txt
+}
+
+#flushLog()
+#{
+##truncates log file
+# echo -n > /var/log/user.log
+#}
+
+# ****************** COMMANDS start from here *
+
+
+
+
+# Logging Issued command to log.bs.sh file.
+echo "[`date`][Command Issued = '$*' ]" >>log.bs.sh
+case $cmd in
+  start)
+    if [[ `pgrep prm.exe` ]]; then
+      echo "eNodeB already running. Can not start again."
+    else
+      #remove existing log folders
+      rm -rf $PICOBS_HOME/rel/inst_A/log/*
+      rm -rf $PICOBS_HOME/rel/inst_B/log/*
+      #remove existing pm log files
+      rm -rf $PICOBS_HOME/rel/inst_A/pmlogs/*
+      rm -rf $PICOBS_HOME/rel/inst_B/pmlogs/*
+      #/etc/init.d/sysklogd restart
+      setEnv;
+      #echo "starting lk-sim"; ../simulators/rh_sim.exe &
+      cd ../simulators
+      ./ems_sim.exe  &
+      cd -
+      ./prm.exe &
+      #IMPORTANT: Need 25 seconds for LK initialisation and around 5 seconds for init process.  
+      sleep 30
+      $0 status;
+      #Setting priority of cp.exe and gtp.exe
+      renice -5 -p $(echo `pgrep cp.exe`) > /dev/null 2>&1
+      renice -5 -p $(echo `pgrep gtp.exe`) > /dev/null 2>&1
+    fi
+      ;;
+  stop)
+    pkill -9 ems_sim.exe
+    numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+    if [[ $numCLIInstances -lt 3 ]]; then
+      if [[ `pgrep prm.exe` ]]; then
+        $runningInstPath/bin/cih.exe --rootDir $runningInstPath  -q -c "get 106" >enbStatus.txt
+        cmdOut=$(echo `cat enbStatus.txt`)
+        if [[ $cmdOut == *ADMINSTATE_UNLOCKED* ]]; then
+          echo "Locking eNodeB..."
+          $runningInstPath/bin/cih.exe --rootDir $runningInstPath  -q -c "set 1.1.2=1">enbStatus.txt
+        fi
+      fi
+      rm enbStatus.txt
+    fi
+    #pkill -12 prm.exe
+    sleep 3
+    echo "Stopping eNodeB..."
+    for name in ${exes[@]}; do
+      pkill -9 $name;
+    done
+    rmmod armldr.ko
+    ipcs -ma | grep root > $PICOBS_HOME/run/ipcrm.txt
+    awk '{system("ipcrm -m" $2);}' < $PICOBS_HOME/run/ipcrm.txt
+    echo "eNodeB Stopped."
+    ;;
+  restart)
+    $0 stop;
+    $0 start;
+    pkill -9 "bs.sh"
+    ;;
+  status)
+    cat /proc/*/maps > /var/log/appli_maps 
+    echo "PID PCPU PMEM CMD"
+    for name in ${exes[@]}; do
+      state=$(ps --no-heading -C $name -o pid,pcpu,pmem,cmd);
+      case "$?" in 
+        0)
+           echo "RUNNING     $state";
+           ;;
+        *) echo "NOT-RUNNING $name"
+           ;;
+      esac
+    done
+    printEnbStatus
+    ;;  
+  dumplogs)
+    ./logutil.exe
+    ./dump_lowerarm.sh
+    ;;
+  collectlogs)
+    # Checking for Prefix in command received
+    if [ -z "$2" ]; then
+      echo "ERR: Prefix not specified";
+      echo "USAGE: ./bs.sh collectlogs <prefix>, prefix can be JIRA bug id, example BS806"
+      exit
+    fi
+    RAM_COREDUMP_PATH=/tmp/core
+    filecount=`ls ${RAM_COREDUMP_PATH} | wc -l`
+    echo $filecount
+    if [ $filecount -gt 0 ]
+    then
+    file=`ls ${RAM_COREDUMP_PATH} -A  -1`
+    tar -czvf curr_coredump.tar.gz -C ${RAM_COREDUMP_PATH} $file
+    fi
+    collectplatformlogs
+    mv /tmp/platform_logs.tar $PICOBS_HOME/run
+
+    filename=$prefix"_enb_log_"$(date +%d%b%y_%H%M%S)".tgz"
+    env>$PICOBS_HOME/run/env.log
+    echo "Starting Log collection in" $filename "......."
+    ./logutil.exe
+    ./dump_lowerarm.sh
+    tar --ignore-failed-read -czf $PICOBS_HOME/run/$filename /var/log/user.log $PICOBS_HOME/log/ $PICOBS_HOME/download/fth_trace.log \
+        $PICOBS_HOME/rel/inst_A/log/ $PICOBS_HOME/rel/inst_A/config/ $PICOBS_HOME/rel/inst_B/log/ $PICOBS_HOME/rel/inst_B/config/ \
+          $PICOBS_HOME/run/*.log  $PICOBS_HOME/run/*.cfg $PICOBS_HOME/run/core* $PICOBS_HOME/run/*.dmp  $PICOBS_HOME/run/log.bs.sh \
+           $PICOBS_HOME/rel/inst_A/pmlogs/  $PICOBS_HOME/rel/inst_B/pmlogs/ $PICOBS_HOME/run/platform_logs.tar $PICOBS_HOME/run/curr_coredump.tar.gz \
+          $PICOBS_HOME/simulators/*.log &> /dev/null
+    echo "All the available Logs/Configs/Coredumps are collected in "$filename" file."
+    #cleaning the env.log
+    rm -f $PICOBS_HOME/run/env.log
+    rm -f $PICOBS_HOME/run/platform_logs.tar
+    rm -f $PICOBS_HOME/run/curr_coredump.tar.gz
+    ;;
+  config)
+    if [[ `pgrep prm.exe` ]]; then
+      echo -e "\neNodeB is Running so can not update the configuration \n";
+    else
+      #start the EMS simulator
+      echo "Starting the EMS simulator"
+      cd /picobs_mnt/simulators/
+      ./ems_sim.exe &
+      cd -
+      # Set the date
+      date -s "1 JAN 2012 0:0:0" > /dev/null
+      echo "Date has been updated to" `date`
+    fi
+    ;;
+  lock)
+     numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+     if [[ $numCLIInstances -eq 3 ]]; then 
+        echo "All $numCLIInstances CLI instances are already running, Cannot lock!!";
+     else
+       if [[ `pgrep prm.exe` ]]; then
+          $runningInstPath/bin/cih.exe --rootDir $runningInstPath  -q -c "set 1.1.2=1"
+          sleep 1;
+          printEnbStatus
+       else
+         echo -e "\neNodeB is not Running.\n";
+       fi
+     fi    
+    ;;
+  unlock)
+     numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+     if [[ $numCLIInstances -eq 3 ]]; then 
+       echo "All $numCLIInstances CLI instances are already running, Cannot Unlock!!";
+     else 
+       if [[ `pgrep prm.exe` ]]; then
+        $runningInstPath/bin/cih.exe --rootDir $runningInstPath -q -c "set 1.1.2=2" > status.txt
+        cmdOut=$(echo `cat status.txt`)                   
+        cat status.txt
+       isFound=$(echo $cmdOut| grep -q -E -s 'SUCCESS')
+         if [ $? -eq 0 ]; then    
+           echo -n "eNB is Unlocking will get you status"
+           x=1;
+	       while [ $x -le 15 ]
+	       do
+	         sleep 1;
+	         echo -n "..";
+                 if [[ 0 -eq $x%3 ]]; then
+                   $runningInstPath/bin/cih.exe --rootDir $runningInstPath   -q -c "get 106" >enbStatus.txt
+                   cmdOut=$(echo `cat enbStatus.txt`)
+                   if [[ $cmdOut == *OPERATIONALSTATE_ENABLED* ]]; then
+                     break
+                   fi
+                 fi
+             ((x++))
+	       done
+	     fi
+	  rm status.txt
+	  printEnbStatus
+      else
+        echo -e "\neNodeB is not Running.\n";\
+      fi
+   fi  
+    ;;
+  alarms)
+       numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+       if [[ $numCLIInstances -eq 3 ]]; then 
+           echo "All $numCLIInstances CLI instance are already running, so can not show Alarms";
+       else 
+         $runningInstPath/bin/cih.exe --rootDir $runningInstPath -q -c "get 120" >activeAlarm.txt
+         $runningInstPath/bin/cih.exe --rootDir $runningInstPath -q -c "get 121" >alarmHistory.txt
+      
+         cmdOut=$(echo `cat activeAlarm.txt`)
+         isFound=$(echo $cmdOut| grep -q -E -s 'CRITICAL|MAJOR')
+         if [ $? -eq 0 ]; then
+            echo -e "\nActive Alarm Table"
+            cat activeAlarm.txt
+            echo "Alarms Found!";      
+         else
+           echo "No Active Alarm Found.";
+         fi
+        	
+           echo -e "\nAlarms History."
+           cmdOut=$(echo `cat alarmHistory.txt`)
+           isFound=$(echo $cmdOut| grep -q -E -s 'CRITICAL|MAJOR')
+           if [ $? -eq 0 ]; then
+              echo -e "\nActive Alarm Table"
+              cat alarmHistory.txt
+              echo "Alarm History Found!";      
+           else
+              echo "No Alarm Found in Alarm History";
+         fi  	
+           rm alarmHistory.txt
+           rm activeAlarm.txt
+    fi
+     ;;
+  logmsgcnt)
+    for name in bsm.exe deh.exe fth.exe lth.exe pmh.exe wih.exe sih.exe prm.exe ; do
+      if [[ `pgrep $name` ]]; then
+        kill -SIGUSR1 $(echo `pgrep $name`) 
+      else
+        echo "Signal SIGUSR1 is not sent to $name because $name is not running."
+      fi
+	done
+    ;;
+  cli)
+     numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+     if [[ $numCLIInstances -eq 3 ]]; then 
+       echo "All $numCLIInstances instances of CLI are already running ";
+     else
+        $runningInstPath/bin/cih.exe --rootDir $runningInstPath  -q $2 $3 
+     fi
+    ;;
+ instancestatus)
+     numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+    if [[ $numCLIInstaces -gt 0 ]]; then
+        echo "$numCLIInstances Instances of CLI are running ";
+    else 
+        echo "NO Instances of CLI are running ";
+    fi    
+   ;; 
+   monitor)
+    echo "Monitoring ENB Status every $Secs secs. Press ctrl+\ to stop... "  
+    echo "OK " 
+    while :
+    do
+      if [ `pgrep bsm.exe` ] && [ `pgrep prm.exe` ]; then	
+         numCLIInstances=$(echo `pgrep cih.exe | wc -l`)
+         if [[ $numCLIInstances -eq 3 ]]; then 
+           echo "All $numCLIInstances instances of CLI are already running ";
+           exit;
+         else
+           $runningInstPath/bin/cih.exe --rootDir $runningInstPath  -q -c "get 120" | grep  ALARMSEVERITY_CRITICAL
+         fi
+         if [ $? -eq 0 ]; then
+            echo "Critical Alarm Occured";
+            $runningInstPath/bin/cih.exe --rootDir $runningInstPath  -q -c "get 120" > restartBS.log
+            echo "Restarting the ENB" 
+            $0 restart;
+            echo "Restarted the ENB "  
+	    fi
+       else
+            echo "Restarting the ENB" 
+            $0 restart;
+            echo "Restarted the ENB "  
+      fi 
+        echo -n "."   
+        sleep $Secs
+    done
+    ;;
+  clean)
+    ps --no-heading -C prm.exe | grep -q prm.exe
+    if [ $? -eq 0 ]; then      
+      echo "ERR: Base Station is running. Stop Base Station to do clean.";      
+    else
+      rm -f $PICOBS_HOME/log/* $PICOBS_HOME/download/fth_trace.log \
+        $PICOBS_HOME/rel/inst_A/log/*  $PICOBS_HOME/rel/inst_B/log/* \
+        $PICOBS_HOME/run/*.log  $PICOBS_HOME/run/core* $PICOBS_HOME/run/*.dmp $PICOBS_HOME/run/*.tgz
+      rm -f $PICOBS_HOME/.env_cfg_done
+      #flushLog
+      echo "Removed log,tgz and core* files"   
+    fi
+    ;;
+  *)
+    echo "error: unknown cmd '$cmd'";
+    usage;
+    ;;
+esac
+

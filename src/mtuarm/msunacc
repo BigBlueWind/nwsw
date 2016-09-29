@@ -1,0 +1,18 @@
+#!/bin/csh
+#
+# make acceptance software
+#
+onintr cleanup
+
+# reserved for trillium development environment
+#set path = (/tools/gnu26/bin $path)
+
+cp -p envopt.h envopt.rls
+cp -p envopt.acc envopt.h
+make -f mt_acc.mak >&! mt_acc.err
+cp -p envopt.rls envopt.h
+exit(0)
+
+cleanup:
+cp -p envopt.rls envopt.h
+exit(-1)

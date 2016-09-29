@@ -1,0 +1,101 @@
+/************** Feature Compilation ISSUE ******************/
+
+Added #include "cm_tpt.h" in cm_tpt.x ( Why is this required? Chinta to answer )
+
+/*************** RRC Folder*******************************/
+1. rrc/nh_ex_ms.c  Added coded under PWAV flag to handle START_IND, HEALTH_CHECK and EXIT 
+2. rrc/nh_ptmi.c   TODO: sendRrcMsgToPrm() Do we still need this?
+
+/*************** RLC_PDCP Folder*******************************/
+1. rlcpdcp/kw_lmm.c     Added code to send messages from RLC to PRM/BSM under PWAV flag.
+2. rlcpdcp/kw_pj_lmm.c  Added code to send messages from PDCP to PRM/BSM under PWAV flag.
+3. rlcpdcp/kw_ex_ms.c   Added code to receive STARTIND, HEALTHCHECK events for RLC,PDCP  under PWAV flag.
+4. rlcpdcp/kw_ptmi.c   Added code to receive STARTIND, HEALTHCHECK events for RLC,PDCP  under PWAV flag.
+
+/*************** MAC Folder*******************************/
+1. mac/rg_lmm.c     Added code to send messages to PRM/BSM under PWAV flag. 
+                    TODO: Who needs this change to trace? Is it a bug fix?
+2. mac/rg_ex_ms.c   Added code to receive STARTIND, HEALTHCHECK events under PWAV flag.
+3. mac/rg_sch_cmn.h Added code to map qci priority index to PWAV specific index.
+
+4. mac/rg_ptmi.c    Added code to send trace indication to sfi.
+                    TODO: Recent release does not show any change. Is the change present in our repo?
+
+5. mac/rg.h         Added log support for MAC 
+                    TODO: Do we need it? If not, delete it. PWAV_RG_LOGS
+
+6. mac/rg_cfg.c     Added logging support for MAC
+                    TODO: Remove PWAV change; not used
+
+7. mac/rg_sch.c     Added logging support for MAC
+                    TODO: Remove PWAV change; not used
+
+8. mac/rg_sch_cmn.c Added logging support for MAC
+                    TODO: Remove PWAV change; not used
+
+9. mac/rg_sch_rr.c  Added logging support for MAC
+                    TODO: Remove PWAV change; not used
+
+10.mac/rg_utl.c     Added logging support for MAC
+                    TODO: Remove PWAV change; not used
+
+/*************** S1AP Folder*******************************/
+1. s1ap/sz_mi.c Added code to send messages to PRM/BSM under PWAV flag.
+2. s1ap/sz_ex_ms.c Added code to receive STARTIND, HEALTHCHECK events under PWAV flag.
+2. s1ap/sz_ptmi.c   Added code to terminate trace indication message on pwav SFI.
+
+/*************** SCTP Folder*******************************/
+1. sctp/sb_bdy1.c Added code to send messages to PRM/BSM under PWAV flag.
+2. sctp/sb_ex_ms.c Added code to receive STARTIND, HEALTHCHECK events under PWAV flag.
+
+/*************** TUCL Folder*******************************/
+1. tucl/hi_bdy1.c Added code to send messages to PRM/BSM under PWAV flag.
+2. tucl/hi_ex_ms.c Added code to receive STARTIND, HEALTHCHECK events under PWAV flag.
+
+/*************** EGTPU Folder*******************************/
+1. egtpu/eg_mi.c        Added code to send messages to PRM/BSM under PWAV flag.
+2. egtpu/eg_ex_ms.c     Added code to receive STARTIND, HEALTHCHECK events under PWAV flag.
+
+/*************** CM Folder*******************************/  DONE
+1. cm/sm_ex_ms.c        Added Code to handle Configuration events from BSM under PWAV flag.
+2. cm/ssi.h             Added ENTDR under PWAV flag
+3. cm/sm_bdy1.c         Added PWAV flag for SmUehActvInit
+4. cm/lsz.c             Added code to send trace indication to sfi
+5. cm/rgr.h             Added new #define when all lch configuration is done for UE.
+6. cm/szt.x             Added #ifdef macro to protect from multiple inclusion error.
+8. cm/lkw.c             Added code to make unpacking routines available to SFI
+9. cm/lkw.x             Added Send RLC message to prm
+10.cm/lpj.x             Added Send PDCP message to prm
+12.cm/lnh.x             Added Send RRC message to prm
+13.cm/lsb.x             Added Send SCTP message to prm
+14.cm/lsz.x             Added Send S1AP message to prm
+15.cm/cm_lte.c          Added code to make packing routines of egtp
+16.cm/cm_lte.x          Added code to make packing routines of egtp
+17.cm/leg.x             Added send Egtp message to prm
+18.cm/nhu_asn.h
+19.cm5                  timer events added
+20.egt.x                Added Egtpu messages declarations
+21.lhi.x                Added sedn TUCL message to prm
+
+/*************** MT Folder*******************************/
+1. mt/ss_gen.c      Added psMain function under PWAV flag.
+2. mt/mt_ss.c       Added PWAV flag in mtGetOpts function. Added new commmand line arg option(-r) 
+
+/*************** CL Folder*******************************/
+1. macphycl/ys_init.c      Added code to pass the command line arguments.
+                           TODO: Remove PWAV change; identify who needs those.
+2. macphycl/ys_ms_dl.c     Changes have been done to work with FT.
+                           TODO: Merge PWAV changes into the new release.
+3. macphycl/ys_ms.h
+4. macpaycl/ys_ms_pal.c
+5. macphycl/ys_ms_stub.c
+6. macphycl/ys_ms_ul.c
+7. macphycl/ys_ex_ms.c     added UEH module enum and FT changes
+/*************** Sample Application*******************************/
+1. sampleueh/ve_sm_init.[cxh] Added the files  contents to cprm/..../ueh_main.[cxh]
+
+/******************* LPR Patches *****************************/
+EGTP: eg_cpm.c. eg_edm.c
+S1AP: sz_msgfn.c
+RLC : kw_lmm.c, kw_pj_lmm.c
+

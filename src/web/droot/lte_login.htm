@@ -1,0 +1,174 @@
+<html>
+<head>
+    <link rel="shortcut icon" href="../image/favicon.ico" />
+     <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+    <title>Login | LTE Web Interface</title>
+    <script type="text/javascript" src="../script/jquery.js"></script>
+    <script type="text/javascript" src="../script/lte_set_get.js"></script>
+    <script type="text/javascript" src="../script/validate.js"></script>
+    <script type="text/javascript">
+
+        function LoginSuccess(d) {
+            var sessionID = d.data;
+            var ConfigGeneral = window.open(sessionID + "-index.htm", '_blank', "width=1280,height=1024,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            ConfigGeneral.focus();
+            window.open('lte_login.htm', '_self', '');
+            self.close();
+        }
+        $(document).ready(function() {
+            if (parent.location.pathname.split("-", 2)[1] == "index.htm") {
+                var pathname = parent.frames["MiddleRight"].location.pathname.substring(1);
+                parent.window.location.replace(pathname);
+            }            
+            $("#btnLogin").click(function() {
+                var msg = "";
+                msg = msg + StrValidate("userName", "^[a-zA-Z0-9]+$", "Username");
+                msg = msg + IsEmpty("passWord", "Password");
+                if (msg == "") {
+                    document.getElementById("btnLogin").disabled = true;
+                    $.post("login.fcgi", $("#login").serialize(),
+                      function(d) {
+                          if (d != null && d != undefined && d.result == "SUCCESS") {
+                              LoginSuccess(d);
+                          }
+                          else {
+                              $("#status").html("<span class='errormsg'>" + d.data + "</span>");
+                              $("#userName,#passWord").val("");
+                              $("#userName").focus();
+                              document.getElementById("btnLogin").disabled = false;
+                          }
+                      },
+                      "json"
+                      );
+                }
+                else {
+                    alert(msg);
+                }
+            });
+            $("#btnReset").click(function() {
+                $("#userName,#passWord").val("");
+                $("#userName").focus();
+            });
+
+            $("#userName, #passWord").bind("keydown", function(event) {
+                var keycode = (event.keyCode ? event.keyCode : (event.which ? event.which : event.charCode));
+                if (keycode == 13) {
+                    document.getElementById('btnLogin').click();
+                    return false;
+                }
+                else
+                    return true;
+            });
+        });
+     
+    </script>
+
+</head>
+<body>
+    <form name='login' id='login' action="">
+       <div  style='position: absolute; width: 512px; height: 207px; z-index: 1; margin-left: 384px; margin-top: 100px ' name='layer1' id='layer1' align='center'>
+       <table>
+       <tr>
+       <td>
+       <img border='0' src='../image/pwav_newlogo.jpg'  align='right'/>
+       
+       </td>
+       </tr>       
+       </table><br /><br /><br /><br />
+<table width='522' border='0' id='Table1' style='border-right: 1px solid #D2CEBC;border-bottom: 1px solid #D2CEBC;border-left: 1px solid #D2CEBC;' cellspacing='0' cellpadding='2' id='table1' height='221'>
+            <tr>
+                <td width='500' height='43' valign='center' align='center' colspan='4' style="background-color: #7876be">
+                    <span class='ltewebterminal'>LTE Web Terminal</span>
+                </td>
+            </tr>
+           <!-- <tr>
+                <td id="message" width='500' height='43' colspan='4' bgcolor='#EEEEEE' align='center'>
+                    <font face='Arial' size='2'>
+                    <input id="status" name="status" type="hidden"/>
+                    &nbsp;</font>
+                </td>
+            </tr> -->
+		 <tr>
+                <td id="status" width='500' height='43' colspan='4' bgcolor='#EEEEEE' align='center'>
+                    <font face='Arial' size='2'>&nbsp;</font>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td width='107' bgcolor='#EEEEEE'>
+                    &nbsp;
+                </td>
+                <td width='69' align='center' height='26' bgcolor='#EEEEEE'>
+                    <font face='Arial' size='2'>Username</font>
+                </td>
+                <td width='161' align='center' height='26' bgcolor='#EEEEEE'>
+                    <input maxlength='30' size='21' name='userName' id='userName' type='text' autocomplete='off'
+                        style='float: right' />
+                </td>
+                <td width='167' align='center' height='26' bgcolor='#EEEEEE'>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td width='107' bgcolor='#EEEEEE'>
+                    &nbsp;
+                </td>
+                <td width='69' align='center' height='26' bgcolor='#EEEEEE'>
+                    <font face='Arial' size='2'>Password</font>
+                </td>
+                <td width='161' align='center' height='26' bgcolor='#EEEEEE'>
+                    <input maxlength='30' name='passWord' id='passWord' size='21' type='password' autocomplete='off'
+                        style='float: right' />
+                </td>
+                <td width='167' align='center' height='26' bgcolor='#EEEEEE'>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td width='508' height='2px' style='font-size: 1px;' colspan='4' bgcolor='#EEEEEE'>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td width='180' colspan='2' bgcolor='#EEEEEE' align='center'>
+                    &nbsp;
+                </td>
+                <td width='161' align='center' bgcolor='#EEEEEE'>                    
+                    <input type='button' value='Login' name='btnLogin' id='btnLogin' />
+                    <input type='button' value='Reset' name='btnReset' id='btnReset' />
+                </td>
+                <td width='167' bgcolor='#EEEEEE'>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td width='516' colspan='4' bgcolor='#EEEEEE'>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td width='516' colspan='4' class='lteloginbottom'>
+                    <table width='516' cellpadding='0' cellspacing='0'>
+                        <tr>
+                            <td valign='middle' class='lteloginbottom'>
+                                <p align='left' valign='middle' />
+                                <font class='pwav' />©&nbsp;Copyright 2010 Powerwave Technologies, Inc.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+
+    <script type="text/javascript">
+        document.login.userName.focus();
+    </script>
+
+</body>
+</html>
+

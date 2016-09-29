@@ -1,0 +1,785 @@
+LTE-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+     MODULE-IDENTITY, OBJECT-TYPE, Integer32, Unsigned32, IpAddress  FROM SNMPv2-SMI  
+     TEXTUAL-CONVENTION                                   	     FROM SNMPv2-TC
+     powerwave                                            	     FROM POWERWAVE-MIB;
+
+lte MODULE-IDENTITY
+   LAST-UPDATED "201008091830Z"
+   ORGANIZATION "Powerwave"
+   CONTACT-INFO 
+              "Powerwave Technologies Inc. 
+               pwregistry@pwav.com"
+   DESCRIPTION  "The MIB module to describe lte Objects."
+   REVISION "201008091830Z"
+   DESCRIPTION  "The MIB module to describe lte Objects."
+   ::= { powerwave 501 }
+
+lteObjects OBJECT IDENTIFIER ::= { lte 600 }
+
+RowNumber ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Unique identifier of a row. 0 means row does not exist."
+  SYNTAX Unsigned32 (0 | 1..300)
+
+FileName ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Full file name i.e directories and the filename. example: /etc/passwd"
+  SYNTAX OCTET STRING (SIZE(2..256))
+
+SwType ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "eNB-Pico Software Image types for various components."
+  SYNTAX INTEGER {
+    enbL2L3Sw (1), 
+	rhSw (2),    
+    enbPhySw (3), 
+    linux (4),
+    other(5)
+    }
+
+FileStatus ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "The event that happened on the file"
+  SYNTAX INTEGER {
+	  notApplicable (1),
+      fileOpened (2), 
+      fileClosed (3), 
+      fileDeleted (4), 
+      fileDownloaded (5), 
+      fileUploaded (6), 
+      fileUploadedAndDeleted (7), 
+      fileAutoUploadedAndDeleted (8), 
+      fileSaved2PersistentMemory (9)
+  }
+
+ModuleId ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Module Identification"
+    SYNTAX	INTEGER {
+        modid-NONE (0),
+		modid-CIH (1),
+		modid-SIH (2),
+		modid-WIH (3),
+		modid-BSM (4),
+		modid-FTH (5),
+		modid-UEH (6),
+		modid-PRM (7),
+		modid-DEH (8),
+ 		modid-LTH (9),
+ 		modid-PMH (10),
+		modid-EGTP (11),
+	      modid-TUCL (12),
+		modid-PDCP (13),
+		modid-RLC (14),
+		modid-MAC (15),
+		modid-RRC (16),
+		modid-SCTP (17),
+		modid-S1AP (18),
+            modid-UDH (19),
+            modid-S1M (20),
+            modid-CEM (21),
+            modid-SM (22),
+		modid-TPUT-TESTER-COORD (23),
+		modid-TPUT-TESTER-NODE-A (24),
+		modid-TPUT-TESTER-NODE-B (25),
+		modid-MAX (26)
+		}
+
+VersionString ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "SW Version"
+  SYNTAX OCTET STRING (SIZE(9..19))
+
+ErrorInfo ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Gives information specific to an error"
+  SYNTAX OCTET STRING (SIZE(2..256))
+
+DateAndTimeStamp ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Date and Time"
+  SYNTAX OCTET STRING (SIZE(17))
+
+String16 ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "String of given length"
+  SYNTAX OCTET STRING (SIZE(1..16))
+
+String32 ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "String of given length"
+  SYNTAX OCTET STRING (SIZE(1..32))
+  
+String64 ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "String of given length"
+  SYNTAX OCTET STRING (SIZE(1..64))
+
+String256 ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "String of given length"
+  SYNTAX OCTET STRING (SIZE(2..256))
+
+ProfileId ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "An identifier of a profile"
+  SYNTAX INTEGER (0..1)
+
+Latitude ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Latitude to specify geographical position coordinates
+  			   Format is MMNN.PPPPPP(N/S). 
+  			   MM -> Degrees, 
+  			   NN -> Minutes, 
+  			   PPPPPP -> Decimal precision, 
+  			   North (N) or South (S)."
+  SYNTAX OCTET STRING (SIZE(12))      
+  
+Longitude ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Longitude to specify geographical position coordinates
+  			   Format is MMMNN.PPPPPP(E/W). 
+  			   MMM -> Degrees, 
+  			   NN -> Minutes, 
+  			   PPPPPP -> Decimal precision, 
+  			   East (E) or West (W)."
+  SYNTAX OCTET STRING (SIZE(13))
+
+EthernetMACAddress ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Ethernet MAC Address."
+  SYNTAX OCTET STRING (SIZE(17))
+
+FileUploadCommand ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "File Upload Command."
+  SYNTAX          INTEGER {
+                  upload (1),
+                  uploadCancel (2)
+                  }
+
+FileDownloadCommand ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "File Download Command."
+  SYNTAX          INTEGER {
+                  download (1),
+                  downloadCancel (2)
+                  }
+
+FileTransferProtocol ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "File Transfer Protocol."
+  SYNTAX          INTEGER {
+                  ftp (1),
+                  scp (2),
+                  sftp (3)
+                  }
+
+FileTransferRate ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "File Transfer Rate."
+  SYNTAX      INTEGER {
+              e-50kbps (1),
+              e-100kbps (2),
+              e-500kbps (3),
+              e-1mbps (4),
+              e-10mbps (5),
+              unlimited (6)
+              }
+
+TraceCommand ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Trace Command."
+  SYNTAX      INTEGER {
+              startTrace (1),
+              stopTrace (2)
+              }
+
+OperationStatus ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Operation Status."
+  SYNTAX      INTEGER {
+              notInitiated (1),
+              ongoing (2),
+              successful (3),
+              failed (4),
+              cancelled (5)
+              }
+
+Percentage ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Percentage."
+  SYNTAX Unsigned32 (0..100)
+
+EnodebId ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Enodeb Identifier."
+  SYNTAX Unsigned32 (0..1048575)
+
+FileSize ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "File Size."
+  SYNTAX Unsigned32 (0..4294967296)
+
+Mcc ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Mobile Country Code."
+  SYNTAX OCTET STRING (SIZE(3))
+
+Mnc ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "Mobile network Code."
+  SYNTAX OCTET STRING (SIZE(2..3))
+ 
+MessageId ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION 
+            "ENB internal communication based message id."
+    SYNTAX	    INTEGER {
+                msg-UNDEFINED	( 0 ),
+                msg-TIMEKEEPER-PRM-TIMEOUT-IND	( 1 ),
+                msg-TIMEKEEPER-BSM-TIMEOUT-IND	( 2 ),
+                msg-TIMEKEEPER-UDP-TIMEOUT-IND	( 3 ),
+                msg-TIMEKEEPER-CIH1-TIMEOUT-IND	( 4 ),
+                msg-TIMEKEEPER-CIH2-TIMEOUT-IND	( 5 ),
+                msg-TIMEKEEPER-CIH3-TIMEOUT-IND	( 6 ),
+                msg-TIMEKEEPER-WIH-TIMEOUT-IND	( 7 ),
+                msg-TIMEKEEPER-DEH-TIMEOUT-IND	( 8 ),
+                msg-TIMEKEEPER-PMH-TIMEOUT-IND	( 9 ),
+                msg-TIMEKEEPER-FTH-TIMEOUT-IND	( 10 ),
+                msg-TIMEKEEPER-SIH-TIMEOUT-IND	( 11 ),
+                msg-FTH-PRM-START-IND	( 12 ),
+                msg-SCTP-PRM-START-IND	( 13 ),
+                msg-EGTP-PRM-START-IND	( 14 ),
+                msg-TUCL-PRM-START-IND	( 15 ),
+                msg-MAC-PRM-START-IND	( 16 ),
+                msg-PDCP-PRM-START-IND	( 17 ),
+                msg-RLC-PRM-START-IND	( 18 ),
+                msg-RRC-PRM-START-IND	( 19 ),
+                msg-S1AP-PRM-START-IND	( 20 ),
+                msg-UEH-PRM-START-IND	( 21 ),
+                msg-DEH-PRM-START-IND	( 22 ),
+                msg-SIH-PRM-START-IND	( 23 ),
+                msg-WIH-PRM-START-IND	( 24 ),
+                msg-BSM-PRM-START-IND	( 25 ),
+                msg-LTH-PRM-START-IND	( 26 ),
+                msg-PMH-PRM-START-IND	( 27 ),
+                msg-UDH-PRM-START-IND	( 28 ),
+                msg-PRM-BSM-EXIT-CMD	( 29 ),
+                msg-PRM-FTH-EXIT-CMD	( 30 ),
+                msg-PRM-DEH-EXIT-CMD	( 31 ),
+                msg-PRM-WIH-EXIT-CMD	( 32 ),
+                msg-PRM-RRC-EXIT-CMD	( 33 ),
+                msg-PRM-S1AP-EXIT-CMD	( 34 ),
+                msg-PRM-RLC-EXIT-CMD	( 35 ),
+                msg-PRM-PDCP-EXIT-CMD	( 36 ),
+                msg-PRM-MAC-EXIT-CMD	( 37 ),
+                msg-PRM-EGTP-EXIT-CMD	( 38 ),
+                msg-PRM-SCTP-EXIT-CMD	( 39 ),
+                msg-PRM-TUCL-EXIT-CMD	( 40 ),
+                msg-PRM-UEH-EXIT-CMD	( 41 ),
+                msg-PRM-SIH-EXIT-CMD	( 42 ),
+                msg-PRM-LTH-EXIT-CMD	( 43 ),
+                msg-PRM-PMH-EXIT-CMD	( 44 ),
+                msg-PRM-UDH-EXIT-CMD	( 45 ),
+                msg-PRM-FTH-HELLO	( 46 ),
+                msg-PRM-SCTP-HELLO	( 47 ),
+                msg-PRM-EGTP-HELLO	( 48 ),
+                msg-PRM-TUCL-HELLO	( 49 ),
+                msg-PRM-MAC-HELLO	( 50 ),
+                msg-PRM-PDCP-HELLO	( 51 ),
+                msg-PRM-RLC-HELLO	( 52 ),
+                msg-PRM-RRC-HELLO	( 53 ),
+                msg-PRM-S1AP-HELLO	( 54 ),
+                msg-PRM-UEH-HELLO	( 55 ),
+                msg-PRM-DEH-HELLO	( 56 ),
+                msg-PRM-SIH-HELLO	( 57 ),
+                msg-PRM-WIH-HELLO	( 58 ),
+                msg-PRM-BSM-HELLO	( 59 ),
+                msg-PRM-LTH-HELLO	( 60 ),
+                msg-PRM-PMH-HELLO	( 61 ),
+                msg-PRM-UDH-HELLO	( 62 ),
+                msg-FTH-PRM-HELLO-ACK	( 63 ),
+                msg-SCTP-PRM-HELLO-ACK	( 64 ),
+                msg-EGTP-PRM-HELLO-ACK	( 65 ),
+                msg-TUCL-PRM-HELLO-ACK	( 66 ),
+                msg-MAC-PRM-HELLO-ACK	( 67 ),
+                msg-PDCP-PRM-HELLO-ACK	( 68 ),
+                msg-RLC-PRM-HELLO-ACK	( 69 ),
+                msg-RRC-PRM-HELLO-ACK	( 70 ),
+                msg-S1AP-PRM-HELLO-ACK	( 71 ),
+                msg-UEH-PRM-HELLO-ACK	( 72 ),
+                msg-DEH-PRM-HELLO-ACK	( 73 ),
+                msg-SIH-PRM-HELLO-ACK	( 74 ),
+                msg-WIH-PRM-HELLO-ACK	( 75 ),
+                msg-BSM-PRM-HELLO-ACK	( 76 ),
+                msg-LTH-PRM-HELLO-ACK	( 77 ),
+                msg-PMH-PRM-HELLO-ACK	( 78 ),
+                msg-UDH-PRM-HELLO-ACK	( 79 ),
+                msg-BSM-S1M-OPSTART-REQ	( 80 ),
+                msg-S1M-BSM-OPSTART-SUCC	( 81 ),
+                msg-S1M-BSM-OPSTART-FAIL	( 82 ),
+                msg-BSM-UDH-OPSTART-REQ	( 83 ),
+                msg-UDH-BSM-OPSTART-SUCC	( 84 ),
+                msg-UDH-BSM-OPSTART-FAIL	( 85 ),
+                msg-BSM-CEM-OPSTART-REQ	( 86 ),
+                msg-CEM-BSM-OPSTART-SUCC	( 87 ),
+                msg-CEM-BSM-OPSTART-FAIL	( 88 ),
+                msg-BSM-DEH-OPSTART-REQ	( 89 ),
+                msg-DEH-BSM-OPSTART-SUCC	( 90 ),
+                msg-DEH-BSM-OPSTART-FAIL	( 91 ),
+                msg-BSM-PMH-OPSTART-REQ	( 92 ),
+                msg-PMH-BSM-OPSTART-SUCC	( 93 ),
+                msg-PMH-BSM-OPSTART-FAIL	( 94 ),
+                msg-BSM-S1M-OPSTOP-REQ	( 95 ),
+                msg-S1M-BSM-OPSTOP-SUCC	( 96 ),
+                msg-BSM-UDH-OPSTOP-REQ	( 97 ),
+                msg-UDH-BSM-OPSTOP-SUCC	( 98 ),
+                msg-BSM-CEM-OPSTOP-REQ	( 99 ),
+                msg-CEM-BSM-OPSTOP-SUCC	( 100 ),
+                msg-BSM-DEH-OPSTOP-REQ	( 101 ),
+                msg-DEH-BSM-OPSTOP-SUCC	( 102 ),
+                msg-BSM-PMH-OPSTOP-REQ	( 103 ),
+                msg-PMH-BSM-OPSTOP-SUCC	( 104 ),
+                msg-BSM-SM-SCTP-INIT-CONFIG-REQ	( 105 ),
+                msg-SM-BSM-SCTP-INIT-CONFIG-SUCC	( 106 ),
+                msg-SM-BSM-SCTP-INIT-CONFIG-FAIL	( 107 ),
+                msg-BSM-SM-EGTP-INIT-CONFIG-REQ	( 108 ),
+                msg-SM-BSM-EGTP-INIT-CONFIG-SUCC	( 109 ),
+                msg-SM-BSM-EGTP-INIT-CONFIG-FAIL	( 110 ),
+                msg-BSM-SM-S1AP-INIT-CONFIG-REQ	( 111 ),
+                msg-SM-BSM-S1AP-INIT-CONFIG-SUCC	( 112 ),
+                msg-SM-BSM-S1AP-INIT-CONFIG-FAIL	( 113 ),
+                msg-BSM-DEH-INIT-CONFIG-REQ	( 114 ),
+                msg-DEH-BSM-INIT-CONFIG-SUCC	( 115 ),
+                msg-DEH-BSM-INIT-CONFIG-FAIL	( 116 ),
+                msg-BSM-SIH-INIT-CONFIG-REQ	( 117 ),
+                msg-SIH-BSM-INIT-CONFIG-SUCC	( 118 ),
+                msg-SIH-BSM-INIT-CONFIG-FAIL	( 119 ),
+                msg-BSM-UEH-INIT-CONFIG-REQ	( 120 ),
+                msg-UEH-BSM-INIT-CONFIG-SUCC	( 121 ),
+                msg-UEH-BSM-INIT-CONFIG-FAIL	( 122 ),
+                msg-BSM-UEH-UEEVENTHISTORYLOG-CONFIG-REQ	( 123 ),
+                msg-UEH-BSM-UEEVENTHISTORYLOG-CONFIG-SUCC	( 124 ),
+                msg-UEH-BSM-UEEVENTHISTORYLOG-CONFIG-FAIL	( 125 ),
+                msg-BSM-CEM-ENB-CONFIG-REQ	( 126 ),
+                msg-CEM-BSM-ENB-CONFIG-SUCC	( 127 ),
+                msg-CEM-BSM-ENB-CONFIG-FAIL	( 128 ),
+                msg-BSM-S1M-CONFIG-REQ	( 129 ),
+                msg-S1M-BSM-CONFIG-SUCC	( 130 ),
+                msg-S1M-BSM-CONFIG-FAIL	( 131 ),
+                msg-BSM-DEH-RH-CONFIG-REQ	( 132 ),
+                msg-DEH-BSM-RH-CONFIG-SUCC	( 133 ),
+                msg-DEH-BSM-RH-CONFIG-FAIL	( 134 ),
+                msg-BSM-PMH-CONFIG-REQ	( 135 ),
+                msg-PMH-BSM-CONFIG-SUCC	( 136 ),
+                msg-PMH-BSM-CONFIG-FAIL	( 137 ),
+                msg-BSM-UDH-CONFIG-REQ	( 138 ),
+                msg-UDH-BSM-CONFIG-SUCC	( 139 ),
+                msg-UDH-BSM-CONFIG-FAIL	( 140 ),
+                msg-BSM-PMH-COUNTER-INPUT-CONFIG-REQ	( 141 ),
+                msg-PMH-BSM-COUNTER-INPUT-CONFIG-SUCC	( 142 ),
+                msg-PMH-BSM-COUNTER-INPUT-CONFIG-FAIL	( 143 ),
+                msg-BSM-FTH-SET-MSG-TRACE	( 144 ),
+                msg-BSM-UEH-SET-MSG-TRACE	( 145 ),
+                msg-BSM-PRM-SET-MSG-TRACE	( 146 ),
+                msg-BSM-DEH-SET-MSG-TRACE	( 147 ),
+                msg-BSM-LTH-SET-MSG-TRACE	( 148 ),
+                msg-BSM-CIH1-SET-MSG-TRACE	( 149 ),
+                msg-BSM-CIH2-SET-MSG-TRACE	( 150 ),
+                msg-BSM-CIH3-SET-MSG-TRACE	( 151 ),
+                msg-BSM-WIH-SET-MSG-TRACE	( 152 ),
+                msg-BSM-SIH-SET-MSG-TRACE	( 153 ),
+                msg-BSM-FTH-SET-LOG-CFG	( 154 ),
+                msg-BSM-SM-SET-LOG-CFG	( 155 ),
+                msg-BSM-DEH-SET-LOG-CFG	( 156 ),
+                msg-BSM-PRM-SET-LOG-CFG	( 157 ),
+                msg-BSM-PMH-SET-LOG-CFG	( 158 ),
+                msg-BSM-LTH-SET-LOG-CFG	( 159 ),
+                msg-BSM-SIH-SET-LOG-CFG	( 160 ),
+                msg-BSM-WIH-SET-LOG-CFG	( 161 ),
+                msg-CIH1-BSM-GET-OBJ-REQ	( 162 ),
+                msg-CIH2-BSM-GET-OBJ-REQ	( 163 ),
+                msg-CIH3-BSM-GET-OBJ-REQ	( 164 ),
+                msg-BSM-CIH1-GET-OBJ-SUCC	( 165 ),
+                msg-BSM-CIH2-GET-OBJ-SUCC	( 166 ),
+                msg-BSM-CIH3-GET-OBJ-SUCC	( 167 ),
+                msg-BSM-CIH1-GET-OBJ-FAIL	( 168 ),
+                msg-BSM-CIH2-GET-OBJ-FAIL	( 169 ),
+                msg-BSM-CIH3-GET-OBJ-FAIL	( 170 ),
+                msg-WIH-BSM-GET-OBJ-REQ	( 171 ),
+                msg-BSM-WIH-GET-OBJ-SUCC	( 172 ),
+                msg-BSM-WIH-GET-OBJ-FAIL	( 173 ),
+                msg-SIH-BSM-GET-OBJ-REQ	( 174 ),
+                msg-BSM-SIH-GET-OBJ-SUCC	( 175 ),
+                msg-BSM-SIH-GET-OBJ-FAIL	( 176 ),
+                msg-CIH1-BSM-SET-OBJ-REQ	( 177 ),
+                msg-CIH2-BSM-SET-OBJ-REQ	( 178 ),
+                msg-CIH3-BSM-SET-OBJ-REQ	( 179 ),
+                msg-BSM-CIH1-SET-OBJ-SUCC	( 180 ),
+                msg-BSM-CIH2-SET-OBJ-SUCC	( 181 ),
+                msg-BSM-CIH3-SET-OBJ-SUCC	( 182 ),
+                msg-BSM-CIH1-SET-OBJ-FAIL	( 183 ),
+                msg-BSM-CIH2-SET-OBJ-FAIL	( 184 ),
+                msg-BSM-CIH3-SET-OBJ-FAIL	( 185 ),
+                msg-WIH-BSM-SET-OBJ-REQ	( 186 ),
+                msg-BSM-WIH-SET-OBJ-SUCC	( 187 ),
+                msg-BSM-WIH-SET-OBJ-FAIL	( 188 ),
+                msg-SIH-BSM-SET-OBJ-REQ	( 189 ),
+                msg-BSM-SIH-SET-OBJ-SUCC	( 190 ),
+                msg-BSM-SIH-SET-OBJ-FAIL	( 191 ),
+                msg-BSM-PRM-GET-OBJ-REQ	( 192 ),
+                msg-PRM-BSM-GET-OBJ-SUCC	( 193 ),
+                msg-BSM-PRM-RESTART-REQ	( 194 ),
+                msg-BSM-PRM-REBOOT-REQ	( 195 ),
+                msg-BSM-PRM-SW-ACTIVATE-REQ	( 196 ),
+                msg-PRM-BSM-SW-ACTIVATE-SUCC	( 197 ),
+                msg-PRM-BSM-SW-ACTIVATE-FAIL	( 198 ),
+                msg-PRM-BSM-SW-ACTIVATE-RSP	( 199 ),
+                msg-PRM-BSM-SW-ACTIVATE-REJ	( 200 ),
+                msg-BSM-PRM-SW-INSTALL-REQ	( 201 ),
+                msg-PRM-BSM-SW-INSTALL-FAIL	( 202 ),
+                msg-PRM-BSM-SW-INSTALL-ACCEPTED	( 203 ),
+                msg-PRM-BSM-SW-INSTALL-REJ	( 204 ),
+                msg-PRM-BSM-SW-INSTALL-SUCC	( 205 ),
+                msg-PRM-BSM-CONFIG-INSTALL-REQ	( 206 ),
+                msg-BSM-PRM-CONFIG-INSTALL-SUCC	( 207 ),
+                msg-BSM-PRM-CONFIG-INSTALL-FAIL	( 208 ),
+                msg-PRM-BSM-ALL-MODULES-UP-IND	( 209 ),
+                msg-PRM-BSM-MOD-UP-IND	( 210 ),
+                msg-PRM-BSM-MOD-DOWN-IND	( 211 ),
+                msg-BSM-PRM-SET-OBJ-REQ	( 212 ),
+                msg-PRM-BSM-SET-OBJ-SUCC	( 213 ),
+                msg-FTH-BSM-DOWNLOAD-CMPL-IND	( 214 ),
+                msg-FTH-BSM-DOWNLOAD-FAIL	( 215 ),
+                msg-FTH-BSM-UPLOAD-CMPL-IND	( 216 ),
+                msg-FTH-BSM-UPLOAD-FAIL	( 217 ),
+                msg-BSM-FTH-GET-OBJ-REQ	( 218 ),
+                msg-FTH-BSM-GET-OBJ-SUCC	( 219 ),
+                msg-BSM-FTH-SET-OBJ-REQ	( 220 ),
+                msg-FTH-BSM-SET-OBJ-SUCC	( 221 ),
+                msg-FTH-BSM-SET-OBJ-FAIL	( 222 ),
+                msg-BSM-DEH-GET-OBJ-REQ	( 223 ),
+                msg-DEH-BSM-GET-OBJ-SUCC	( 224 ),
+                msg-DEH-BSM-GET-OBJ-FAIL	( 225 ),
+                msg-BSM-DEH-SET-OBJ-REQ	( 226 ),
+                msg-DEH-BSM-SET-OBJ-SUCC	( 227 ),
+                msg-DEH-BSM-SET-OBJ-FAIL	( 228 ),
+                msg-DEH-BSM-COMPONENT-DOWN-IND	( 229 ),
+                msg-DEH-BSM-COMPONENT-UP-IND	( 230 ),
+                msg-BSM-DEH-GPS-DETAIL-REQ	( 231 ),
+                msg-DEH-BSM-GPS-DETAIL-SUCC	( 232 ),
+                msg-DEH-BSM-GPS-DETAIL-FAIL	( 233 ),
+                msg-BSM-DEH-DEVICE-INIT-REQ	( 234 ),
+                msg-DEH-BSM-DEVICE-INIT-SUCC	( 235 ),
+                msg-DEH-BSM-DEVICE-INIT-FAIL	( 236 ),
+                msg-BSM-DEH-SET-LED-COLOR	( 237 ),
+                msg-BSM-DEH-RH-RECONFIG-IND	( 238 ),
+                msg-BSM-DEH-GET-ENB-ADDR-REQ	( 239 ),
+                msg-DEH-BSM-GET-ENB-ADDR-RSP	( 240 ),
+                msg-DEH-BSM-GET-ENB-ADDR-FAIL	( 241 ),
+                msg-BSM-DEH-SET-IP-ADDR-REQ	( 242 ),
+                msg-DEH-BSM-SET-IP-ADDR-RSP	( 243 ),
+                msg-PRM-DEH-RH-SW-INSTALL-REQ	( 244 ),
+                msg-DEH-PRM-RH-SW-INSTALL-SUCC	( 245 ),
+                msg-DEH-PRM-RH-SW-INSTALL-FAIL	( 246 ),
+                msg-PRM-DEH-RH-SW-ACTIVATE-REQ	( 247 ),
+                msg-DEH-PRM-RH-SW-ACTIVATE-SUCC	( 248 ),
+                msg-DEH-PRM-RH-SW-ACTIVATE-FAIL	( 249 ),
+                msg-DEH-PRM-RH-VERSION-INFO	( 250 ),
+                msg-BSM-SIH-NOTI-IND	( 251 ),
+                msg-S1M-BSM-LINK-UP-IND	( 252 ),
+                msg-S1M-BSM-LINK-DOWN-IND	( 253 ),
+                msg-S1M-BSM-LINK-CLOSED-IND	( 254 ),
+                msg-S1M-BSM-RESET-IND	( 255 ),
+                msg-S1M-BSM-UNKNOWN-ENB-UE-ID	( 256 ),
+                msg-BSM-UEH-GET-ACTIVE-UE-STATUS-REQ	( 257 ),
+                msg-UEH-BSM-GET-ACTIVE-UE-STATUS-RSP	( 258 ),
+                msg-BSM-UEH-GET-UE-EVENT-HISTORY-REQ	( 259 ),
+                msg-UEH-BSM-GET-UE-EVENT-HISTORY-RSP	( 260 ),
+                msg-BSM-UEH-MOD-STATE-REQ	( 261 ),
+                msg-UEH-BSM-MOD-STATE-RSP	( 262 ),
+                msg-BSM-CEM-CELL-BAR-REQ	( 263 ),
+                msg-CEM-BSM-CELL-BAR-SUCC	( 264 ),
+                msg-BSM-CEM-CELL-UNBAR-REQ	( 265 ),
+                msg-CEM-BSM-CELL-UNBAR-SUCC	( 266 ),
+                msg-BSM-UDH-GET-ACTIVE-RAB-STATUS-REQ	( 267 ),
+                msg-UDH-BSM-GET-ACTIVE-RAB-STATUS-RSP	( 268 ),
+                msg-BSM-UDH-GET-RAB-HISTORY-REQ	( 269 ),
+                msg-UDH-BSM-GET-RAB-HISTORY-RSP	( 270 ),
+                msg-BSM-UDH-MOD-STATE-REQ	( 271 ),
+                msg-UDH-BSM-MOD-STATE-RSP	( 272 ),
+                msg-BSM-PMH-GET-OBJ-REQ	( 273 ),
+                msg-PMH-BSM-GET-OBJ-SUCC	( 274 ),
+                msg-PMH-BSM-GET-OBJ-FAIL	( 275 ),
+                msg-BSM-PMH-SET-OBJ-REQ	( 276 ),
+                msg-PMH-BSM-SET-OBJ-SUCC	( 277 ),
+                msg-PMH-BSM-SET-OBJ-FAIL	( 278 ),
+                msg-PMH-BSM-MEASUREMENT-CMPL-IND	( 279 ),
+                msg-PMH-BSM-COUNTER-FILE-AVAILABLE	( 280 ),
+                msg-PMH-BSM-COUNTER-COLLECTION-FAILED	( 281 ),
+                msg-BSM-PMH-PM-FILE-UPLOADED	( 282 ),
+                msg-BSM-PMH-COUNTER-CLEAR-REQ	( 283 ),
+                msg-PMH-BSM-COUNTER-CLEAR-SUCC	( 284 ),
+                msg-PMH-BSM-COUNTER-CLEAR-FAIL	( 285 ),
+                msg-BSM-PMH-DIAG-COUNTER-CMD	( 286 ),
+                msg-PMH-BSM-DIAG-COUNTER-CMD-CMPL	( 287 ),
+                msg-PMH-UEH-COUNTER-START-REQ	( 288 ),
+                msg-UEH-PMH-COUNTER-START-SUCC	( 289 ),
+                msg-UEH-PMH-COUNTER-START-FAIL	( 290 ),
+                msg-PMH-UEH-COUNTER-STOP-REQ	( 291 ),
+                msg-UEH-PMH-COUNTER-STOP-SUCC	( 292 ),
+                msg-UEH-PMH-COUNTER-REPORT-IND	( 293 ),
+                msg-UEH-PMH-COUNTER-STOP-IND	( 294 ),
+                msg-PMH-SM-PDCP-GEN-STAT-REQ	( 295 ),
+                msg-SM-PMH-PDCP-GEN-STAT-RSP	( 296 ),
+                msg-PMH-SM-PDCP-UPLANE-STAT-REQ	( 297 ),
+                msg-SM-PMH-PDCP-UPLANE-STAT-RSP	( 298 ),
+                msg-PMH-SM-EGTP-GEN-STAT-REQ	( 299 ),
+                msg-SM-PMH-EGTP-GEN-STAT-RSP	( 300 ),
+                msg-PMH-SM-RLC-GEN-STAT-REQ	( 301 ),
+                msg-SM-PMH-RLC-GEN-STAT-RSP	( 302 ),
+                msg-PMH-SM-MAC-GEN-STAT-REQ	( 303 ),
+                msg-SM-PMH-MAC-GEN-STAT-RSP	( 304 ),
+                msg-PMH-SM-MAC-RLCSAP-STAT-REQ	( 305 ),
+                msg-SM-PMH-MAC-RLCSAP-STAT-RSP	( 306 ),
+                msg-PMH-SM-MAC-PHYSAP-STAT-REQ	( 307 ),
+                msg-SM-PMH-MAC-PHYSAP-STAT-RSP	( 308 ),
+                msg-PMH-SM-SCTP-GEN-STAT-REQ	( 309 ),
+                msg-SM-PMH-SCTP-GEN-STAT-RSP	( 310 ),
+                msg-PMH-SM-RRC-GEN-STAT-REQ	( 311 ),
+                msg-SM-PMH-RRC-GEN-STAT-RSP	( 312 ),
+                msg-PMH-SM-RRC-CELL-STAT-REQ	( 313 ),
+                msg-SM-PMH-RRC-CELL-STAT-RSP	( 314 ),
+                msg-PMH-SM-S1AP-GEN-STAT-REQ	( 315 ),
+                msg-SM-PMH-S1AP-GEN-STAT-RSP	( 316 ),
+                msg-PMH-SM-S1AP-PEER-NODE-STAT-REQ	( 317 ),
+                msg-SM-PMH-S1AP-PEER-NODE-STAT-RSP	( 318 ),
+                msg-PMH-UEH-RRM-STAT-REQ	( 319 ),
+                msg-UEH-PMH-RRM-STAT-RSP	( 320 ),
+                msg-PMH-UDH-DSTATS-REQ	( 321 ),
+                msg-UDH-PMH-DSTATS-IND	( 322 ),
+                msg-PMH-TFU-DSTATS-CFG-REQ	( 323 ),
+                msg-TFU-PMH-DSTATS-IND	( 324 ),
+                msg-TFU-DEH-CPRI-LINK-DOWN-IND	( 325 ),
+                msg-TFU-DEH-CPRI-LINK-UP-IND	( 326 ),
+                msg-COORD-NODEA-SESSION-CREATE-REQ	( 327 ),
+                msg-NODEA-COORD-SESSION-CREATE-SUCC	( 328 ),
+                msg-NODEA-COORD-SESSION-CREATE-FAIL	( 329 ),
+                msg-COORD-NODEB-SESSION-CREATE-REQ	( 330 ),
+                msg-NODEB-COORD-SESSION-CREATE-SUCC	( 331 ),
+                msg-NODEB-COORD-SESSION-CREATE-FAIL	( 332 ),
+                msg-COORD-NODEA-START-DATA-TX	( 333 ),
+                msg-NODEA-COORD-DATA-TX-RX-COMPLETE	( 334 ),
+                msg-COORD-NODEB-START-DATA-TX	( 335 ),
+                msg-NODEB-COORD-DATA-TX-RX-COMPLETE	( 336 ),
+                msg-COORD-NODEA-SESSION-INFO-REQ	( 337 ),
+                msg-COORD-NODEB-SESSION-INFO-REQ	( 338 ),
+                msg-NODEA-COORD-SESSION-INFO-RSP	( 339 ),
+                msg-NODEB-COORD-SESSION-INFO-RSP	( 340 ),
+                msg-COORD-NODEA-SESSION-DEL-REQ	( 341 ),
+                msg-NODEA-COORD-SESSION-DEL-SUCC	( 342 ),
+                msg-NODEA-COORD-SESSION-DEL-FAIL	( 343 ),
+                msg-COORD-NODEB-SESSION-DEL-REQ	( 344 ),
+                msg-NODEB-COORD-SESSION-DEL-SUCC	( 345 ),
+                msg-NODEB-COORD-SESSION-DEL-FAIL	( 346 ),
+                msg-TIMEKEEPER-SHOW-USAGE-TIMEOUT-IND	( 347 ),
+                msg-TIMEKEEPER-COORD-DATA-COMPLETE-TIMEOUT-IND	( 348 ),
+                msg-TIMEKEEPER-NODEA-RCV-DATA-TIMEOUT-IND	( 349 ),
+                msg-TIMEKEEPER-NODEB-RCV-DATA-TIMEOUT-IND	( 350 ),
+                msg-TIMEKEEPER-NODEA-SEND-DATA-TIMEOUT-IND	( 351 ),
+                msg-TIMEKEEPER-NODEB-SEND-DATA-TIMEOUT-IND	( 352 ),
+                msg-TIMEKEEPER-LTH-TIMEOUT-IND	( 353 ),
+                msg-SM-LTH-TRACE-IND	( 354 ),
+                msg-LTH-SM-TRACE-START-REQ	( 355 ),
+                msg-SM-LTH-TRACE-START-SUCC	( 356 ),
+                msg-SM-LTH-TRACE-START-FAIL	( 357 ),
+                msg-LTH-SM-TRACE-STOP-REQ	( 358 ),
+                msg-SM-LTH-TRACE-STOP-SUCC	( 359 ),
+                msg-SM-LTH-TRACE-STOP-FAIL	( 360 ),
+                msg-BSM-SIH-STOP-TRACE-IND	( 361 ),
+                msg-BSM-LTH-GET-OBJ-REQ	( 362 ),
+                msg-LTH-BSM-GET-OBJ-SUCC	( 363 ),
+                msg-BSM-LTH-INIT-CONFIG-REQ	( 364 ),
+                msg-LTH-BSM-INIT-CONFIG-SUCC	( 365 ),
+                msg-LTH-BSM-INIT-CONFIG-FAIL	( 366 ),
+                msg-BSM-LTH-SET-OBJ-REQ	( 367 ),
+                msg-LTH-BSM-SET-OBJ-SUCC	( 368 ),
+                msg-LTH-BSM-SET-OBJ-FAIL	( 369 ),
+                msg-IMC-PRM-PHYSHUTDOWN-CMD	( 370 )	
+		}
+
+CounterId ::= TEXTUAL-CONVENTION
+  STATUS current
+  DESCRIPTION "counter Identifier."
+  SYNTAX      INTEGER {
+                counterid-AVGNUMACTVUESQCI1 (1000),  
+                counterid-AVGNUMACTVUESQCI2 (1001),  
+                counterid-AVGNUMACTVUESQCI3 (1002),  
+                counterid-AVGNUMACTVUESQCI4 (1003),  
+                counterid-AVGNUMACTVUESQCI5 (1004),  
+                counterid-AVGNUMACTVUESQCI6 (1005),  
+                counterid-AVGNUMACTVUESQCI7 (1006),  
+                counterid-AVGNUMACTVUESQCI8 (1007),  
+                counterid-AVGNUMACTVUESQCI9 (1008),  
+                counterid-PKTUULOSSRATEDLQCI1 (1009),
+                counterid-PKTUULOSSRATEDLQCI2 (1010),
+                counterid-PKTUULOSSRATEDLQCI3 (1011),
+                counterid-PKTUULOSSRATEDLQCI4 (1012),
+                counterid-PKTUULOSSRATEDLQCI5 (1013),
+                counterid-PKTUULOSSRATEDLQCI6 (1014),
+                counterid-PKTUULOSSRATEDLQCI7 (1015),
+                counterid-PKTUULOSSRATEDLQCI8 (1016),
+                counterid-PKTUULOSSRATEDLQCI9 (1017),
+                counterid-PKTDELAYDLQCI1 (2000), 
+                counterid-PKTDELAYDLQCI2 (2001), 
+                counterid-PKTDELAYDLQCI3 (2002), 
+                counterid-PKTDELAYDLQCI4 (2003), 
+                counterid-PKTDELAYDLQCI5 (2004), 
+                counterid-PKTDELAYDLQCI6 (2005), 
+                counterid-PKTDELAYDLQCI7 (2006), 
+                counterid-PKTDELAYDLQCI8 (2007), 
+                counterid-PKTDELAYDLQCI9 (2008), 
+                counterid-PKTDISCRATEDLQCI1 (2009), 
+                counterid-PKTDISCRATEDLQCI2 (2010), 
+                counterid-PKTDISCRATEDLQCI3 (2011), 
+                counterid-PKTDISCRATEDLQCI4 (2012), 
+                counterid-PKTDISCRATEDLQCI5 (2013), 
+                counterid-PKTDISCRATEDLQCI6 (2014), 
+                counterid-PKTDISCRATEDLQCI7 (2015), 
+                counterid-PKTDISCRATEDLQCI8 (2016), 
+                counterid-PKTDISCRATEDLQCI9 (2017), 
+                counterid-PKTLOSSULQCI1 (2018),  
+                counterid-PKTLOSSULQCI2 (2019),  
+                counterid-PKTLOSSULQCI3 (2020),  
+                counterid-PKTLOSSULQCI4 (2021),  
+                counterid-PKTLOSSULQCI5 (2022),  
+                counterid-PKTLOSSULQCI6 (2023),  
+                counterid-PKTLOSSULQCI7 (2024),  
+                counterid-PKTLOSSULQCI8 (2025),  
+                counterid-PKTLOSSULQCI9 (2026),  
+                counterid-PRBUSAGEDLQCI1 (3000), 
+                counterid-PRBUSAGEDLQCI2 (3001), 
+                counterid-PRBUSAGEDLQCI3 (3002), 
+                counterid-PRBUSAGEDLQCI4 (3003), 
+                counterid-PRBUSAGEDLQCI5 (3004), 
+                counterid-PRBUSAGEDLQCI6 (3005), 
+                counterid-PRBUSAGEDLQCI7 (3006), 
+                counterid-PRBUSAGEDLQCI8 (3007), 
+                counterid-PRBUSAGEDLQCI9 (3008), 
+                counterid-PRBUSAGEULQCI1 (3009), 
+                counterid-PRBUSAGEULQCI2 (3010), 
+                counterid-PRBUSAGEULQCI3 (3011), 
+                counterid-PRBUSAGEULQCI4 (3012), 
+                counterid-PRBUSAGEULQCI5 (3013), 
+                counterid-PRBUSAGEULQCI6 (3014), 
+                counterid-PRBUSAGEULQCI7 (3015), 
+                counterid-PRBUSAGEULQCI8 (3016), 
+                counterid-PRBUSAGEULQCI9 (3017), 
+                counterid-NUMACTVUESDLQCI1 (3018),
+                counterid-NUMACTVUESDLQCI2 (3019),
+                counterid-NUMACTVUESDLQCI3 (3020),
+                counterid-NUMACTVUESDLQCI4 (3021),
+                counterid-NUMACTVUESDLQCI5 (3022),
+                counterid-NUMACTVUESDLQCI6 (3023),
+                counterid-NUMACTVUESDLQCI7 (3024),
+                counterid-NUMACTVUESDLQCI8 (3025),
+                counterid-NUMACTVUESDLQCI9 (3026),
+                counterid-NUMACTVUESULQCI1 (3027),
+                counterid-NUMACTVUESULQCI2 (3028),
+                counterid-NUMACTVUESULQCI3 (3029),
+                counterid-NUMACTVUESULQCI4 (3030),
+                counterid-NUMACTVUESULQCI5 (3031),
+                counterid-NUMACTVUESULQCI6 (3032),
+                counterid-NUMACTVUESULQCI7 (3033),
+                counterid-NUMACTVUESULQCI8 (3034),
+                counterid-NUMACTVUESULQCI9 (3035),
+                counterid-TOTALPRBUSAGEDL (3036), 
+                counterid-TOTALPRBUSAGEUL (3037), 
+                counterid-RECVRAPREAMBLESDEDICATED (3038), 
+                counterid-RECVRAPREAMBLESLOWRANGE (3039),  
+                counterid-RECVRAPREAMBLESHIGHRANGE (3040), 
+                counterid-MAX (3041)
+              }
+
+-- Objects
+swType OBJECT-TYPE
+  SYNTAX SwType
+  MAX-ACCESS accessible-for-notify
+  STATUS current
+  DESCRIPTION "eNB-Pico Software Image types for various components."
+  ::= { lteObjects 1 }
+
+dateAndTimeStamp OBJECT-TYPE
+  SYNTAX DateAndTimeStamp
+  MAX-ACCESS accessible-for-notify
+  STATUS current
+  DESCRIPTION "Local time at ENB.
+               Used to stamp events occuring on ENB"
+  ::= { lteObjects 2 }
+
+fileName OBJECT-TYPE
+        SYNTAX          FileName --OCTET STRING (SIZE (2..256))
+        MAX-ACCESS      read-write
+        STATUS          current
+        DESCRIPTION     "Full name of a file.
+                         Used in conjuntion with a file operation, such a filedownload, upload etc."
+                         
+        DEFVAL          { "" } 
+
+    ::= { lteObjects 3 }
+
+errorInfo OBJECT-TYPE
+        SYNTAX          ErrorInfo
+        MAX-ACCESS      read-only
+        STATUS          current
+        DESCRIPTION     "Names the error in human readable form and
+         gives the values associated with this instance/occurance of the error"
+        DEFVAL          { "noError" } 
+    ::= { lteObjects 4 }
+
+oamIfType OBJECT-TYPE
+        SYNTAX          INTEGER { ems (1), web (2), cli(3) }
+        MAX-ACCESS      read-only
+        STATUS          current
+        DESCRIPTION     "ems - ENB interface to Element Manager
+                         web - ENB interface to web-craft i.e using Web-browser
+                         cli - Command Line Interface in ENB"
+        DEFVAL          { ems } 
+    ::= { lteObjects 5 }
+
+productId OBJECT-TYPE
+     SYNTAX  OCTET STRING (SIZE(1 .. 30))
+     MAX-ACCESS  read-only
+     STATUS current
+     DESCRIPTION "Unique identifier of the product"
+     DEFVAL  { "pwav-picoenb-123456" }
+    ::= { lteObjects 6 }  
+    
+notificationSequenceNumber OBJECT-TYPE
+  SYNTAX INTEGER (0 | 1..999 )
+  MAX-ACCESS accessible-for-notify
+  STATUS current
+  DESCRIPTION 	"Identifies a notification generated by enodeB.
+   				EnodeB includes this number in each notification it generates.
+   				Each time enodeB generates an alarm-notification it increments this number.
+   				Its purpose is to help EMS in detecting of loss of notifications."
+  ::= { lteObjects 7 }
+
+enodebId OBJECT-TYPE
+  SYNTAX EnodebId
+  MAX-ACCESS accessible-for-notify
+  STATUS current
+  DESCRIPTION "Enodeb Identifier."
+  ::= { lteObjects 8 }
+
+version OBJECT-TYPE
+  SYNTAX VersionString
+  MAX-ACCESS accessible-for-notify
+  STATUS current
+  DESCRIPTION "SW Version"
+  ::= { lteObjects 9 }
+
+END

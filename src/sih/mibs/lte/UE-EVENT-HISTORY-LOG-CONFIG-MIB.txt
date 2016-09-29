@@ -1,0 +1,106 @@
+ -- @file    UE-EVENT-HISTORY-LOG-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:53 PM
+ --
+
+UE-EVENT-HISTORY-LOG-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+ueEventHistoryLogConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "contains parameters to control recording of UE events"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 70 }
+
+ueEventHistoryLogConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF UeEventHistoryLogConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "contains parameters to control recording of UE events
+            This is a SINGLE ROW Table"
+       ::= { ueEventHistoryLogConfig 1 }
+
+ueEventHistoryLogConfigEntry OBJECT-TYPE
+       SYNTAX      UeEventHistoryLogConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry defines information for ueEventhistoryLog Configuration"
+       INDEX  { ueEventHistoryIndex }
+       ::= { ueEventHistoryLogConfigTable 1 }
+
+UeEventHistoryLogConfigEntry ::= 
+   SEQUENCE {
+       ueEventHistoryIndex     ProfileId,
+       cRnti                   Unsigned32,
+       ueProcedureBitMap       Unsigned32,
+       ueEventMeasures         INTEGER
+   }
+
+ueEventHistoryIndex OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SNMP index to UE Event history log config]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { ueEventHistoryLogConfigEntry 1 }
+
+cRnti OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Event history will be recorded for specific UE if value is 
+             specificUe OR if value is 0 , events will be recorded for all 
+             Ues]
+           [Change_Condition : RW ]"
+       DEFVAL { 65535 }
+       ::= { ueEventHistoryLogConfigEntry 2 }
+
+ueProcedureBitMap OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             user can enter any combination of these events
+             rrcConn, security, directTransfer, ueCapability, rrcReconfig, initialCtxSetup, ueCtxRelease, handover]
+           [Change_Condition : RW ]"
+       DEFVAL { 255 }
+       ::= { ueEventHistoryLogConfigEntry 3 }
+
+ueEventMeasures OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   logAllEvents(1),
+                   logFailure(2),
+                   logOnlyProcedure(3),
+                   logUes(4)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             user should enter any one of these values
+             logAllEvents(1), logFailure(2), logOnlyProcedure(3), logUes(4)]
+           [Change_Condition : RW ]"
+       DEFVAL { logAllEvents }
+       ::= { ueEventHistoryLogConfigEntry 4 }
+
+END

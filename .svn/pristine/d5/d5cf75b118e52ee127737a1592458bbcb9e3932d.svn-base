@@ -1,0 +1,363 @@
+<html>
+<head>
+<style type='text/css' lang='css'>
+     @import '../css/styles.css';
+</style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/mapping.js'></script>
+<script type='text/javascript'>
+    var sessionID = parent.sessionID;
+$(document).ready(function() {
+var fn = function(e) {
+return DisableRefresh(e);
+}
+document.onkeydown = fn;
+$(document).bind('contextmenu',             function(e) {              alert('Due to security reason, Right Click is not allowed.'); return false; });
+LteGet('enbStatus', null, SetMapping);
+var interval = '';
+$('#rfrshInt').change(function() {
+ if ($('#rfrshInt').val() != 'NONE') {
+if (interval != '')
+clearInterval(interval);
+interval = setInterval('LteGet("enbStatus", null, SetMapping)', $('#rfrshInt').val() * 1000);
+}
+else
+clearInterval(interval);
+});
+$('#btnHelp').click(function() {
+window.open(sessionID + "-help.htm#enbStatus", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+});
+});
+</script>
+</head>
+<body>
+<table width='100%'>
+<tr>
+<td align='left' width='60%'>
+<span class='title'>Monitor &gt; EnodeB Status</span>
+</td>
+<td align='right' width='40%'>
+<span class='cmdMsg' id='cmdMsg'></span>
+</td>
+</tr>
+</table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+<div style='margin-left: 10px; margin-top: 10px;'>
+<table cellspacing='0' cellpadding='2' border='0' width='1045px' style='margin-top: 10px'>
+<tbody>
+<tr>
+<td align='left' style='font-size:smaller;'>Automatic Refresh Interval (Seconds)&nbsp;&nbsp;
+:&nbsp;
+<select name='rfrshInt' id='rfrshInt'>
+<option value='NONE'>NONE</option>
+<option value='5'>5</option>
+<option value='10'>10</option>
+<option value='15'>15</option>
+<option value='30'>30</option>
+<option value='60'>60</option>
+</select></td>
+<td align='right' class='txtPageTitle'>
+<input type='button' value='Help' name='btnHelp' id='btnHelp' />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style='margin-left: 10px; margin-top: 10px; width: 500px;'>
+<form name='enbStatus' id='enbStatus' action=''>
+<table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+<tr>
+<td align='left' class='tblTitleBg'>
+&nbsp; EnodeB Status
+</td>
+</tr>
+<tr class='formheadingborder'>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<table width='100%' cellspacing='0' cellpadding='2' border='0'>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+EnodeB Identifier
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='enodebId' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Vendor Name
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='vendorName' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+EnodeB IP Address
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='enodebIpAddress' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Connected To MME
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='connectedToMME' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Admin State
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='adminState' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Operational State
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='operationalState' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Connected UEs
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numOfUesConnected' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Aggregate Downlink Throughput(Kbps)
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='aggregateDLThroughputKbps' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Aggregate Uplink Throughput(Kbps)
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='aggregateULThroughputKbps' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Load State
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='loadState' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Active Critical Alarms
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numActiveCriticalAlarms' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Active Major Alarms
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numActiveMajorAlarms' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Up-Time
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='uptime' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Local Time
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='localTime' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Local Time Offset from UTC ([+/-]HH:NN)
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='localTimeOffsetFromUTC' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+MIB Version
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='mibVersion' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Date and Time Source
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='dateAndTimeSource' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

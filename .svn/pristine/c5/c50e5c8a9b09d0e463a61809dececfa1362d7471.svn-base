@@ -1,0 +1,38 @@
+ # Generated on : 11/29/2012 5:01:49 PM
+sw_package_table = (    {
+                           index = 1;
+                           swType = 1;                /*enb_l2l3_sw */
+                           version = "0.0.0.0.0";
+                           builtOn = "-";
+                           swNotes = "supports 20 UEs with Security";
+                           isRunning = 0;
+                           packageDir = "-";
+                        }, /* End Of Sw Info 1 */
+                        {
+                           index = 2;
+                           swType = 1;                /*enb_l2l3_sw */
+                           version = "0.0.0.0.0";
+                           builtOn = "-";
+                           swNotes = "-";
+                           isRunning = 0;
+                           packageDir = "-";
+                        }, /* End Of Sw Info 2 */
+                        {
+                           index = 3;
+                           swType = 2;                /*rh_sw */
+                           version = "0.0.0.0.0";
+                           builtOn = "-";
+                           swNotes = "supports LTE 700 MHz band";
+                           isRunning = 0;
+                           packageDir = "-";
+                        }, /* End Of Sw Info 3 */
+                        {
+                           index = 4;
+                           swType = 2;                /*rh_sw */
+                           version = "0.0.0.0.0";
+                           builtOn = "-";
+                           swNotes = "supports LTE 700 MHz band";
+                           isRunning = 0;
+                           packageDir = "-";
+                        } /* End Of Sw Info 4 */
+                     ); /* End Of sw_package_table */

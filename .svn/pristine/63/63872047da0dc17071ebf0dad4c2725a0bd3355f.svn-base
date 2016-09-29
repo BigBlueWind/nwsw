@@ -1,0 +1,128 @@
+ -- @file    CELL-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+CELL-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, String256                         FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI
+       TruthValue                                        FROM SNMPv2-TC;
+
+cellStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Cell Status"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 138 }
+
+cellStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF CellStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Cell Status
+            This is a SINGLE ROW Table"
+       ::= { cellStatus 1 }
+
+cellStatusEntry OBJECT-TYPE
+       SYNTAX      CellStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Cell Status"
+       INDEX  { index }
+       ::= { cellStatusTable 1 }
+
+CellStatusEntry ::= 
+   SEQUENCE {
+       index             RowNumber,
+       cellId            Unsigned32,
+       isOperational     TruthValue,
+       isBarred          TruthValue,
+       isOverloaded      TruthValue,
+       spare1            TruthValue,
+       info              String256
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { cellStatusEntry 1 }
+
+cellId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Cell Id Should be same as given in CellConfig.CellId]"
+       ::= { cellStatusEntry 2 }
+
+isOperational OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Describes if Cell is configured and System Information is being transmitted
+             FALSE means cell is down, no SI is being broadcast
+             TRUE means cell has been added, and SI broadcast is on
+             ]"
+       ::= { cellStatusEntry 3 }
+
+isBarred OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates if the cell is barred or not ]"
+       ::= { cellStatusEntry 4 }
+
+isOverloaded OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates if cell is overloaded or not]"
+       ::= { cellStatusEntry 5 }
+
+spare1 OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Reserved for future use]"
+       ::= { cellStatusEntry 6 }
+
+info OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Provides details of why the cell in the above state
+             Example: 
+             1 If cell is barred by Operator, info will be operator-initiated-barring:
+             2 If  cell is barred because of S1-Link-Down, info will be
+             enb-initiated-barring:s1-link-down
+             ]"
+       ::= { cellStatusEntry 7 }
+
+END

@@ -1,0 +1,39 @@
+# Config for CodeSourcery G++ Lite ARM-EABI (bare metal access)
+#
+# Copyright 2008,2009,2010 by Mindspeed Technologies
+# All rights reserved
+#
+
+PREFIX=arm-none-eabi-
+
+ifeq ($(BOARD),C4KEVM)
+ARCH = cortex-a9
+else
+ARCH = mpcore
+endif
+
+# LTE-RCT cannot be #defined, replace with LTE
+ifeq ($(FOURG),LTE-RCT)
+FOURGDEF = LTE
+else
+FOURGDEF = $(call uppercase,$(FOURG))
+endif
+
+#
+# Tool definitions
+#
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp -c
+LD = $(PREFIX)gcc
+AR = $(PREFIX)ar
+
+#
+# Tool settings
+#
+DEF = -D$(FOURGDEF) -D$(call uppercase,$(BOARD)) -DUSE_$(call uppercase,$(OS)) -D$(call uppercase,$(MACTYPE))
+INC = -I. -I../Common -IOSAL/$(OS) -IBSP -IBSP/$(OS)
+OPT = -O1 -g
+CFLAGS = -march=$(ARCH) -Wall $(DEFS) $(INC) $(OPT)
+ASFLAGS = $(DEFS) $(INC) -Wa,-march=armv6
+LIBS = -lbsp -losal -lphystub -lmac
+LDFLAGS = -Wl,--print-map,--entry=ResetHandler,-Map=$(APP).lst,-LBSP/$(OS),-LOSAL/$(OS),-LPHYSTUB/$(MACTYPE),-L$(FOURG)/$(MACTYPE),--script=BSP/$(OS)/turner.ld

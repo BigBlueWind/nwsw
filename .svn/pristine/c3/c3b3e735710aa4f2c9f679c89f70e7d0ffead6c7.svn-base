@@ -1,0 +1,113 @@
+ -- @file    MME-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+MME-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                                               FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, IpAddress          FROM SNMPv2-SMI
+       TruthValue                                                   FROM SNMPv2-TC;
+
+mmeConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Contains MME specific parameters"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 66 }
+
+mmeConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF MmeConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Contains MME specific parameters
+            This is a SINGLE ROW Table"
+       ::= { mmeConfig 1 }
+
+mmeConfigEntry OBJECT-TYPE
+       SYNTAX      MmeConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to MME configuration"
+       INDEX  { index }
+       ::= { mmeConfigTable 1 }
+
+MmeConfigEntry ::= 
+   SEQUENCE {
+       index                      RowNumber,
+       mmeIpAddr                  IpAddress,
+       enableSecureMmeLink        TruthValue,
+       enableSecureGtpTunnels     TruthValue,
+       numSctpStreams             Unsigned32
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row index for number of MME(s) supported. Presently 1.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { mmeConfigEntry 1 }
+
+mmeIpAddr OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MME IP (v4) address.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "172.17.5.10" }
+       ::= { mmeConfigEntry 2 }
+
+enableSecureMmeLink OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means S1 signalling is to be protected by IPSec]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { mmeConfigEntry 3 }
+
+enableSecureGtpTunnels OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means S1 user-plane is to be protected by IPSec]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { mmeConfigEntry 4 }
+
+numSctpStreams OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 2 .. 5 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of SCTP Streams for S1.
+             1 Stream refers to a pair of 1 inbound and 1 outbound.
+             1 Stream will be used for Non-UE-Specific Signaling.
+             Others will be used for UE-Specific Signaling.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 2 }
+       ::= { mmeConfigEntry 5 }
+
+END

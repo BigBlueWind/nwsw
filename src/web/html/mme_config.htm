@@ -1,0 +1,250 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+
+    <script type='text/javascript' src='../script/validate.js'></script>
+
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });
+
+            $(':text, :password, select').each(function() {
+                $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+            });
+
+            LteGet('mmeConfig', null, ChkLock);
+
+            $('#btnApply').click(function() {
+                var msg = '';
+                var change = "false";                
+
+                
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+                if (change == 'true') {
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                            else {
+                                if ($(this).is(':text, :password') == true) {
+                                    if (this.id == "mmeIpAddr" && $("#mmeIpAddrChkb").is(":checked") == false)
+                                        msg = msg;
+                                    else
+                                        msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                                }
+                            }
+                        }
+                    });
+                    if (msg != "") {
+                        $(':text, :password, select').each(function() {
+                            $(this).attr('disabled', false);
+                        });
+                        alert(msg);
+                    }
+                    else {
+                        $(':checkbox').each(function() {
+                            $(this).attr('disabled', true);
+                        });
+                        LteSet('mmeConfig', $('#mmeConfig'), $('#btnApply'), ChkLock);
+                    }
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+               
+            });
+
+            $('#mmeIpAddrChkb').click(function() {
+                EnableInput(this.id, 'mmeIpAddr', '0.0.0.0', 'mmeIpAddrHidden');
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#mmeConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+        function ChkSpecialValues() {
+            $("#btnApply").attr("disabled", false);
+            $('#enableSecureMmeLink, #enableSecureGtpTunnels,#mmeIpAddrChkb').attr('disabled', false).css('background-color', 'white');
+            $('#mmeIpAddr, #numSctpStreams').attr('readonly', false).attr('disabled', false).css('background-color', 'white');
+            $(':checkbox').each(function() {
+                $(this).attr('disabled', false);
+            });                    
+                        
+            if ($('#mmeIpAddr').val() == '0.0.0.0') {
+                $('#mmeIpAddrChkb').attr('checked', false);
+                $('#mmeIpAddr').attr('readonly', true).css('background-color', '#A4A4A4');
+            }
+            else {
+                $('#mmeIpAddrChkb').attr('checked', true);
+                $('#mmeIpAddr').attr('disabled', false).css('background-color', 'white');
+                $('#mmeIpAddrHidden').val($('#mmeIpAddr').val());
+            }            
+            $(':text, :password, select').each(function() {
+                $('#' + this.id + 'Hidden').val($(this).val());
+            });
+        }
+        function LockAttributes() {
+            $('#mmeIpAddr, , #numSctpStreams').attr('readonly', true).attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip();
+            $('#mmeIpAddrChkb').attr('disabled', true);
+            FreezeList('#enableSecureMmeLink, #enableSecureGtpTunnels');
+            $('#enableSecureMmeLink, #enableSecureGtpTunnels').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+                if (parent.frames['Top'].isLocked == 'unlocked') 
+                    FreezeList(this);
+            });
+            $("#btnApply").attr("disabled", true);
+        }
+
+        function MapIdName(fieldName) {
+            switch (fieldName) {
+                case 'mmeIpAddr': return 'MME IP Address';
+                case 'numSctpStreams': return 'Number of Outbound SCTP Streams for S1';
+            }
+        }
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Configuration > MME </span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td>
+        </tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 450px; height: 615px;'>
+        <form name='mmeConfig' id='mmeConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'> 
+                    &nbsp; MME Configuration
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                MME IP Address
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input type='hidden' id='index' name='index' />
+                                <input type='text' id='mmeIpAddr' name='mmeIpAddr' class='lteinput' validate="IpValidate"/>&nbsp;
+                                <input id='mmeIpAddrChkb' type='checkbox' /> Used
+                                <input type="hidden" id="mmeIpAddrHidden" />
+                            </td>                            
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Use Secure MME Link 
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='enableSecureMmeLink' name='enableSecureMmeLink' class='lteinput'>
+                                    <option value='1'>TRUE</option>
+                                    <option value='0'>FALSE</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Use Secure SGW Link
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='enableSecureGtpTunnels' name='enableSecureGtpTunnels' class='lteinput'>
+                                    <option value='1'>TRUE</option>
+                                    <option value='0'>FALSE</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Number of Outbound SCTP Streams for S1
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input type='text'  id='numSctpStreams' name='numSctpStreams' class='lteinput' validate="IntRangeChk" min="2" max="5"/>&nbsp (2 ~ 5)                               
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

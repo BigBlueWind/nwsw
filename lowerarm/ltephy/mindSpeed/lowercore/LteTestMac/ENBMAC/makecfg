@@ -1,0 +1,89 @@
+# -----------------------------------------
+#  Tools name
+# -----------------------------------------
+AS  = armasm
+LD  = armlink
+AR  = armar
+CC  = armcc
+COPY= move
+
+ifeq ($(RELEASEBUILD),0)
+
+#
+#  Debug build
+# 
+CC_FLAGS = \
+	--apcs norwpi/noswst \
+	--arm \
+	--no_unaligned_access \
+	--library_interface=aeabi_clib \
+	--cpu Cortex-A9 \
+	--fpu softvfp \
+	-c \
+	--li \
+	-g \
+	-O0 \
+	-Ono_memcpy
+
+AS_FLAGS = \
+	--Xref \
+	--apcs norwpi/noswst \
+	--ARM \
+	--LIttleend \
+	--cpu Cortex-A9	\
+	--fpu softvfp \
+	-g
+
+AR_FLAGS = -r 
+
+LD_FLAGS = \
+	--xref \
+	--map \
+	--list $(BIN).lst \
+	--symdefs $(BIN).sym \
+	--symbols \
+	--Output $(BIN) \
+	--remove \
+	--scatter $(SCT) \
+	--bestdebug			
+
+else
+
+#
+#  Release build
+#
+CC_FLAGS = \
+	--apcs norwpi/noswst \
+	--arm \
+	--no_unaligned_access \
+	--library_interface=aeabi_clib \
+	--cpu Cortex-A9.no_neon.no_vfp \
+	--fpu softvfp \
+	-c \
+	--li \
+	-O2 \
+	-Otime \
+	-Ono_memcpy
+
+AS_FLAGS = \
+	--Xref \
+	--apcs norwpi/noswst \
+	--ARM \
+	--LIttleend \
+	--cpu Cortex-A9.no_neon.no_vfp \
+	--fpu softvfp				
+
+AR_FLAGS = -r
+
+LD_FLAGS = \
+	--xref \
+	--map \
+	--list $(BIN).lst \
+	--symdefs $(BIN).sym \
+	--symbols \
+	--Output $(BIN) \
+	--remove \
+	--scatter $(SCT) \
+	--debug
+
+endif

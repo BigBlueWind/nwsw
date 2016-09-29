@@ -1,0 +1,61 @@
+0x00080001; | SUASSOCID %8ld | Received AssocCfm from SCTP, spAssocId =  %ld
+0x00080002; |        NA      | Received TermInd from SCTP, assocId =  %ld assocIdtype =  %ld
+0x00080003; | SUASSOCID %8ld | Received TermCfm from SCTP
+0x00080004; | SUASSOCID %8ld | Received Status indication from SCTP, spAssocId = %ld, status = %d, cause = %d
+0x00080005; | SUASSOCID %8ld | Received Flow Control Indication from SCTP, reason = %d
+0x000f0001; |        NA      | Recieved X2AP Message :
+0x000f0002; |    PEERID %8ld | ASN Decoding failed, AsnErrorCode = %d, msgType = %d
+0x000f0003; |    PEERID %8ld | Received DatInd from SCTP, event  = %d
+0x000f0004; |        NA      | Send X2Ap Message : 
+0x000f0005; |    PEERID %8ld | Received AssocInd from SCTP, ind type  = %d, spAssocId  = %d
+0x00100001; |    PEERID %8ld | Received GpReq from Application, msgType  = %d
+0x00100002; |    PEERID %8ld | Received GpRsp from Application, msgType  = %d
+0x00100003; |    PEERID %8ld | Received BmpReq from Application, msgType  = %d
+0x00100004; |    PEERID %8ld | Received BmpRsp from Application, msgType  = %d
+0x00100005; |    PEERID %8ld | Received GpErrReq from Application, msgType  = %d
+0x00100006; |    PEERID %8ld | Received GpRetxReq from Application, msgType  = %d
+0x00100007; |    PEERID %8ld | Received RelReq from Application, Release type = %d, ID type = %d
+0x00120001; |        NA      | EGTP Path Down, IP Address = 0x%x
+0x00310001; |        NA      | Received RRC Message :
+0x00310002; |        NA      | Sending RRC Message :
+0x00310003; |        NA      | ASN Decoding failed, msgCategory = %d
+0x00350001; |      SPID %8ld | Received BndCfm from RLC for control SAP suId = %d sap state = %d
+0x00350002; |      SPID %8ld | Received BndCfm from RLC for data SAP suId = %d sap status = %d
+0x00350003; |      SUID %8ld | Received BndCfm from MAC suId = %d sap status = %d
+0x00350004; |        NA      | RRC Recived Sap Bind Cfm from PDCP suId = %d, status = %d
+0x00350005; |        NA      | Received BndCfm from PDCP suId = %d, sap status = %d
+0x00350006; |      UEID %8ld | Received DatInd from RLC suId = %d, rbId = %d
+0x00350007; |      UEID %8ld | Received DatInd from PDCP suId = %d, pdcp UeId = %d
+0x00350008; |     CRNTI %8ld | Received DatCfm from PDCP suId = %d, status = %d
+0x00350009; |      UEID %8ld | Received UeIdChgCfm from PDCP suId = %d, status = %d
+0x0035000a; |      UEID %8ld | Received ReEstCfm from PDCP, re-establish Request only for SRB1 suId = %d status = %d
+0x0035000b; |        NA      | Received SecCfgCfm from PDCP suId = %d, status = %d
+0x0035000c; |      UEID %8ld | Received CountCfm, COUNT values of all established DRB from PDCP layer suId = %d
+0x0035000d; |      SUID %8ld | Received CfgCfm from RLC
+0x0035000e; |      UEID %8ld | Received UeIdChgCfm from RLC suId = %d status = %d
+0x0035000f; |      SUID %8ld | Received CfgCfm from MAC status = %d
+0x00350010; |        NA      | Received CellCfgCfm from RLC Status = Failed, RAB-ID = %d
+0x00350011; |        NA      | Received CellCfgCfm from RLC, Releasing of RAB failed  RAB-ID = %d
+0x00350012; |      UEID %8ld | Received StaInd from PDCP suId = %d, rbId = %d
+0x00360001; |        NA      | Received CfgReq from SM element = %d
+0x00360002; |        NA      | Received CntrlReq from SM element = %d
+0x00360003; |        NA      | Received StsReq from SM action = %d, element = %d
+0x00360004; |        NA      | Received StaReq from SM element = %d
+0x005b0001; |        NA      | Sending S1AP Message : 
+0x005b0002; |        NA      | Recieved S1AP Message :
+0x005b0003; |        NA      | Received BndCfm from SCTP suId  = %d, spId  = %d, result  = %d
+0x005b0004; |        NA      | Received AssocCfm suAssocId = %ld, spAssocId = %ld
+0x005b0005; |    PEERID %8ld | Received TermInd from SCTP AssocId = %d, status = %d, cause = %d
+0x005b0006; | SUASSOCID %8ld | Received DatInd from SCTP suAssocId = %ld, stream = %d
+0x005b0007; |    PEERID %8ld | Received FlcInd suAssocId = %ld, reason  = %d
+0x005b0008; |    PEERID %8ld | Received StaInd from SCTP suAssocId = %d, status = %d, cause = %d
+0x005b0009; |    PEERID %8ld | ASN Decoding failed, AsnErrorCode = %d, msgType = %d, procedureCode = %d 
+0x005d0001; |        NA      | In the prot configuration %d
+0x00670001; |        NA      | Received BndReq from Application, spId = %d, suId  = %d
+0x00670002; |        NA      | Received UbndReq from Application, spId = %d
+0x00670003; |    PEERID %8ld | Received UDatReq from Application, Event = %d
+0x00670004; |    PEERID %8ld | Received ConReq from Application, Event = %d, suConnId = %ld
+0x00670005; |   SPCONID %8ld | Received ConRsp from Application, Event = %d ConnId = %ld
+0x00670006; |    CONNID %8ld | Received RelReq from Application, ConnId Type = %d, Release Type = %d
+0x00670007; |   SPCONID %8ld | Received RelResp from Application, PeerId = %ld Event  = %d
+0x00670008; |   SPCONID %8ld | Received DatReq from Application, peerId = %ld, Event  = %d

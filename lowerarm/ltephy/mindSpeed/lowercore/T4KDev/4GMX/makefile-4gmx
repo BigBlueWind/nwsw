@@ -1,0 +1,94 @@
+#
+# (c) 2010 - 2012 Mindspeed Technologies
+#
+
+include T4KDev/LTERT/buildcfg
+
+OS4GMXBUILDDIR := $(OS4GMXDIR)/$(BUILDDIR)
+
+VPATH = $(OS4GMXSRCDIR) $(OS4GMXARMSRCDIR)
+
+# C sources
+C_SRCS += \
+4gmx_arm.c \
+4gmx_arm_mmu.c \
+4gmx_l2cache.c \
+4gmx_debug.c \
+4gmx_event.c \
+4gmx_gvars.c \
+4gmx_heap.c \
+4gmx_intercpu.c \
+4gmx_mkernel.c \
+4gmx_mthread.c \
+4gmx_kernel.c \
+4gmx_list.c \
+4gmx_part.c \
+4gmx_queue.c \
+4gmx_rheap.c \
+4gmx_serv.c \
+4gmx_sema.c \
+4gmx_thread.c \
+4gmx_timer.c \
+4gmx_tracer.c
+
+# Assembler sources
+S_SRCS += \
+ 4gmx_arm_asm.s \
+ 4gmx_mmu.s 
+
+# Object files
+C_OBJS = $(patsubst %.c,$(OS4GMXBUILDDIR)/%.o,$(notdir $(C_SRCS)))
+S_OBJS = $(patsubst %.s,$(OS4GMXBUILDDIR)/%.o,$(notdir $(S_SRCS)))
+
+OBJS = $(C_OBJS) $(S_OBJS)
+
+INC := -I"$(OS4GMXINCDIR)" -I"$(OS4GMXARMINCDIR)"
+
+CFLAGS = $(MXBUILDCFG) $(INC)
+
+.PHONY : $(MAIN_TARGET)
+$(MAIN_TARGET) : $(PCF) $(FOURGMXLIB)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(OS4GMXBUILDDIR)/4gmx.dep
+CLEANDEP = clean_dep
+else
+-include $(OS4GMXBUILDDIR)/4gmx.dep
+endif
+
+$(FOURGMXLIB) : $(OS4GMXBUILDDIR) $(CLEANDEP) $(OBJS)
+	@echo $(DELIMETER1)
+	@echo Creating $(FOURGMXLIB)
+	@$(AR) $(AR_FLAGS) $(FOURGMXLIB) $(OBJS)
+
+$(OS4GMXBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) -o"$@" "$<"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(OS4GMXBUILDDIR)/%.o : %.s
+	@echo $(subst $(ROOTDIR)/,,$<)
+	@$(AS) $(AS_FLAGS) -o"$@" "$<"
+
+$(OS4GMXBUILDDIR):
+	@$(MKDIR) $(OS4GMXBUILDDIR)
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean:
+	@$(RM) $(OBJS)
+
+.PHONY : xclean
+xclean: clean
+	@$(RM) $(FOURGMXLIB) 
+

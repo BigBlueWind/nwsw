@@ -1,0 +1,236 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"/>
+<style type="text/css" lang="css">
+@import '../css/styles.css';
+    </style>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript" src="../script/lte_set_get.js"></script>
+<script type="text/javascript" src="../script/mapping.js"></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+function addRowStatus(tableID, sno, data)
+{
+    var table = parent.frames["MiddleRight"].document.getElementById(tableID);
+    if (table != null) 
+    {
+        var rowCount = table.rows.length;        
+        table.width = "100%";
+        table.border = "0";
+        table.cellpadding = "0";
+        table.cellspacing = "0";
+        table.overflow = "auto"
+        var row = table.insertRow(rowCount);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+        var cell6 = row.insertCell(5);
+        var cell7 = row.insertCell(6);
+        var cell8 = row.insertCell(7);
+        var cell9 = row.insertCell(8);
+        var cell10 = row.insertCell(9);
+        var cell11 = row.insertCell(10);
+        if (rowCount % 2 == 1) {
+            row.className = "conTblRowBg2"
+        }
+        else {
+            row.className = "conTblRowBg1"
+        }
+
+        cell1.align = "center";
+        cell1.width = "5%";
+        cell1.innerHTML = data.col[0].value;
+
+        cell2.align = "center";
+        cell2.width = "7%";
+        cell2.innerHTML = data.col[1].value;
+
+        cell3.align = "center";
+        cell3.width = "10%";
+        cell3.innerHTML = data.col[2].value;   
+
+        cell4.align = "center";
+        cell4.width = "5%";
+        cell4.innerHTML = data.col[3].value;
+
+        cell5.align = "center";
+        cell5.width = "9%";
+        cell5.innerHTML = SetMultiRowMapping("moduleStatus", data.col[4].param, data.col[4].value);
+        
+
+        cell6.align = "center";
+        cell6.width = "5%";
+        cell6.innerHTML = data.col[5].value;
+
+        cell7.align = "center";
+        cell7.width = "8%";
+        cell7.innerHTML = data.col[6].value;
+
+        cell8.align = "center";
+        cell8.width = "15%";
+        cell8.innerHTML = DisplayTime(data.col[7].value);
+
+        cell9.align = "center";
+        cell9.width = "6%"
+        cell9.innerHTML = data.col[8].value;
+
+        cell10.align = "center";
+        cell10.width = "14%";
+        cell10.innerHTML = SetMultiRowMapping("moduleStatus", data.col[9].param, data.col[9].value);     
+        
+        cell11.align = "center";
+        cell11.width = "16%";
+        cell11.innerHTML = DisplayTime(data.col[10].value);
+        
+    }
+
+}
+
+$(document).ready(function() {
+var fn = function(e) {
+    return DisableRefresh(e);
+}
+document.onkeydown = fn;
+$(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });   
+    
+    var interval = "";
+    updateTable("moduleStatus", "moduleStatusTable");
+    $("#rfrshInt").change(function() {
+        if ($("#rfrshInt").val() != "NONE") {
+            if (interval != "")
+                clearInterval(interval);
+            interval = setInterval('updateTable("moduleStatus", "moduleStatusTable")', $("#rfrshInt").val() * 1000);
+        }
+        else
+            clearInterval(interval);
+    });
+    $('#btnHelp').click(function() {
+    window.open(sessionID + "-help.htm#moduleStatus", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+    });
+});
+
+
+</script>
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Monitor &gt; Module Status</span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style=' margin-top: 10px; left: 10px;'>
+            <table cellspacing="0" cellpadding="2" border="0" width="1055px" style="margin-top: 10px">
+                <tbody>
+                    <tr>
+                     <td align="left" style="font-size:smaller;">&nbsp;&nbsp;&nbsp;Automatic Refresh Interval (Seconds)&nbsp;&nbsp; 
+                        :&nbsp;
+                        <select name="rfrshInt" id="rfrshInt">
+                            <option value="NONE">NONE</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="60">60</option>
+                        </select></td>
+                        <td align="right" class="txtPageTitle">
+                            <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>          
+    <div style="margin-left: 10px; margin-top: 10px; width: 1045px;">
+    <form id="moduleStatus" action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <thead>
+                <tr>
+                    <td width="5%" align="center" class="tblTitleBg">
+                        S.No
+                    </td>
+                    <td width="7%" align="center" class="tblTitleBg">
+                        Name
+                    </td>
+                    <td width="10%" align="center" class="tblTitleBg">
+                        Description
+                    </td>
+                    <td width="5%" align="center" class="tblTitleBg">
+                        Version
+                    </td>
+                    <td width="9%" align="center" class="tblTitleBg">
+                        Running
+                    </td>
+                    <td width="5%" align="center" class="tblTitleBg">
+                        Task ID
+                    </td>
+                    <td width="8%" align="center" class="tblTitleBg">
+                        Memory Usage
+                    </td>
+                    <td width="15%" align="center" class="tblTitleBg">
+                        Started At
+                    </td>
+                    <td width="6%" align="center" class="tblTitleBg">
+                        Restarts (Errors)
+                    </td>
+                    <td width="14%" align="center" class="tblTitleBg">
+                        Error/Restart Reason
+                    </td>
+                    <td width="16%" align="center" class="tblTitleBg">
+                        Last Health Check
+                    </td>
+                </tr>
+                <tr class="formheadingborder">
+                    <td colspan="11">
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="11" valign='top' align='center'>
+                        <div style="width: 100%;">                    
+                            <table id="moduleStatusTable" width="900px" border="0" cellpadding="0" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th align='center' width='5%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='7%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='10%'nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='5%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='9%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='5%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='8%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='15%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='6%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='14%' nowrap="nowrap">
+                                        </th>
+                                        <th align='center' width='16%' nowrap="nowrap">
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>                   
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+         </form>
+     </div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+ -- @file    RLC-GEN-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+RLC-GEN-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+rlcGenCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Statistics"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 108 }
+
+rlcGenCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF RlcGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Statistics
+            This is a SINGLE ROW Table"
+       ::= { rlcGenCounters 1 }
+
+rlcGenCountersEntry OBJECT-TYPE
+       SYNTAX      RlcGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains RLC counter objects."
+       INDEX  { index }
+       ::= { rlcGenCountersTable 1 }
+
+RlcGenCountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       numUeCfg            Counter32,
+       pdusRecv            Counter32,
+       pdusSent            Counter32,
+       pdusRetx            Counter32,
+       bytesRecv           Counter32,
+       bytesSent           Counter32,
+       unexpPdusRecv       Counter32,
+       errorPdusRecv       Counter32,
+       protTimeOut         Counter32,
+       numOfRb             Counter32,
+       numSduDisc          Counter32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { rlcGenCountersEntry 1 }
+
+numUeCfg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UEs configured ]"
+       ::= { rlcGenCountersEntry 2 }
+
+pdusRecv OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of PDUs received from MAC]"
+       ::= { rlcGenCountersEntry 3 }
+
+pdusSent OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of PDUs sent to MAC]"
+       ::= { rlcGenCountersEntry 4 }
+
+pdusRetx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of PDUs retransmitted to MAC]"
+       ::= { rlcGenCountersEntry 5 }
+
+bytesRecv OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of bytes received from MAC ]"
+       ::= { rlcGenCountersEntry 6 }
+
+bytesSent OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of bytes sent to MAC ]"
+       ::= { rlcGenCountersEntry 7 }
+
+unexpPdusRecv OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unexpected messages received]"
+       ::= { rlcGenCountersEntry 8 }
+
+errorPdusRecv OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Format error pdus received]"
+       ::= { rlcGenCountersEntry 9 }
+
+protTimeOut OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of protocol time outs leading to retransmission]"
+       ::= { rlcGenCountersEntry 10 }
+
+numOfRb OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total number of RBs in RLC]"
+       ::= { rlcGenCountersEntry 11 }
+
+numSduDisc OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of SDUs discarded at RLC which was received from higher layer]"
+       ::= { rlcGenCountersEntry 12 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { rlcGenCountersEntry 13 }
+
+END

@@ -1,0 +1,136 @@
+ -- @file    TRACE-HISTORY-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/12/2012 11:51:03 AM
+ --
+
+TRACE-HISTORY-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                  FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+traceHistory MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Trace History keeps track all traced sessions since base station is up"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 141 }
+
+traceHistoryTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF TraceHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Trace History keeps track all traced sessions since base station is up
+            This is a MULTI ROW Table"
+       ::= { traceHistory 1 }
+
+traceHistoryEntry OBJECT-TYPE
+       SYNTAX      TraceHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "traceHistory"
+       INDEX  { index }
+       ::= { traceHistoryTable 1 }
+
+TraceHistoryEntry ::= 
+   SEQUENCE {
+       index                          RowNumber,
+       traceId                        Unsigned32,
+       traceStartedAt                 DateAndTimeStamp,
+       traceStoppedAt                 DateAndTimeStamp,
+       traceDurationElapsedInMins     Unsigned32,
+       traceDestination               INTEGER,
+       traceFileName                  OCTET STRING,
+       traceEndCause                  INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { traceHistoryEntry 1 }
+
+traceId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 10 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier for trace session. Assigned by eNodeB when trace is started.]"
+       ::= { traceHistoryEntry 2 }
+
+traceStartedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates the time at which trace was started ]"
+       ::= { traceHistoryEntry 3 }
+
+traceStoppedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates the time at which trace was stopped i.e when the stop command was recd or 'duration' elapsed.]"
+       ::= { traceHistoryEntry 4 }
+
+traceDurationElapsedInMins OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 60 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total Elapsed Time in minutes since the trace has been started]"
+       ::= { traceHistoryEntry 5 }
+
+traceDestination OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   collectToFile(1),
+                   relayToRemoteHost(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Two modes of tracing are supported. 1) collectToFile : where traces are written to a file on eNodeB 2) relayToRemoteHost: where eNodeB relays each traced message to a remote host using UDP. In this mode two additional parameters need to be configured: traceDestUdpPort, traceDestIPAddress, which specifiy the host to which eNodeB should send the traces. When collectToFile is chosen then traceDestUdpPort and traceDestIPAddress are ignored. ]"
+       ::= { traceHistoryEntry 6 }
+
+traceFileName OBJECT-TYPE
+SYNTAX      OCTET STRING (SIZE (1..50))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Trace File Name to which captured traces are logged]"
+       ::= { traceHistoryEntry 7 }
+
+traceEndCause OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   stoppedByOperator(1),
+                   timeDurationElapsed(2),
+                   enbError(3)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             StoppedByOperator: Stop command received from the operator. timeDurationElapsed: Timeout happened after the specified time duration.]"
+       ::= { traceHistoryEntry 8 }
+
+END

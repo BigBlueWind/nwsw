@@ -1,0 +1,108 @@
+ -- @file    SRS-CONFIG-DEDICATED-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+SRS-CONFIG-DEDICATED-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte                                               FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI
+       TruthValue                                        FROM SNMPv2-TC;
+
+srsConfigDedicated MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Contains configuration parameters for SRS dedicated"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 68 }
+
+srsConfigDedicatedTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SrsConfigDedicatedEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Contains configuration parameters for SRS dedicated
+            This is a SINGLE ROW Table"
+       ::= { srsConfigDedicated 1 }
+
+srsConfigDedicatedEntry OBJECT-TYPE
+       SYNTAX      SrsConfigDedicatedEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             ""
+       INDEX  { srsBandwidth }
+       ::= { srsConfigDedicatedTable 1 }
+
+SrsConfigDedicatedEntry ::= 
+   SEQUENCE {
+       srsBandwidth               INTEGER,
+       srsHoppingBandWidth        INTEGER,
+       frequecyDomainPosition     Unsigned32,
+       duration                   TruthValue
+   }
+
+srsBandwidth OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   bw0(0),
+                   bw1(1),
+                   bw2(2),
+                   bw3(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SoundingRS-UL-ConfigDedicated ]
+           [Change_Condition : RW ]"
+       DEFVAL { bw0 }
+       ::= { srsConfigDedicatedEntry 1 }
+
+srsHoppingBandWidth OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   hbw0(0),
+                   hbw1(1),
+                   hbw2(2),
+                   hbw3(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SoundingRS-UL-ConfigDedicated ]
+           [Change_Condition : RW ]"
+       DEFVAL { hbw0 }
+       ::= { srsConfigDedicatedEntry 2 }
+
+frequecyDomainPosition OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 23 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SoundingRS-UL-ConfigDedicated ]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { srsConfigDedicatedEntry 3 }
+
+duration OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SoundingRS-UL-ConfigDedicated. FALSE corresponds to - single  and value TRUE to - indefinite]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { srsConfigDedicatedEntry 4 }
+
+END

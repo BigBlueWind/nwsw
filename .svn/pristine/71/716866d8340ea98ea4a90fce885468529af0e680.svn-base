@@ -1,0 +1,267 @@
+<html>
+<head>
+<style type='text/css' lang='css'>
+     @import '../css/styles.css';
+</style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/mapping.js'></script>
+<script type='text/javascript'>
+    var sessionID = parent.sessionID;
+$(document).ready(function() {
+var fn = function(e) {
+return DisableRefresh(e);
+}
+document.onkeydown = fn;
+$(document).bind('contextmenu',             function(e) {              alert('Due to security reason, Right Click is not allowed.'); return false; });
+LteGet('rrcGenCounters', null, SetMapping);
+var interval = '';
+$('#rfrshInt').change(function() {
+ if ($('#rfrshInt').val() != 'NONE') {
+if (interval != '')
+clearInterval(interval);
+interval = setInterval('LteGet("rrcGenCounters", null, SetMapping)', $('#rfrshInt').val() * 1000);
+}
+else
+clearInterval(interval);
+});
+$('#btnHelp').click(function() {
+window.open(sessionID + "-help.htm#rrcGenCounters", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+});
+});
+</script>
+</head>
+<body>
+<table width='100%'>
+<tr>
+<td align='left' width='60%'>
+<span class='title'>Monitor &gt; RRC General Counters</span>
+</td>
+<td align='right' width='40%'>
+<span class='cmdMsg' id='cmdMsg'></span>
+</td>
+</tr>
+</table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+<div style='margin-left: 10px; margin-top: 10px;'>
+<table cellspacing='0' cellpadding='2' border='0' width='1045px' style='margin-top: 10px'>
+<tbody>
+<tr>
+<td align='left' style='font-size:smaller;'>Automatic Refresh Interval (Seconds)&nbsp;&nbsp;
+:&nbsp;
+<select name='rfrshInt' id='rfrshInt'>
+<option value='NONE'>NONE</option>
+<option value='5'>5</option>
+<option value='10'>10</option>
+<option value='15'>15</option>
+<option value='30'>30</option>
+<option value='60'>60</option>
+</select></td>
+<td align='right' class='txtPageTitle'>
+<input type='button' value='Help' name='btnHelp' id='btnHelp' />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style='margin-left: 10px; margin-top: 10px; width: 450px;'>
+<form name='rrcGenCounters' id='rrcGenCounters' action=''>
+<table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+<tr>
+<td align='left' class='tblTitleBg'>
+&nbsp; RRC General Counters
+</td>
+</tr>
+<tr class='formheadingborder'>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<table width='100%' cellspacing='0' cellpadding='2' border='0'>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Established RRC Connections
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numEstbCon' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Failed RRC Connections
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numFailCon' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Successful RRC Reconfiguration
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numReConfigSucc' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Failed RRC Reconfiguration
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numReConfigFail' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Unexpected Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numUnExptMsg' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Lower Layer Failures
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numLwLyFail' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Erroneous Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numDecErr' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Messages with Encoding Errors
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numEncErr' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of PDCP Errors
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numPdcpErr' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RLC Errors
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numRlcErr' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Last Collected At
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='lastCollectedAt' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

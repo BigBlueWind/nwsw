@@ -1,0 +1,95 @@
+ -- @file    SW-INSTALL-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:47 PM
+ --
+
+SW-INSTALL-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, String256             FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI;
+
+swInstall MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to install new software on to Enodeb"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 5 }
+
+swInstallTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SwInstallEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to install new software on to Enodeb
+            This is a SINGLE ROW Table"
+       ::= { swInstall 1 }
+
+swInstallEntry OBJECT-TYPE
+       SYNTAX      SwInstallEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Fields that need to be filled in a SW Install Command."
+       INDEX  { index }
+       ::= { swInstallTable 1 }
+
+SwInstallEntry ::= 
+   SEQUENCE {
+       index                RowNumber,
+       installationType     INTEGER,
+       filename             String256,
+       installer            String256
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { swInstallEntry 1 }
+
+installationType OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   l2l3Release(1),
+                   l2l3Configuration(2),
+                   l2l3Patch(3),
+                   rhRelease(4)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Type of the installation component to be installaed at ENB. This can be entire release, configuration or patch for L2L3 sw, RH sw, etc.]"
+       ::= { swInstallEntry 2 }
+
+filename OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             File name with which software package will be Installed. ]"
+       ::= { swInstallEntry 3 }
+
+installer OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The installer script/tool that should be used for installing the new SW.
+             If empty, ENB will try to use default tool.]"
+       ::= { swInstallEntry 4 }
+
+END

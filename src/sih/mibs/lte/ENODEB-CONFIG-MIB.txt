@@ -1,0 +1,137 @@
+ -- @file    ENODEB-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+ENODEB-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, EnodebId                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, IpAddress          FROM SNMPv2-SMI
+       TruthValue                                       FROM SNMPv2-TC;
+
+enodebConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "This table contain Enodeb configuration parameters"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 52 }
+
+enodebConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EnodebConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "This table contain Enodeb configuration parameters
+            This is a SINGLE ROW Table"
+       ::= { enodebConfig 1 }
+
+enodebConfigEntry OBJECT-TYPE
+       SYNTAX      EnodebConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to enb configuration."
+       INDEX  { enodebId }
+       ::= { enodebConfigTable 1 }
+
+EnodebConfigEntry ::= 
+   SEQUENCE {
+       enodebId                       EnodebId,
+       enodebName                     OCTET STRING,
+       useStaticIpAddress             TruthValue,
+       enodebStaticIpAddr             IpAddress,
+       enodebNetmaskAddr              IpAddress,
+       enodebRegistrationAccepted     TruthValue,
+       configChangeAckByEms           TruthValue
+   }
+
+enodebId OBJECT-TYPE
+       SYNTAX      EnodebId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNodeB Identity as defined in 36.413, 9.2.1.37 Global eNB ID (20 bits). This identifies the eNB uniquely within the PLMN. This is combined with CellTable->CellId to get the 28bit Cell Identity for a cell.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { enodebConfigEntry 1 }
+
+enodebName OBJECT-TYPE
+       SYNTAX      OCTET STRING
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNodeB name. This is sent by eNodeB to MME in S1 Setup procedure.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "pwav-pico" }
+       ::= { enodebConfigEntry 2 }
+
+useStaticIpAddress OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             If FALSE, ENB will get IP Address using DHCP. If TRUE, ENB will use the static IP address configured below.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { enodebConfigEntry 3 }
+
+enodebStaticIpAddr OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNodeB IP (v4) address in dotted notation, to be used at backhaul port. eNodeB first tries to aquire IP address using DHCP. If it cannot, then it tries to use this address. This should be set to '0.0.0.0' if static IP is not to be used at all.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "172.17.5.8" }
+       ::= { enodebConfigEntry 4 }
+
+enodebNetmaskAddr OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Netmask address to configure static IP
+             Note: Net mask Address must be configured along with eNodeB Static IP address.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "255.255.255.0" }
+       ::= { enodebConfigEntry 5 }
+
+enodebRegistrationAccepted OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter can only be set from SNMP.
+             TRUE means ENB is registered to the EMS (enbRegConfig.emsAddr).
+             It is non-persistent. At reboot/restart, ENB sets it to FALSE and re-registers.]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { enodebConfigEntry 6 }
+
+configChangeAckByEms OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TRUE means any change performed via non-EMS interfaces (CLI/Web) is acknowledged by EMS. When any configuration parameter is modified through CLI/Web this is set to FALSE and a notification is sent to EMS. EMS needs to set this value to TRUE after acknowledging the change towards configuration data synchronization.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { enodebConfigEntry 7 }
+
+END

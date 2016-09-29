@@ -1,0 +1,141 @@
+ -- @file    ACTIVE-ALARM-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+ACTIVE-ALARM-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                                                                                FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY                                                                                    FROM SNMPv2-SMI
+       AlarmSequenceNumber, AlarmType, AlarmId, AlarmSeverity, AlarmCause, AlarmLocation, AlarmAdditionalText          FROM ENB-ALARM-MIB;
+
+activeAlarmStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "This table contain list of current active alarms ."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 120 }
+
+activeAlarmStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF ActiveAlarmStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "This table contain list of current active alarms .
+            This is a MULTI ROW Table"
+       ::= { activeAlarmStatus 1 }
+
+activeAlarmStatusEntry OBJECT-TYPE
+       SYNTAX      ActiveAlarmStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to a particular
+currently active ENB alarm status."
+       INDEX  { index }
+       ::= { activeAlarmStatusTable 1 }
+
+ActiveAlarmStatusEntry ::= 
+   SEQUENCE {
+       index                     RowNumber,
+       alarmSequenceNumber       AlarmSequenceNumber,
+       alarmDateAndTimeStamp     DateAndTimeStamp,
+       alarmType                 AlarmType,
+       alarmId                   AlarmId,
+       alarmSeverity             AlarmSeverity,
+       alarmCause                AlarmCause,
+       alarmLocation             AlarmLocation,
+       alarmAdditionalText       AlarmAdditionalText
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { activeAlarmStatusEntry 1 }
+
+alarmSequenceNumber OBJECT-TYPE
+       SYNTAX      AlarmSequenceNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number to sequence the notifications from ENB to EMS.]"
+       ::= { activeAlarmStatusEntry 2 }
+
+alarmDateAndTimeStamp OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Tiemstamp of occurrence of an alarm in YYYYMMDDHHNNSSTTT format.]"
+       ::= { activeAlarmStatusEntry 3 }
+
+alarmType OBJECT-TYPE
+       SYNTAX      AlarmType
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Identifies a type of alarm.]"
+       ::= { activeAlarmStatusEntry 4 }
+
+alarmId OBJECT-TYPE
+       SYNTAX      AlarmId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Identifies an instance of the alarm type.]"
+       ::= { activeAlarmStatusEntry 5 }
+
+alarmSeverity OBJECT-TYPE
+       SYNTAX      AlarmSeverity
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Severity of the alarm notified.]"
+       ::= { activeAlarmStatusEntry 6 }
+
+alarmCause OBJECT-TYPE
+       SYNTAX      AlarmCause
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Condition or cause leading to the alarm.]"
+       ::= { activeAlarmStatusEntry 7 }
+
+alarmLocation OBJECT-TYPE
+       SYNTAX      AlarmLocation
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Details of resource instance affected by the alarm]"
+       ::= { activeAlarmStatusEntry 8 }
+
+alarmAdditionalText OBJECT-TYPE
+       SYNTAX      AlarmAdditionalText
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Provides additional alarm specific description with or without further parameters]"
+       ::= { activeAlarmStatusEntry 9 }
+
+END

@@ -1,0 +1,144 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason, Right Click is not allowed."); return false; });
+        LteGet("traceConfig", null, ChkLock);
+        $("#btnApply").click(function() {
+            var msg = "";
+            msg = msg + IpValidate("traceCollectorIp", "Trace Handler IP");
+            msg = msg + IntRangeChk("traceCollectorUdpPort", "UDP Port", 0, 65535);
+            if (msg != "") 
+            {
+                alert(msg);
+            }
+            else 
+            {
+                LteSet("traceConfig", $("#traceConfig"), $("#btnApply"), ChkLock);                        
+            }
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#traceConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });
+                
+</script>
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > Trace Collector</span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px;width:420px;height:615px"> 
+        <form name='traceConfig' id='traceConfig' action="">
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp Trace Collector Configuration
+                </td>
+            </tr>
+           <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Trace RRC Messages
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="traceRRC" id="traceRRC" class="lteinput">
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Trace S1AP Messages
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="traceS1AP" id="traceS1AP" class="lteinput">
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Trace MAC Messages
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="traceMAC" id="traceMAC" class="lteinput">
+                                    <option value="1">YES</option>
+                                    <option value="0">NO</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

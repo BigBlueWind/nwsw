@@ -1,0 +1,248 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';
+          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        LteGet("enbAddresses", null, ChkLock);
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";        
+           
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }
+                }
+            });
+            if (change == 'true') {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true)
+                            msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                        }
+                    }
+                });
+                if (msg != "") {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                    if (parent.frames["Top"].isLocked == "unlocked")
+                        LockAttributes();
+                    alert(msg);
+                }
+                else {
+                    LteSet("enbAddresses", $("#enbAddresses"), $("#btnApply"), ChkLock);
+                }
+                $(':text, :password, select').each(function() {
+                    $(this).attr('disabled', false);
+                });
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#enbAddresses", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+        
+    });  
+    
+    function MapIdName(fieldName)
+    {
+        switch(fieldName)
+        {
+            case "backhaulPortMacAddress": return "Backhaul Port MAC Address";
+            case "debugPortMacAddress": return "Debug Port MAC Address";
+            case "radioHeadIpAddress": return "Radiohead IP Addresss";
+            case "radioHeadMacAddress": return "Radiohead MAC Address";
+        }
+    }
+               
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > eNodeB Addresses </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px;width:420px;height:615px">
+        <form name='enbAddresses' id='enbAddresses' action="">
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp eNodeB Addresses Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class="conTblRowBg1">
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Backhaul Port MAC Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="backhaulPortMacAddress" name="backhaulPortMacAddress" type="text" value="0" validate="MacValidate"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Debug Port MAC Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="debugPortMacAddress" name="debugPortMacAddress" type="text" value="0" validate="MacValidate"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Unique Product Id
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap" id="uniqueProductId">Unknown
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Static IP Used At Debug Port
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap" id="staticIPAddressUsedAtDebugPort">0
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Netmask for Debug Port
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap" id="netmaskForDebugPort">0
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Radiohead IP Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="radioHeadIpAddress" name="radioHeadIpAddress" type="text" value="0" validate="IpValidate" class="lteinput"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Radiohead MAC Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="radioHeadMacAddress" name="radioHeadMacAddress" type="text" value="0" validate="MacValidate" class="lteinput"/>
+                                
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

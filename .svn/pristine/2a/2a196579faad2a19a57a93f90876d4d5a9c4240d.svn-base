@@ -1,0 +1,152 @@
+ -- @file    TIMERS-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 2/14/2013 11:40:20 AM
+ --
+
+TIMERS-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ModuleId, String32                           FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+timersConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Lists the configurable timers of BS"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 201 }
+
+timersConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF TimersConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Lists the configurable timers of BS
+            This is a MULTI ROW Table"
+       ::= { timersConfig 1 }
+
+timersConfigEntry OBJECT-TYPE
+       SYNTAX      TimersConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains configurable timers of BS."
+       INDEX  { timerName }
+       ::= { timersConfigTable 1 }
+
+TimersConfigEntry ::= 
+   SEQUENCE {
+       timerName       INTEGER,
+       timeUnit        INTEGER,
+       duration        Unsigned32,
+       description     String32,
+       moduleId        ModuleId
+   }
+
+timerName OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   waitInitComplete(1),
+                   healthCheckInterval(2),
+                   waitHelloAck(3),
+                   waitExitComplete(4),
+                   waitBootLowerArmComplete(5),
+                   waitRhSwInstallRsp(6),
+                   waitRhActivateRsp(7),
+                   waitDehStatusReportPeriod(8),
+                   waitAllDeviceRsp(9),
+                   waitRhInit(10),
+                   waitRhDisableRsp(11),
+                   waitRhEnableRsp(12),
+                   waitRhConfigRsp(13),
+                   waitRhStatusRspForCih(14),
+                   waitRhStatusRspForSih(15),
+                   waitRhStatusRspForWih(16),
+                   waitBistComplete(17),
+                   waitCpriLinkup(18),
+                   waitTraceConfirm(19),
+                   waitTraceDuration(20),
+                   waitEnableComplete(21),
+                   waitDisableComplete(22),
+                   waitConfigComplete(23),
+                   waitGpsParametersRsp(24),
+                   waitEmsRegRsp(25),
+                   waitMmeLinkEstablish(26),
+                   waitDeviceInitComplete(27),
+                   waitInitIpAddrComplete(28),
+                   waitCmdRsp(29),
+                   waitCounterCollection(30),
+                   waitSnmpCmdRsp(31),
+                   waitCounterReset(32),
+                   waitL2PMCounterControlProfile1(33),
+                   waitL2PMCounterControlProfile2(34),
+                   waitL2PMReportProfile1(35),
+                   waitL2PMReportProfile2(36),
+                   waitSampleInterval(37),
+                   waitPmFileClose(38),
+                   waitScheduledFileTransferToStart(39)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of the timer]
+           [Change_Condition : RO ]"
+       ::= { timersConfigEntry 1 }
+
+timeUnit OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   usec(1),
+                   msec(2),
+                   sec(3),
+                   minute(4),
+                   max(5)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Granularity of ticks]
+           [Change_Condition : RW ]"
+       DEFVAL { sec }
+       ::= { timersConfigEntry 2 }
+
+duration OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 429496729 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Duration]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { timersConfigEntry 3 }
+
+description OBJECT-TYPE
+       SYNTAX      String32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Describes the purpose of each timer]
+           [Change_Condition : RO ]"
+       ::= { timersConfigEntry 4 }
+
+moduleId OBJECT-TYPE
+       SYNTAX      ModuleId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The module in which this timer runs]
+           [Change_Condition : RO ]"
+       ::= { timersConfigEntry 5 }
+
+END

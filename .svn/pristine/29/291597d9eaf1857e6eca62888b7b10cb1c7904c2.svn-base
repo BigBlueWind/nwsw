@@ -1,0 +1,25 @@
+; turner_u.scat
+;
+; Upper ARM scatter file
+
+MMU_TLB 0x4000
+{
+    MMU_TLB 0x4000
+    {
+        mmu.o (+ZI)
+    }
+}
+
+TurnerFirmware 0x10000
+{
+    Turner 0x10000 0x800000
+    {
+        * (+RO, +RW, +ZI)
+    }
+    RTXCSTACKS 0x810000 EMPTY 0x64000
+    {
+    }
+    RTXCHEAP 0x874000 EMPTY 0x300000
+    {
+    }
+}

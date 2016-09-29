@@ -1,0 +1,129 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+
+    <script type='text/javascript' src='../script/validate.js'></script>
+
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });
+            ChkLock('cellAdmin');
+            $('#btnApply').click(function() {
+                var msg = '';
+                msg = msg + IntRangeChk('cellId', 'Cell ID', 0, 65535);
+                if (msg != '') {
+                    alert(msg);
+                }
+                else {
+                    LteSet('cellAdmin', $('#cellAdmin'), $('#btnApply'), null);
+                }
+            });
+        });
+        function LockAttributes() {
+        }
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Commands > Cell Admin</span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+        <tr>
+            <td align='left' valign='top' class='horline'>
+                <img src='../image/horline.gif' width='1' height='1'>
+            </td>
+        </tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' style='width: 60px' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 450px; height: 615px;'>
+        <form name='cellAdmin' id='cellAdmin' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp; Cell Admin
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                            Cell Id
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input type='hidden' id='index' name='index' />                               
+                                 <input type='text' class='lteinput' id='cellId' name='cellId' />&nbsp;(1 ~ 255)                               
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                            Cell Command
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='cellCommand' name='cellCommand' class='lteinput'>
+                                    <option value='1'>BAR</option>
+                                    <option value='2'>UNBAR</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

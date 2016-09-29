@@ -1,0 +1,453 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';
+          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        LteGet("pmCounterLogConfig", null, ChkLock);
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";
+            msg = msg + IntRangeChk("pmProfileId", "Profile Identifier", 1, 1);
+            if (msg != "") {
+                alert(msg);
+            }
+            else {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+                if (change == 'true') {
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                        }
+                    });
+                    LteSet("pmCounterLogConfig", $("#pmCounterLogConfig"), $("#btnApply"), ChkLock);
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+            }
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#pmCounterLogConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });
+                     
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > Statistics Logging   </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px;width:450px;height:615px">
+        <form name='pmCounterLogConfig' id='pmCounterLogConfig' action="">
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp Statistics Logging Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class="conTblRowBg1">
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Profile Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="pmProfileId" name="pmProfileId" type="text" class="lteinput"/> (1 ~ 1)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Counter Snapshot Interval
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="sampleInterval" name="sampleInterval" class="lteinput">
+                                <option value="1">1min</option>
+                                <option value="2">5min</option>
+                                <option value="3">10min</option>
+                                <option value="4">15min</option>
+                                <option value="5">30min</option>
+                                <option value="6">1hr</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Statistics File Creation Interval
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap" >
+                                <select id="pmFileCreationInterval" name="pmFileCreationInterval" class="lteinput">
+                                <option value="1">1Hr</option>
+                                <option value="2">2Hr</option>
+                                <option value="3">4Hr</option>
+                                <option value="4">8Hr</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect MAC General Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectMacGenCounters" name="collectMacGenCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect MAC User Plane Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectMacUplaneCounters" name="collectMacUplaneCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect RLC Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="collectRlcGenCounters" name="collectRlcGenCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>                           
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect PDCP General Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectPdcpGenCounters" name="collectPdcpGenCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect PDCP User Plane Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectPdcpUplaneCounters" name="collectPdcpUplaneCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect GTP General Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="collectGtpGenCounters" name="collectGtpGenCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>                           
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect SCTP General Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectSctpGenCounters" name="collectSctpGenCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect S1AP General Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="collectS1apGenCounters" name="collectS1apGenCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>                           
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect S1AP Peer Node Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="collectS1apPeerNodeCounters" name="collectS1apPeerNodeCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>                           
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect RRC General Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectRrcGenCounters" name="collectRrcGenCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect RRC Cell Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectRrcCellCounters" name="collectRrcCellCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect RRM Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectRrmCounters" name="collectRrmCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect IP Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="collectIPCounters" name="collectIPCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>                           
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Collect Ethernet Counters
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="collectEthernetCounters" name="collectEthernetCounters" class="lteinput">
+                                <option value="1">TRUE</option>
+                                <option value="0">FALSE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<html>
+<head>
+
+ <style>
+.nav3 {overflow: hidden; clear: both; float: left; width: 204px; min-height: 500px; margin: 0px; padding: 0px; color:White; font-size: 12px;}
+.nav3 ul {width: 204px; margin: 0px 0px 10px 0px; padding: 0px; }	
+
+.nav3 li
+{
+    font-size:13;font-style:inherit;font-family:Tahoma,Verdana
+}
+.nav3 li.title {margin: 0px 0px 0px 0px; color:White; text-transform:none; font-weight: bold; font-size: 14;border-top: solid 1px rgb(200,200,200);padding: 10px 7px 0px 5px;font-style:inherit;font-family:Tahoma,Verdana}
+.nav3 li a {display: block; min-height: 1.7em; height: auto !important; height: 1.7em; line-height: 1.7em; margin: 0px; padding: 0px 7px 0px 20px;  color:White; text-decoration: none; font-size: 100%;}
+
+
+
+
+
+
+        
+
+    </style>
+ <script type="text/javascript" src="../script/jquery.js"></script>
+ <script type='text/javascript' src='../script/lte_set_get.js'></script>
+     
+  <script language="javascript" type="text/javascript">
+      var sessionID = parent.sessionID;
+      $(document).ready(function() {
+          var fn = function(e) {
+              return DisableRefresh(e);
+          }
+          document.onkeydown = fn;
+          $(document).bind("contextmenu", function(e) {
+              alert("Due to security reasons,Right click not allowed.");
+              return false;
+          });
+          if (sessionID != null || sessionID != "undefined") {
+              $("#enbadmin").attr("href", sessionID + "-enbadmin_command.htm");
+              $("#downloadfile").attr("href", sessionID + "-filedownload_command.htm");
+              $("#uploadfile").attr("href", sessionID + "-fileupload_command.htm");
+              $("#swinstall").attr("href", sessionID + "-swinstall_command.htm");
+              $("#swactivation").attr("href", sessionID + "-swactivation_command.htm");
+              //$("#tracecontrol").attr("href", sessionID + "-tracecontrol_command.htm");
+              $("#celladmin").attr("href", sessionID + "-celladmin_command.htm");
+              $("#countercontrol").attr("href", sessionID + "-countercontrol_command.htm");
+              parent.frames["MiddleRight"].document.location.href = sessionID + "-commands_index.htm";                     
+          }
+
+          $("#enbadmin,#downloadfile,#uploadfile,#swinstall,#swactivation,#celladmin,#countercontrol").click(function() {
+          $("#enbadmin,#downloadfile,#uploadfile,#swinstall,#swactivation,#celladmin,#countercontrol").css("color", "white").css("font-weight", "normal");
+              $(this).css("color", "Navy").css("font-weight","bold");
+              
+          });
+      });
+  </script>
+</head>
+<body bottommargin='0' topmargin='0' leftmargin='0' rightmargin='0' marginheight='0' marginwidth='0' style="background-color:#9B99CF" >
+<table cellpadding='0' cellspacing='0' width=205 style="border:1">
+<tr>
+<td >
+<div >
+
+<!-- Navigation Level 3 -->
+   <div class="nav3">
+      <ul>        
+        <li class="title">Commands</li>
+        <li><a href="" id= "celladmin" target="MiddleRight">Cell Admin</a></li>                      
+        <!--li><a href="" id= "countercontrol" target="MiddleRight">Counter Control</a></li-->        
+        <li><a href="" id= "downloadfile" target="MiddleRight">Download File</a></li>        
+        <li><a href="" id= "enbadmin" target="MiddleRight">EnodeB Control</a></li>
+        <li><a href="" id= "swactivation" target="MiddleRight">Software Activation</a></li>    
+        <li><a href="" id= "swinstall" target="MiddleRight">Software Install</a></li> 
+        <!--li><a href="" id= "tracecontrol" target="MiddleRight">Trace Control</a></li--> 
+        <li><a href="" id= "uploadfile" target="MiddleRight">Upload File</a></li>              
+      </ul>	
+    </div>
+</div>
+
+</td></tr>
+</table></body>
+</html>

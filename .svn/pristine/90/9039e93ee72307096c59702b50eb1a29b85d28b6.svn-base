@@ -1,0 +1,408 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';        
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>     
+    <script type='text/javascript' src='../script/jquery_tooltip_chkbox.js'></script>   
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/validate.js'></script>   
+    <script type="text/javascript">
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+
+            $(document).bind("contextmenu", function(e) { alert("Due to security reason, Right Click is not allowed !!!"); return false; });
+            var sessionID = parent.sessionID;
+
+            $(':text, :password, select').each(function() {
+                $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+            });
+
+            LteGet("enbRegistrationConfig", null, ChkLock);
+
+            $("#btnApply").click(function() {
+                var msg = "";
+                var change = "false";
+               
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+                if (change == 'true') {
+                    msg = "";
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                            else {
+                                if ($(this).is(':text, :password') == true)
+                                msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                            }
+                        }
+                    });
+                    if (msg != "") {
+                        $(':text, :password, select').each(function() {
+                            $(this).attr('disabled', false);
+                        });
+                        alert(msg);
+                    }
+                    else {
+                        $(':checkbox').each(function() {
+                            $(this).attr('disabled', true);
+                        });
+                        LteSet("enbRegistrationConfig", $("#enbRegistrationConfig"), $("#btnApply"), ChkLock);
+                    }
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#enbRegistrationConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+        
+        function ChkSpecialValues() 
+        {
+            $("#btnApply").attr("disabled", false);
+            $("#bsId, #publicDNSServer1, #publicDNSServer2, #privateDNSServer1, #privateDNSServer2, #securityGW1, #securityGW2, #emsAddr, #configuredLatitude, #configuredLongitude, #snmpCommunityString, #timeAndLocationSourceToUse, #initialLocalTime, #initialLocalTimeOffsetFromUTC").attr("disabled", false).attr("readonly", false).css("background-color", "white");            
+        }
+        function LockAttributes() 
+        {
+            $("#bsId, #publicDNSServer1, #publicDNSServer2, #privateDNSServer1,#privateDNSServer2, #securityGW1, #securityGW2, #emsAddr, #configuredLatitude, #configuredLongitude, #snmpCommunityString, #initialLocalTime, #initialLocalTimeOffsetFromUTC").attr("readonly", true).attr("title", "Lock eNodeB to Modify").css("background-color", "#E6E6E6").simpletooltip();
+            FreezeList('#timeAndLocationSourceToUse');
+            $('#timeAndLocationSourceToUse').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+                if (parent.frames['Top'].isLocked == 'unlocked')
+                    FreezeList(this);
+            });
+            $("#btnApply").attr("disabled", true);              
+        }
+        function MapIdName(fieldName)
+        {
+            switch(fieldName)
+            {
+                case "bsId": return "Base Station Identity";
+                case "publicDNSServer1": return "Public DNS IP Address 1";
+                case "publicDNSServer2": return "Public DNS IP Address 2";
+                case "privateDNSServer1": return "Private DNS IP Address 1";
+                case "privateDNSServer2": return "Private DNS IP Address 2";
+                case "securityGW1": return "Carrier Security GW Address 1";
+                case "securityGW2": return "Carrier Security GW Address 2";
+                case "emsAddr": return "EMS IP Address";
+                case "configuredLatitude": return "Latitude";
+                case "configuredLongitude": return "Longitude";
+                case "snmpCommunityString": return "SNMP Community";
+                case "initialLocalTime": return "Initial Local Time";
+                case "initialLocalTimeOffsetFromUTC": return "Initial Local Time Offset From UTC";
+             }
+        }
+         
+    </script>
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > eNodeB Registration </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1' /></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left: 10px; width: 550px; height: 615px">
+        <form name='enbRegistrationConfig' id='enbRegistrationConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp eNodeB Registration Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; Base Station Information
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Base Station Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input type="text" class="lteinput"  id="bsId" name="bsId" validate="IntRangeChk" min="0" max="1048575"/>&nbsp;(0 ~ 1048575)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Public DNS IP Address 1
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input type="text" class="lteinput" id="publicDNSServer1" validate="IpValidate" name="publicDNSServer1" />
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Public DNS IP Address 2
+
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input type="text" class="lteinput" id="publicDNSServer2" name="publicDNSServer2" validate="IpValidate" />
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Private DNS IP Address 1
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input type="text" class="lteinput" id="privateDNSServer1" name="privateDNSServer1" validate="IpValidate"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                 Private DNS IP Address 2
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input type="text" class="lteinput" id="privateDNSServer2" name="privateDNSServer2" validate="IpValidate"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                            </td>
+                            <td nowrap="nowrap">
+                                Carrier Security GW Address 1
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="securityGW1" name="securityGW1" type="text" class="lteinput" validate="IpValidate"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Carrier Security GW Address 2
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="securityGW2" name="securityGW2" type="text" class="lteinput" validate="IpValidate"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                EMS IP Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="emsAddr" name="emsAddr" type="text" class="lteinput" validate="IpValidate"/>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Latitude
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               <input id="configuredLatitude" name="configuredLatitude" type="text" class="lteinput" validate="GpsLatitudeValidate"/>&nbsp;DDMM.PPPPPP(N/S)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Longitude
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="configuredLongitude" name="configuredLongitude" type="text" class="lteinput"  validate="GpsLongitudeValidate" />&nbsp;DDDMM.PPPPPP(E/W)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SNMP Community String
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               <input id="snmpCommunityString" name="snmpCommunityString" type="text" class="lteinput" validate="AlphaNumericValidate" min="4" max="64" />&nbsp(4 ~ 64 Characters)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Time And Location Source To Use
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="timeAndLocationSourceToUse" id="timeAndLocationSourceToUse" class="lteinput">
+                                    <option value="1">GPS</option>
+                                    <option value="2">Operator Configured</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Initial Local Time
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="initialLocalTime" name="initialLocalTime" type="text" class="lteinput" validate="LocalTimeValidate" />&nbsp;YYYYMMDDHHNNSSTTT 
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>     
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Initial Local Time Offset From UTC
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="initialLocalTimeOffsetFromUTC" name="initialLocalTimeOffsetFromUTC" type="text" class="lteinput" validate="UTCTimeValidate" />&nbsp;(+/-)HHNN
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                                         
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>           
+</body>
+</html>

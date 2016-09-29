@@ -1,0 +1,156 @@
+ -- @file    FILE-DOWNLOAD-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 2/14/2013 11:40:14 AM
+ --
+
+FILE-DOWNLOAD-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp, String256, FileDownloadCommand, FileTransferProtocol, FileTransferRate          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, IpAddress                                                               FROM SNMPv2-SMI;
+
+fileDownload MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to download a file to enb"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 2 }
+
+fileDownloadTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF FileDownloadEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to download a file to enb
+            This is a SINGLE ROW Table"
+       ::= { fileDownload 1 }
+
+fileDownloadEntry OBJECT-TYPE
+       SYNTAX      FileDownloadEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to a particular file download."
+       INDEX  { index }
+       ::= { fileDownloadTable 1 }
+
+FileDownloadEntry ::= 
+   SEQUENCE {
+       index                   RowNumber,
+       fileDownloadCommand     FileDownloadCommand,
+       fileName                String256,
+       loginId                 String256,
+       password                String256,
+       sourceIp                IpAddress,
+       protocolUsed            FileTransferProtocol,
+       sourcePort              Unsigned32,
+       maxDownloadSpeed        FileTransferRate,
+       scheduleDateAndTime     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { fileDownloadEntry 1 }
+
+fileDownloadCommand OBJECT-TYPE
+       SYNTAX      FileDownloadCommand
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             1:instantDownload: download a file to BS.
+             2:scheduleDownload: schedule a file download.
+             3:modifyDownload: modify download in case of scheduled
+             4.cancelDownload: cancel an ongoing file download]"
+       ::= { fileDownloadEntry 2 }
+
+fileName OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             File to download to BS
+             BS will pull the file from the server. For example, if ftp is used, BS will act as ftp client and do a 'get' on the file.]"
+       ::= { fileDownloadEntry 3 }
+
+loginId OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             loginId at the server from which file has to be downloaded.]"
+       ::= { fileDownloadEntry 4 }
+
+password OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             password at the server. For example, password to be used for ftp-login
+             NOTE: Being password, it is be displayed as *****.]"
+       ::= { fileDownloadEntry 5 }
+
+sourceIp OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IP address of the server on which the file is available.
+             Destination is always BS.]"
+       ::= { fileDownloadEntry 6 }
+
+protocolUsed OBJECT-TYPE
+       SYNTAX      FileTransferProtocol
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Protocol used for file download session FTP, SFTP & SCP are supported.
+             1:FTP, 2:SCP, 3:SFTP]"
+       ::= { fileDownloadEntry 7 }
+
+sourcePort OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Port number used by the protocol]"
+       ::= { fileDownloadEntry 8 }
+
+maxDownloadSpeed OBJECT-TYPE
+       SYNTAX      FileTransferRate
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             If set, BS will try to limit download speed to this value.]"
+       ::= { fileDownloadEntry 9 }
+
+scheduleDateAndTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             timestamp to schedule the download time in YYYYMMDDHHNNSSTTT format.]"
+       ::= { fileDownloadEntry 10 }
+
+END

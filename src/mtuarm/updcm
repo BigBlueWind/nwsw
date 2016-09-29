@@ -1,0 +1,28 @@
+#!/bin/csh
+#
+# update common files
+#
+set CMROOT=/clearcase/tds/core_prd/crnt/cm
+if($#argv == 1) then
+if($1 == "-n") then
+  set CMROOT=/clearcase/tds/core_prd/next/cm
+endif
+
+if($1 == "-view") then
+set CMROOT=/vobs/core_prd/cm
+endif
+endif
+
+cp $CMROOT/tech/cm_cm/src/envdep.h .
+cp $CMROOT/tech/cm_cm/src/envind.h .
+cp $CMROOT/tech/cm_cm/src/envopt.h .
+cp $CMROOT/tech/cm_cm/src/gen.h .
+cp $CMROOT/tech/cm_cm/src/gen.x .
+cp $CMROOT/tech/cm_cm/src/ssi.h .
+cp $CMROOT/tech/cm_cm/src/ssi.x .
+cp $CMROOT/lib/mem/src/cm_mem.h .
+cp $CMROOT/lib/mem/src/cm_mem.c .
+cp $CMROOT/lib/mem/src/cm_mem.x .
+cp $CMROOT/lib/timer/src/cm5.h .
+cp $CMROOT/lib/timer/src/cm5.x .
+cp $CMROOT/lib/timer/src/cm_bdy5.c .

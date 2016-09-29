@@ -1,0 +1,41 @@
+# Config for CodeSourcery G++ Lite ARM-EABI (Linux OS)
+#
+# Copyright 2008,2009,2010 by Mindspeed Technologies
+# All rights reserved
+#
+
+PREFIX=arm-none-linux-gnueabi-
+
+ifeq ($(BOARD),C4KEVM)
+ARCH = cortex-a9
+else
+ARCH = mpcore
+endif
+
+# LTE-RCT cannot be #defined, replace with LTE
+ifeq ($(FOURG),LTE-RCT)
+FOURGDEF = LTE
+else
+FOURGDEF = $(call uppercase,$(FOURG))
+endif
+
+#
+# Tool definitions
+#
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp -c
+LD = $(PREFIX)gcc
+AR = $(PREFIX)ar
+
+#
+# Tool settings
+#
+#DEF = -D$(FOURGDEF) -D$(call uppercase,$(BOARD)) -DUSE_$(call uppercase,$(OS)) -D$(call uppercase,$(MACTYPE)) -DFDX_RT -DCACHED_ICPU
+DEF = -D$(FOURGDEF) -D$(call uppercase,$(BOARD)) -DUSE_$(call uppercase,$(OS)) -D$(call uppercase,$(MACTYPE)) -DFDX_RT
+INC = -I. -I../T4KDev/SYSCORE/SERVICES -I../Common -I../../common -IOSAL/$(OS) -IBSP -IBSP/$(OS) -I../LteTestMac -I../PHY/LTE/C-Code
+OPT = -O3
+CFLAGS = -mcpu=$(ARCH) -Wall $(DEFS) $(INC) $(OPT)
+ASFLAGS = $(DEFS) $(INC) -Wa,-mcpu=$(ARCH),-ac
+LIBS = -lpthread -lrt -lmac -lm -lbsp -losal -lsctp -lphystub -lpcap
+LDFLAGS = -Wl,-Map=$(APP).lst,-LOSAL/$(OS),-LBSP/$(OS),-LBSP/$(OS)/libsctp,-L$(FOURG)/$(MACTYPE),-LPHYSTUB/$(MACTYPE)
+ARFLAGS = rcs

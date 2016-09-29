@@ -1,0 +1,1 @@
+gcc -DWIN32 -D_WIN32 ../../LTE/Arm/Prj/LtePhyRt/LteBsPhyStats.c -I../../LTE/C-Code -I../../../Common -I../../../T4KDev/SYSCORE/SERVICES -I../../LTE/C-Code/Prj/BsLibMspd -I../../LTE/Arm/Prj/LtePhyRt -o PhyStatsParser

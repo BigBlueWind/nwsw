@@ -1,0 +1,257 @@
+ -- @file    UE-EVENT-HISTORY-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 11/9/2012 10:02:42 AM
+ --
+
+UE-EVENT-HISTORY-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp, String32          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32            FROM SNMPv2-SMI;
+
+ueEventHistory MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the history of events for each UE: when it entered, exited, etc."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 119 }
+
+ueEventHistoryTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF UeEventHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the history of events for each UE: when it entered, exited, etc.
+            This is a MULTI ROW Table"
+       ::= { ueEventHistory 1 }
+
+ueEventHistoryEntry OBJECT-TYPE
+       SYNTAX      UeEventHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains UE event log objects."
+       INDEX  { index }
+       ::= { ueEventHistoryTable 1 }
+
+UeEventHistoryEntry ::= 
+   SEQUENCE {
+       index              RowNumber,
+       mmec               Unsigned32,
+       mTmsi              Unsigned32,
+       cRnti              Unsigned32,
+       eventType          INTEGER,
+       eventDetail        String32,
+       eventTimestamp     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { ueEventHistoryEntry 1 }
+
+mmec OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MMEC value of S-TMSI field]"
+       ::= { ueEventHistoryEntry 2 }
+
+mTmsi OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             M-TMSI value of S-TMSI field]"
+       ::= { ueEventHistoryEntry 3 }
+
+cRnti OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             C-RNTI of the UE]"
+       ::= { ueEventHistoryEntry 4 }
+
+eventType OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   unknown(0),
+                   rrcConnReq(1),
+                   rrcConnSetup(2),
+                   rrcConnRej(3),
+                   rrcConnSetupCompl(4),
+                   initialUeMsg(5),
+                   ueCapabilityEnq(6),
+                   ueCapabilityInfo(7),
+                   ueCapabilityInfoInd(8),
+                   rrcConnReconfig(9),
+                   rrcConnReconfCompl(10),
+                   secModeCommand(11),
+                   secModeCompl(12),
+                   secModeFail(13),
+                   initContextSetupReq(14),
+                   initContextSetupResp(15),
+                   initContextSetupFail(16),
+                   rrcConnRelease(17),
+                   rrcReEstabReq(18),
+                   rrcReEstabRes(19),
+                   rrcReEstabRej(20),
+                   rrcReEstabCom(21),
+                   rrcCounterCheckReq(22),
+                   rrcCounterCheckRes(23),
+                   ulInfTransfer(24),
+                   ulNasTransportMsg(25),
+                   dlInfTransfer(26),
+                   dlNasTransportMsg(27),
+                   locationReportCtrl(28),
+                   locationReportFailureInd(29),
+                   locationReportRes(30),
+                   traceStart(31),
+                   traceFailureInd(32),
+                   deactivateTrace(33),
+                   deactivateTraceFailureInd(34),
+                   outHoTriggered(35),
+                   outHoComplete(36),
+                   outHoFail(37),
+                   inHoRequest(38),
+                   inHoComplete(39),
+                   inHoFail(40),
+                   hoNotify(41),
+                   pathSwitchReq(42),
+                   pathSwitchRes(43),
+                   pathSwitchFail(44),
+                   hoCancel(45),
+                   hoCancelAck(46),
+                   rabSetupReq(47),
+                   rabSetupCompl(48),
+                   rabSetupFail(49),
+                   rabModReq(50),
+                   rabModRes(51),
+                   rabModFail(52),
+                   rabRelReq(53),
+                   rabRelCompl(54),
+                   rabRelInd(55),
+                   ueContextRelReq(56),
+                   ueContextRelCmd(57),
+                   ueContextRelCom(58),
+                   ueContextModReq(59),
+                   uecontextModResp(60),
+                   ueContextModFail(61),
+                   rlFailure(62),
+                   rlRecovery(63),
+                   rrcBndReq(64),
+                   rrcCellCfg(65),
+                   schBndReq(66),
+                   schCellConfig(67),
+                   schLchConfig(68),
+                   schLcgConfig(69),
+                   schUeConfig(70),
+                   schUeReConfig(71),
+                   schUeDelete(72),
+                   schSiConfig(73),
+                   phyBndReq(74),
+                   phyUeConfig(75),
+                   phyCellConfig(76),
+                   phyUeDelete(77),
+                   udhBndReq(78),
+                   udhAddRabReq(79),
+                   udhDelRabReq(80),
+                   udhDelUeReq(81),
+                   rrcUeCapDecodeReq(82),
+                   s1BndReq(83),
+                   dlNasNonDeliveryInd(84),
+                   ueDeleted(85),
+                   internal(86),
+                   opStopRelease(87),
+                   rrcLiCfgCfm(88),
+                   rrcErrInd(89),
+                   ueResTmrExp(90),
+                   srb1TmrExp(91),
+                   rrcConnRelL2AckTmrExp(92),
+                   ueCtxRelTmrExp(93),
+                   ueCrntiRetenTmrExp(94),
+                   rrcEncCfm(95),
+                   rrcDecCfm(96),
+                   eGtErrInd(97),
+                   udhErabAddCfm(98),
+                   udhUeInActvInd(99),
+                   udhErabDelCfm(100),
+                   ueCtfCfgCfm(101),
+                   udhUlInActvInd(102),
+                   rrcCountCfm(103),
+                   ueCounterCheckRsp(104),
+                   s1APHoCmd(105),
+                   s1APHoPrepFailed(106),
+                   s1APEncDecCfm(107),
+                   mMERelIndTmrExp(108),
+                   ueSchCfgCfm(109),
+                   ueNhuDataCfm(110),
+                   s1Clear(111),
+                   s1APErrInd(112),
+                   egtpTunnelMgmtCfm(113),
+                   udhDelUeCfm(114),
+                   paging(115),
+                   intConfTmrExp(116),
+                   rrcConnEstaSucc(117),
+                   initialCtxSetupSucc(118),
+                   securitySucc(119),
+                   ueCapabilitySucc(120),
+                   rrcReconfigSucc(121),
+                   ueCtxReleaseSucc(122),
+                   ueEntered(123),
+                   macL2Meas(124),
+                   rlcL2Meas(125),
+                   pdcpL2Meas(126),
+                   s1apLocalErrInd(127),
+                   rrcLocalErrInd(128),
+                   phyKdfReq(129),
+                   phyKdfRsp(130),
+                   reserved1(131),
+                   reserved2(132),
+                   reserved3(133),
+                   reserved4(134),
+                   reserved5(135),
+                   other(136)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Event Type ]"
+       ::= { ueEventHistoryEntry 5 }
+
+eventDetail OBJECT-TYPE
+       SYNTAX      String32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Event details string (ASCII) ]"
+       ::= { ueEventHistoryEntry 6 }
+
+eventTimestamp OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Event timestamp in YYYYMMDDHHNNSSTTT format.]"
+       ::= { ueEventHistoryEntry 7 }
+
+END

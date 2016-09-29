@@ -1,0 +1,445 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script> 
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript'>
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        $(document).bind('contextmenu', function(e) { alert('Due to security reason,Right Click is not allowed.'); return false; });
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        var sessionID = parent.sessionID;
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+
+        LteGet('schedulerConfig', null, ChkLock);
+
+        if (parent.frames['Top'].link == 1) {
+            $('#btnBack').hide();
+            $('#pageTitle').html('Configuration > Scheduler');
+        }
+        else
+            if (parent.frames['Top'].link == 2) {
+            $('#pageTitle').html('Configuration > Cell > Scheduler');
+        }
+        else
+            $('#pageTitle').html('Configuration > eNodeB > Cell > Scheduler');
+
+        $('#btnBack').click(function() {
+            if (sessionID != null && sessionID != 'undefined')
+                window.location.href = sessionID + '-cell_config.htm';
+            parent.frames['Top'].link--;
+        });
+        $('#btnApply').click(function() {
+            var msg = '';
+            var change = "false";
+            
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+
+                if (change == 'true') {
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                            else {
+                                if ($(this).is(':text, :password') == true)
+                                    msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                            }
+                        }
+                    });
+                    if (msg != "") 
+                    {
+                        $(':text, :password, select').each(function() {
+                            $(this).attr('disabled', false);
+                        });
+                        if (parent.frames["Top"].isLocked == "unlocked")
+                            LockAttributes();
+                        alert(msg);
+                    }
+                    else
+                    {
+                        if (parent.frames["Top"].isLocked == "unlocked")
+                                $('#schedulerProfileId, #maxDlHarqTx,#maxUlHarqTx, #maxMsg4HarqTx, #pcfichCfi').attr('disabled', true).css('background-color', '#E6E6E6');
+                        LteSet('schedulerConfig', $('#schedulerConfig'), $('#btnApply'), ChkLock);
+                    }
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#schedulerConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+    });                      
+           
+    function ChkSpecialValues() {
+        $('#schedulerProfileId, #maxDlHarqTx,#maxUlHarqTx, #maxMsg4HarqTx, #pcfichCfi').attr('disabled', false).attr('readonly', false).css('background-color', 'white');                
+    }   
+    function LockAttributes(){
+        $('#schedulerProfileId, #maxDlHarqTx, #maxMsg4HarqTx, #pcfichCfi').attr('readonly', true).attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip();
+        FreezeList('#maxUlHarqTx');
+        $('#maxUlHarqTx').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change select click mouseover', function() {
+            if (parent.frames['Top'].isLocked == 'unlocked')
+                FreezeList(this);
+        });
+    }
+
+function MapIdName(fieldName) {
+    switch (fieldName) {
+        case 'schedulerProfileId': return 'Scheduler Profiler Id';
+        case 'maxDlHarqTx': return 'Max DL HARQ Re-transmission';
+        case 'maxMsg4HarqTx': return 'Max HARQ Re-transmissions Msg4';
+        case 'pcfichCfi': return 'PFICH CFI';
+    }
+}
+</script>
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title' id='pageTitle'></span>
+            </td>
+            <td align='right' width='40%'>
+                 <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input id='btnBack' name='btnBack' type='button' value='Back' />
+                        <input id='btnApply' name='btnApply' type='button' value='Apply' />
+                        <input id='btnHelp' name='btnHelp' type='button' value='Help' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 500px; height: 615px'>
+        <form name='schedulerConfig' id='schedulerConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp Scheduler Configuration
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; Profile Id
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                        
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Scheduler Profile Identifier
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input id='schedulerProfileId' name='schedulerProfileId' type='text' class='lteinput' validate="IntRangeChk" min="0" max="0"/>&nbsp;(0 ~ 0)
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; DL HARQ Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Maximun DL HARQ Re-transmission
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input id='maxDlHarqTx' name='maxDlHarqTx' type='text' class='lteinput' validate="IntRangeChk" min="1" max="8"/>&nbsp;(1 ~ 8)
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Maximum HARQ Re-transmissions Msg4
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input id='maxMsg4HarqTx' name='maxMsg4HarqTx' type='text' class='lteinput' validate="IntRangeChk" min="1" max="8"/>&nbsp;(1 ~ 8)
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; UL HARQ Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Maximun UL HARQ Re-transmission
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='maxUlHarqTx' name='maxUlHarqTx' class='lteinput'>
+                                <option value='0'>n1</option>
+                                <option value='1'>n2</option>
+                                <option value='2'>n3</option>
+                                <option value='3'>n4</option>
+                                <option value='4'>n5</option>
+                                <option value='5'>n6</option>
+                                <option value='6'>n7</option>
+                                <option value='7'>n8</option>
+                                <option value='8'>n10</option>
+                                <option value='9'>n12</option>
+                                <option value='10'>n16</option>
+                                <option value='11'>n20</option>
+                                <option value='12'>n24</option>
+                                <option value='13'>n28</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; Cell Information
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Scheduling Algorithm
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='schedulingAlgorithm' name='schedulingAlgorithm' class='lteinput'>
+                                <option value='0'>Round-Robin</option>
+                                <option value='1'>Spare 1</option>
+                                <option value='2'>Spare 2</option>
+                                <option value='3'>Spare 3</option>
+                                <option value='4'>Spare 4</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                PCFICH CFI
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input id='pcfichCfi' name='pcfichCfi' type='text' class='lteinput' validate="IntRangeChk" min="1" max="3"/>&nbsp;(1 ~ 3)
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; PHR-Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Periodic PHR Timer
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='periodicPhrTimer' name='periodicPhrTimer' class='lteinput'>                                
+                                <option value='0'>sf10</option>
+                                <option value='1'>sf20</option>
+                                <option value='2'>sf50</option>
+                                <option value='3'>sf100</option>
+                                <option value='4'>sf200</option>
+                                <option value='5'>sf500</option>
+                                <option value='6'>sf1000</option>
+                                <option value='7'>Infinity</option>                                
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Prohibit PHR Timer
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='prohibitPhrTimer' name='prohibitPhrTimer' class='lteinput'>
+                                <option value='0'>sf0</option>
+                                <option value='1'>sf10</option>
+                                <option value='2'>sf20</option>
+                                <option value='3'>sf50</option>
+                                <option value='4'>sf100</option>
+                                <option value='5'>sf200</option>
+                                <option value='6'>sf500</option>
+                                <option value='7'>sf1000</option>                                
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                DL Path Loss Change
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='dlPathlossChange' name='dlPathlossChange' class='lteinput'>
+                                <option value='0'>dB1</option>
+                                <option value='1'>dB3</option>
+                                <option value='2'>dB6</option>
+                                <option value='3'>Infinity</option>                                                          
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; BSR-Configuration
+                            </td>
+                        </tr>
+                         <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                               Periodic BSR Timer
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                               <select id='periodicBsrTimer' name='periodicBsrTimer' class='lteinput'>
+                                <option value='0'>sf5</option>
+                                <option value='1'>sf10</option>
+                                <option value='2'>sf16</option>
+                                <option value='3'>sf20</option>
+                                <option value='4'>sf32</option>
+                                <option value='5'>sf40</option>
+                                <option value='6'>sf64</option>
+                                <option value='7'>sf80</option>
+                                <option value='8'>sf128</option>
+                                <option value='9'>sf160</option>
+                                <option value='10'>sf320</option>
+                                <option value='11'>sf640</option>
+                                <option value='12'>sf1280</option>
+                                <option value='13'>sf2560</option>
+                                <option value='14'>Infinity</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                ReTx BSR Timer
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='retxBsrTimer' name='retxBsrTimer' class='lteinput'>
+                                <option value='0'>sf320</option>
+                                <option value='1'>sf640</option>
+                                <option value='2'>sf1280</option>
+                                <option value='3'>sf2560</option>
+                                <option value='4'>sf5120</option>
+                                <option value='5'>sf10240</option>                                                            
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

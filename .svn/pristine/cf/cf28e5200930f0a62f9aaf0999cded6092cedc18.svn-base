@@ -1,0 +1,281 @@
+ -- @file    PHY-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 1/24/2013 5:21:20 PM
+ --
+
+PHY-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                                          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32, Integer32          FROM SNMPv2-SMI
+       TruthValue                                                              FROM SNMPv2-TC;
+
+phyConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Physical Layer configuration"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 57 }
+
+phyConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF PhyConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Physical Layer configuration
+            This is a SINGLE ROW Table"
+       ::= { phyConfig 1 }
+
+phyConfigEntry OBJECT-TYPE
+       SYNTAX      PhyConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to phy configuration."
+       INDEX  { phyProfileId }
+       ::= { phyConfigTable 1 }
+
+PhyConfigEntry ::= 
+   SEQUENCE {
+       phyProfileId             ProfileId,
+       phichResource            INTEGER,
+       prachFreqOffset          Unsigned32,
+       referenceSignalPower     Integer32,
+       cellPhyPb                Unsigned32,
+       srsEnabled               TruthValue,
+       alpha                    INTEGER,
+       poNominalPucch           Integer32,
+       cellPhyPa                INTEGER,
+       betaOffsetAckIndex       Unsigned32,
+       betaOffsetRiIndex        Unsigned32,
+       betaOffsetCqiIndex       Unsigned32,
+       poUePusch                Integer32,
+       poUePucch                Integer32,
+       pSrsOffset               Unsigned32,
+       phichDuration            INTEGER,
+       totalTxPower             Unsigned32
+   }
+
+phyProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PHY Profile Identifier. This Id should be referred in CellTable entry to create the mapping of Cell->PHY configuration.]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { phyConfigEntry 1 }
+
+phichResource OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   oneSixth(0),
+                   half(1),
+                   one(2),
+                   two(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PHICH Resource]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { oneSixth }
+       ::= { phyConfigEntry 2 }
+
+prachFreqOffset OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 94 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PRACH FrequencyOffset is the first physical resource block allocated to the PRACH opportunity. The value of this parameter must be so that prachFreqOffset <= (UL RBs - 6).]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 2 }
+       ::= { phyConfigEntry 3 }
+
+referenceSignalPower OBJECT-TYPE
+       SYNTAX      Integer32 (-60 .. 50 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Reference-signal power, which provides the downlink reference-signal EPRE. The actual value in dBm.]
+           [Change_Condition : RO ]"
+       ::= { phyConfigEntry 4 }
+
+cellPhyPb OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 3 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ratio of EPRE of PDSCH-only REs  to EPRE of PDSCH+RS REs ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { phyConfigEntry 5 }
+
+srsEnabled OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Defines if the sounding reference signaling is enabled in the cell. If disabled, the value ot srsBandwidthConfig is ignored and  in SIB2, the IE 'SoundingRS-UL-ConfigCommon' is set to 'release']
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { phyConfigEntry 6 }
+
+alpha OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   al0(0),
+                   al04(1),
+                   al05(2),
+                   al06(3),
+                   al07(4),
+                   al08(5),
+                   al09(6),
+                   al1(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Parameter: a as defined in 36.213, used for UE uplink poewr control. where al0 corresponds to 0, al04 corresponds to value 0.4, al05 to 0.5, al06 to
+             0.6, al07 to 0.7, al08 to 0.8, al09 to 0.9 and al1 corresponds to 1.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { al06 }
+       ::= { phyConfigEntry 7 }
+
+poNominalPucch OBJECT-TYPE
+       SYNTAX      Integer32 (-127 ..-96 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Parameter PO_NOMINAL_ PUCCH P as defined in 36.213, used for UE uplink power control.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { -100 }
+       ::= { phyConfigEntry 8 }
+
+cellPhyPa OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   dBMinus6(0),
+                   dBMinus4dot77(1),
+                   dBMinus3(2),
+                   dBMinus1dot77(3),
+                   dB0(4),
+                   dB1(5),
+                   dB2(6),
+                   dB3(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             equal to Ea/Ers. Ea = EPRE (energy per resource element) of PDSCH REs (resource elements) type A i.e. REs in OFDM symbols that do not include reference symbols.                                                                                                                                                                                                                                                           Ers = EPRE of reference symbols REs. Specified in 3GPP TS 36.213 section 5.2. Value dB-6 corresponds to -6 dB, dB-4dot77 corresponds to -4.77 dB etc.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { dB0 }
+       ::= { phyConfigEntry 9 }
+
+betaOffsetAckIndex OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             betaOffset-ACK-Index used for HARQ ACK transmission. Same value is used for all UE]
+           [Change_Condition : RW ]"
+       DEFVAL { 9 }
+       ::= { phyConfigEntry 10 }
+
+betaOffsetRiIndex OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             betaOffset-RI-Index used Rank Indication transmission. Same value is used for all UE]
+           [Change_Condition : RW ]"
+       DEFVAL { 6 }
+       ::= { phyConfigEntry 11 }
+
+betaOffsetCqiIndex OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             betaOffset-CQI-Index used for CQI transmission. Same value is used for all UE]
+           [Change_Condition : RW ]"
+       DEFVAL { 6 }
+       ::= { phyConfigEntry 12 }
+
+poUePusch OBJECT-TYPE
+       SYNTAX      Integer32 (-8 .. 7 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE specific PO_PUSCH as defined in 36.213, used in UE uplink power control. This s applicable for non-persistent scheduling, only. Unit is dBm and actual rangle is -8..+7 dBm, i.e. parameter value 0 corresponds to -8, value 1 corresponds to -7dBm, and so on. ]
+           [Change_Condition : RW ]"
+       DEFVAL { 6 }
+       ::= { phyConfigEntry 13 }
+
+poUePucch OBJECT-TYPE
+       SYNTAX      Integer32 (-8 .. 7 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE specific PO_PUSCH as defined in 36.213, used in UE uplink power control for PUCCH. Unit is dBm and actual rangle is -8..+7 dBm, i.e. parameter value 0 corresponds to -8, value 1 corresponds to -7dBm, and so on.]
+           [Change_Condition : RW ]"
+       DEFVAL { 6 }
+       ::= { phyConfigEntry 14 }
+
+pSrsOffset OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SRS Power offset used in SRS power control as defined in [36.213]. ]
+           [Change_Condition : RW ]"
+       DEFVAL { 7 }
+       ::= { phyConfigEntry 15 }
+
+phichDuration OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   normal(0),
+                   extended(1)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PHICH Duration.
+             Sent in MIB.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { normal }
+       ::= { phyConfigEntry 16 }
+
+totalTxPower OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 6 .. 33 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total power applied in tx mode of eNB]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 33 }
+       ::= { phyConfigEntry 17 }
+
+END

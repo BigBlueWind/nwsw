@@ -1,0 +1,307 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';     
+        @import '../css/jqueryFileTree.css'; 
+            H1 {
+				font-family: Georgia, serif;
+				font-size: 20px;
+				font-weight: normal;
+			}
+			
+			H2 {
+				font-family: Georgia, serif;
+				font-size: 16px;
+				font-weight: normal;
+				margin: 0px 0px 10px 0px;
+			}
+			
+			.example {
+				float: left;
+				margin: 0px;
+			}
+			
+			.demo {
+				width: 400px;
+				height: 300px;
+				border-top: solid 1px #BBB;
+				border-left: solid 1px #BBB;
+				border-bottom: solid 1px #FFF;
+				border-right: solid 1px #FFF;
+				background: #FFF;
+				overflow: scroll;
+				padding: 5px;
+			}
+  
+    </style>
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/validate.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/jqueryFileTree.js'></script>
+    <script type='text/javascript' src='../script/jquery.easing.js'></script>
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+                
+        $(document).ready(function() {
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason,Right Click is not allowed.'); return false; });
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            var status = '';
+            $('#btnUpload').click(function() {
+                var msg = '';
+                msg = msg + IpValidate('destinationIp', 'IP Address');
+                msg = msg + IntRangeChk('destinationPort', 'Port', 0, 65535);
+                msg = msg + StrLengthValidate('loginId', 'Login Id', 2, 256);
+                msg = msg + StrLengthValidate('password', 'Password', 2, 256);
+                msg = msg + StrLengthValidate('fileName', 'File Name', 2, 256);
+                msg = msg + StrLengthValidate('remoteFileName', 'Remote File Name', 2, 256);
+                if (msg != '') {
+                    alert(msg);
+                }
+                else {
+                    var strquery = 'fileUploadCommand=1&' + $('#fileUpload').serialize();
+                    status = LteSet('fileUpload', strquery, $('#btnUpload'), null);
+                }
+            });
+            
+            $('#btnClear').click(function() {
+                $('#fileUpload')[0].reset();
+                $('#fileTreeDemo').fileTree({ root: '/', script: sessionID + "-LTEWebGet.fcgi", folderEvent: 'click' }, function(file) {
+                    $("#fileName").val(file);
+                });
+            });            
+
+            $('#fileTreeDemo').fileTree({ root: '/', script: sessionID + "-LTEWebGet.fcgi", folderEvent: 'click'}, function(file) {
+                $("#fileName").val(file);
+            });
+            
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#fileUpload", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });    
+    
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Commands > Upload File</span>
+            </td>
+             <td align='right' width='40%'>
+                 <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+        <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                       <input type='button' value='Upload' name='btnUpload' id='btnUpload' style='width:60px' />
+                        <input type='button' value='Clear' name='btnClear' id='btnClear' style='width:60px'/>
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' style='width:60px'/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="uploaddiv" style='margin-left: 10px; width: 550px; height: 615px;'>
+        <form name='fileUpload' id='fileUpload' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+        <tr>
+            <td align='left' class='tblTitleBg'>
+                &nbsp; Upload File Details
+            </td>
+        </tr>
+        <tr class='formheadingborder'>
+            <td>
+            </td>
+        </tr>
+        <tr>
+        <td>    
+            <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                <tr class='conTblRowBg1'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        IP Address
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :&nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        <input type='text' class='lteinput' id='destinationIp' name='destinationIp' />
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg2'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        Protocol
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :&nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        <select name='protocolUsed' id='protocolUsed' class='lteinput''>
+                            <option value='1'>FTP</option>
+                            <option value='2'>SCP</option>
+                            <option value='3'>SFTP</option>
+                        </select>
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg1'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        Port
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :&nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        <input id='destinationPort' type='text' name='destinationPort' class='lteinput'/>&nbsp;(0 ~ 65535)
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg2'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        Login Id
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :&nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        <input id='loginId' type='text' name='loginId' class='lteinput'/>&nbsp;(2 ~ 256 Characters)
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg1'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        Password
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :&nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        <input id='password' type='password' name='password' class='lteinput'/>&nbsp;(2 ~ 256 Characters)
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg2'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        File Name
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :&nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        <input id='fileName' type='text' name='fileName' class='lteinput' />&nbsp;(2 ~ 256 Characters)                        
+                        <div class="example">                            
+                            <div id="fileTreeDemo" class="demo">
+                            </div>
+                        </div>
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg1'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        Upload Speed
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :
+                    </td>
+                    <td nowrap='nowrap'>
+                        <select name='maxUploadSpeed' id='maxUploadSpeed' class='lteinput''>
+                            <option value='1'>50 Kbps</option>
+                            <option value='2'>100 Kbps</option>
+                            <option value='3'>500 Kbps</option>
+                            <option value='4'>1 Mbps</option>
+                            <option value='5'>10 Mbps</option>
+                            <option value='6'>UNLIMITED</option>
+                        </select>
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg2'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        Remote File Name
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :
+                    </td>
+                    <td nowrap='nowrap'>
+                        <input id='remoteFileName' type='text' name='remoteFileName' class='lteinput'/>&nbsp;(2 ~ 256 Characters)
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr class='conTblRowBg1'>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                    <td nowrap='nowrap'>
+                        Delete After Upload
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        :
+                    </td>
+                    <td nowrap='nowrap'>
+                        <select id='deleteAfterUpload' name='deleteAfterUpload' class='lteinput'>
+                            <option value='0'>FALSE</option>
+                            <option value='1'>TRUE</option>                            
+                        </select>                        
+                    </td>
+                    <td nowrap='nowrap' class='rowcell'>
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+        </td>
+        </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+#!/bin/csh
+#
+# remove common files
+#
+\rm envopt.h
+\rm envdep.h
+\rm envind.h
+\rm cm5.h
+\rm cm5.x
+\rm cm_bdy5.c
+\rm cm_mem.h
+\rm cm_mem.x
+\rm cm_mem.c
+\rm gen.h
+\rm gen.x
+\rm ssi.h
+\rm ssi.x

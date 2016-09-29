@@ -1,0 +1,638 @@
+<html>
+<head>
+<style type='text/css' lang='css'>
+     @import '../css/styles.css';
+</style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/mapping.js'></script>
+<script type='text/javascript'>
+    var sessionID = parent.sessionID;
+$(document).ready(function() {
+var fn = function(e) {
+return DisableRefresh(e);
+}
+document.onkeydown = fn;
+$(document).bind('contextmenu',             function(e) {              alert('Due to security reason, Right Click is not allowed.'); return false; });
+LteGet('rrmCounters', null, SetMapping);
+var interval = '';
+$('#rfrshInt').change(function() {
+ if ($('#rfrshInt').val() != 'NONE') {
+if (interval != '')
+clearInterval(interval);
+interval = setInterval('LteGet("rrmCounters", null, SetMapping)', $('#rfrshInt').val() * 1000);
+}
+else
+clearInterval(interval);
+});
+$('#btnHelp').click(function() {
+window.open(sessionID + "-help.htm#rrmCounters", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+});
+});
+</script>
+</head>
+<body>
+<table width='100%'>
+<tr>
+<td align='left' width='60%'>
+<span class='title'>Monitor &gt; RRM Counters</span>
+</td>
+<td align='right' width='40%'>
+<span class='cmdMsg' id='cmdMsg'></span>
+</td>
+</tr>
+</table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+<div style='margin-left: 10px; margin-top: 10px;'>
+<table cellspacing='0' cellpadding='2' border='0' width='1045px' style='margin-top: 10px'>
+<tbody>
+<tr>
+<td align='left' style='font-size:smaller;'>Automatic Refresh Interval (Seconds)&nbsp;&nbsp;
+:&nbsp;
+<select name='rfrshInt' id='rfrshInt'>
+<option value='NONE'>NONE</option>
+<option value='5'>5</option>
+<option value='10'>10</option>
+<option value='15'>15</option>
+<option value='30'>30</option>
+<option value='60'>60</option>
+</select></td>
+<td align='right' class='txtPageTitle'>
+<input type='button' value='Help' name='btnHelp' id='btnHelp' />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style='margin-left: 10px; margin-top: 10px; width: 520px;'>
+<form name='rrmCounters' id='rrmCounters' action=''>
+<table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+<tr>
+<td align='left' class='tblTitleBg'>
+&nbsp; RRM Counters
+</td>
+</tr>
+<tr class='formheadingborder'>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div style='overflow-x: hidden; overflow-y: scroll; height: 600px; width: 520px; 
+border-bottom: 1px; scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black'>
+<table width='100%' cellspacing='0' cellpadding='2' border='0'>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Radio Link Failures
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numRlFailures' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of S1 Setup Req sent to MME
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nS1SetupReq' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Incoming Handover Successful
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numIncomingHoSuccessful' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Handover Requests Failed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numIncomingHoFailed' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Handover Requests Rejected
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numIncomingHoRejected' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of S1AP Requests Rejected
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numS1apRejected' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC Connection Requested
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcConnReq' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC Connection Set Up
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcConnSetup' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC Connection Completed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcConnSetupCmpl' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC Connection Released
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcConnRel' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of DL Information Transformed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nDlInfoTrf' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UL Information Transformed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUlInfoTrf' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UL  NAS Information Transformed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUlNasTrfMsg' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of DL  NAS Information Transformed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nDlNasTrfMsg' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Intial Context Setup Request
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nInitCtxtSetReq' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Intial Context Setup Response
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nInitCtxtSetRsp' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Intial Context Setup Failed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nInitCtxtSetFail' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC Reconfigure Request
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcReconfReq' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC REconfigure Completed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcReconfCmpl' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC Reset Request
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcReestReq' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UE Capability Enquiry
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUeCapEnq' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UE Capability Information
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUeCapInfo' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UE Capability Information Indication
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUeCapInfoInd' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Security Mode Command
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nSecModeCmd' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Numboer of Security Mode Complete
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nSecModeCmpl' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Security Mode Failed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nSecModeFail' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UE Context Release Completed
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUeCtxtRelCmpl' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UE Context Release Command
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUeCtxtRelCmd' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UE Context Release Req
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUeCtxtRelReq' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of UE Context Modification Response
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nUeCtxtModResp' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of S1ap Setup  Fail
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nS1SetupFail' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of paging request happen
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nPaging' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of RRC Connection Rejected
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='nRrcConnRej' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Last Collected At
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='lastCollectedAt' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

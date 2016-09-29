@@ -1,0 +1,58 @@
+#! /bin/sh
+
+if [ $# -lt 2 ]
+then 
+   echo "Usage: $0 <view_name> <target dir>"
+   echo " eg: pavitra_tucl_rel_1.5_dev ~/tmp "
+   exit 1
+fi
+
+
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_hw/src/hw.h .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_hw/src/hw.x .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/cm_ss.c .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/sm_bdy1.c .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/sm_ex_ms.c .
+ln -s /view/$1/vobs/core_prd/voip/tucl/src/acc/* . 
+ln -s /view/$1/vobs/core_prd/voip/tucl/src/sample/* .
+ln -s /view/$1/vobs/core_prd/voip/tucl/src/build/* .
+ln -s /view/$1/vobs/core_prd/voip/tucl/src/hi/* .
+ln -s /view/$1/vobs/core_prd/voip/tucl/src/tu/* .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/envdep.h .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/envind.h .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/envopt.h .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/ssi.h .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/ssi.x .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/gen.h .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/gen.x .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/cm_gen.h .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/cm_gen.x .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/cm_gen.c .
+ln -s /view/$1/vobs/core_prd/cm/inf/hit/src/hit.c .
+ln -s /view/$1/vobs/core_prd/cm/inf/hit/src/hit.h .
+ln -s /view/$1/vobs/core_prd/cm/inf/hit/src/hit.x .
+ln -s /view/$1/vobs/core_prd/cm/inf/lhi/src/lhi.c .
+ln -s /view/$1/vobs/core_prd/cm/inf/lhi/src/lhi.h .
+ln -s /view/$1/vobs/core_prd/cm/inf/lhi/src/lhi.x .
+ln -s /view/$1/vobs/core_prd/cm/inf/sht/src/sht.c .
+ln -s /view/$1/vobs/core_prd/cm/inf/sht/src/sht.h .
+ln -s /view/$1/vobs/core_prd/cm/inf/sht/src/sht.x .
+ln -s /view/$1/vobs/core_prd/cm/inf/cm_tpt/src/cm_tpt.c .
+ln -s /view/$1/vobs/core_prd/cm/inf/cm_tpt/src/cm_tpt.h .
+ln -s /view/$1/vobs/core_prd/cm/inf/cm_tpt/src/cm_tpt.x .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_inet/src/cm_inet.c .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_inet/src/cm_inet.h .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_inet/src/cm_inet.x .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_hash/src/cm_hash.c .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_hash/src/cm_hash.h .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_hash/src/cm_hash.x .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_llist/src/cm_llist.c . 
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_llist/src/cm_llist.h .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_llist/src/cm_llist.x .
+ln -s /view/$1/vobs/core_prd/cm/lib/timer/src/cm5.h .
+ln -s /view/$1/vobs/core_prd/cm/lib/timer/src/cm5.x .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/cm_err.h .
+ln -s /view/$1/vobs/core_prd/cm/lib/timer/src/cm_bdy5.c .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_lib/src/cm_lib.c .
+ln -s /view/$1/vobs/core_prd/cm/lib/cm_lib/src/cm_lib.x .
+ln -s /view/$1/vobs/core_prd/cm/tech/cm_cm/src/ss_ptsp.c .

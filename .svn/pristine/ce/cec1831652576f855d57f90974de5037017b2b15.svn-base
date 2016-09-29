@@ -1,0 +1,239 @@
+#
+# (c) 2010 - 2012 Mindspeed Technologies
+#
+
+include T4KDev/LTERT/buildcfg
+
+SYSCOREBUILDDIR := $(SYSCOREDIR)/$(BUILDDIR)
+
+VPATH := $(SYSCOREFECDIR) $(SYSCOREMAPDIR) $(SYSCORECPRIDIR) $(SYSCOREDIR) $(SYSCORESERVICESDIR) $(SYSCOREDRIVERSDIR) $(SYSCORECEVAREXDIR) $(SYSCORECEVADRV) 
+
+# C sources
+C_SRCS += \
+FECdrv.c \
+mdmadrv.c \
+fp_fft0128_code.c \
+fp_fft0256_code.c \
+fp_fft0512_code.c \
+fp_fft1024_code.c \
+fp_fft2048_code.c \
+fp_fft4096_code.c \
+fp_fft4096_outdata.c \
+fp_fft_indata.c \
+fp_fft_outdata.c \
+fp_fft_shift_table.c \
+fp_fft_table.c \
+fp_idft_code.c \
+fp_idft_data.c \
+fp_ifft_indata.c \
+fp_ifft_outdata.c \
+fp_ifft4096_outdata.c \
+fpdrv.c \
+cpridrv.c \
+DSPdrv.c \
+clkrst.c \
+gemdrv.c \
+hbidrv.c \
+i2cdrv.c \
+icdrv.c \
+schtaskdrv.c \
+sysshutdown.c \
+systimers.c \
+timerdrv.c \
+uartdrv.c \
+spidrv.c \
+oxpcie952.c \
+pciedrv.c \
+devinit.c \
+evmfpga.c \
+ad9361radio.c \
+dejitter.c	\
+rdmemdrv.c \
+sriodrv.c	\
+srdsdrv.c \
+ptmdrv.c  \
+ddrmondrv.c  \
+apimgr.c \
+appheap.c \
+appinit.c \
+appprintf.c \
+armdiag.c \
+armdiagtask.c \
+brmplugin.c \
+bootlog.c \
+cline.c \
+cmgr.c \
+console.c \
+defheap.c \
+diagnostics.c \
+dspdiag.c \
+fecdiag.c \
+fpdiag.c \
+heaps.c \
+initcpu.c \
+intercpu.c \
+lcorecfg.c \
+dbgfunctab.c \
+mlog.c \
+mmutable.c \
+ncnbdata.c \
+ncnbheap.c \
+phydatacomm.c \
+phyprofiler.c \
+retarget.c \
+schdiagctrl.c \
+stacks.c \
+stream.c \
+supervisor.c \
+sysclkctrl.c \
+sysddrctrl.c \
+syscorecfg.c \
+version.c \
+svsrlogger.c \
+svsrloggerstorage.c \
+logmgr.c \
+globalstoragearrays.c \
+iqphone.c \
+servmgr.c \
+i2cdiag.c \
+dataint.c \
+genlog.c \
+spaccdrv.c \
+spacclib.c \
+snow3guea2_uia2hash744.c \
+devinfo.c \
+rex.c \
+rex_serv.c \
+rexcomp.c \
+dspprintf.c \
+spidiag.c \
+pciediag.c \
+sctp_client.c \
+swdiag.c \
+ptmdiag.c \
+unified_diag.c \
+rexdiag.c \
+pmdrv.c \
+icpu2.c \
+iq.c \
+tracer.c \
+mmumgr.c  \
+mlogceva.c \
+cevamdmadrv.c \
+cevaservapi.c \
+rootinfo.c \
+cevafecdrv.c \
+cevafpdrv.c \
+core0heap.c \
+conicpu.c
+
+# Assembler sources
+S_SRCS += \
+vectors_code.s \
+vectors_h.s \
+vectors_l.s \
+pm.s
+
+# Object files
+C_OBJS = $(patsubst %.c,$(SYSCOREBUILDDIR)/%.o,$(notdir $(C_SRCS)))
+S_OBJS = $(patsubst %.s,$(SYSCOREBUILDDIR)/%.o,$(notdir $(S_SRCS)))
+
+OBJS = $(C_OBJS) $(S_OBJS)
+
+INC = -I"$(SYSCORESERVICESDIR)" \
+      -I"$(SYSCORENETWORKDIR)" \
+      -I"$(SYSCOREDRIVERSDIR)" \
+      -I"$(SYSCORECPRIDIR)" \
+      -I"$(SYSCOREFECDIR)" \
+      -I"$(SYSCOREMAPDIR)" \
+      -I"$(COMMONDIR)" \
+      -I"$(OS4GMXINCDIR)" \
+      -I"$(OS4GMXARMINCDIR)" \
+      -I"$(SYSCORECEVAREXDIR)" \
+      -I"$(SYSCORECEVADRV)" 
+#      -I "../../../PHY/CEVA/Prj/LteApp\EVM_$(RELEASEBUILD)"
+ifeq ($(RELEASEBUILD),1)
+INC += -I "PHY/LTE/Ceva/Prj/LteApp/EVM_Release"
+else
+INC += -I "PHY/LTE/Ceva/Prj/LteApp/EVM_Debug"
+endif
+
+
+CFLAGS =  $(COREBUILDCFG) $(INC)
+
+LIBS := $(SYSCORENETWORKDIR)/$(BUILDDIR)/network.a $(SYSCOREIPERFDIR)/$(BUILDDIR)/iperf.a $(SYSCORESCTPDIR)/$(BUILDDIR)/sctp.a $(SYSCOREDHCPDIR)/$(BUILDDIR)/dhcp.a
+
+.PHONY : $(MAIN_TARGET)
+$(MAIN_TARGET) : $(PCF) $(SYSCORELIBRARY)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(SYSCOREBUILDDIR)/syscore.dep
+CLEANDEP = clean_dep
+else
+-include $(SYSCOREBUILDDIR)/syscore.dep
+endif
+
+$(SYSCORELIBRARY) : $(SYSCOREBUILDDIR) $(CLEANDEP) $(OBJS) $(LIBS)
+	@echo $(DELIMETER1)
+	@echo Creating $(SYSCORELIBRARY)
+	@$(AR) $(AR_FLAGS) $(SYSCORELIBRARY) $(OBJS) $(LIBS)	
+
+$(SYSCOREBUILDDIR) :
+	@$(MKDIR) $(SYSCOREBUILDDIR)
+
+$(SYSCOREBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) -o"$@" "$<"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(SYSCOREBUILDDIR)/%.o: %.s
+	@echo $<
+	@$(AS) --cpu=Cortex-A9.no_neon.no_vfp -o"$@" "$<"
+
+
+.PHONY : $(SYSCORENETWORKDIR)/$(BUILDDIR)/network.a
+$(SYSCORENETWORKDIR)/$(BUILDDIR)/network.a :
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCORENETWORKDIR)/makefile-network "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)" "GENDEP=$(GENDEP)"
+
+.PHONY : $(SYSCOREIPERFDIR)/$(BUILDDIR)/iperf.a
+$(SYSCOREIPERFDIR)/$(BUILDDIR)/iperf.a : 
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCOREIPERFDIR)/makefile-network-iperf "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)" "GENDEP=$(GENDEP)"
+
+.PHONY : $(SYSCORESCTPDIR)/$(BUILDDIR)/sctp.a 
+$(SYSCORESCTPDIR)/$(BUILDDIR)/sctp.a :
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCORESCTPDIR)/makefile-network-sctp "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)" "GENDEP=$(GENDEP)"
+
+.PHONY : $(SYSCOREDHCPDIR)/$(BUILDDIR)/dhcp.a 
+$(SYSCOREDHCPDIR)/$(BUILDDIR)/dhcp.a :
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCOREDHCPDIR)/makefile-network-dhcp "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)" "GENDEP=$(GENDEP)"
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+		
+.PHONY : clean
+clean:
+	@$(RM) $(OBJS) 
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCORENETWORKDIR)/makefile-network "ROOTDIR=$(ROOTDIR)" clean "RELEASEBUILD=$(RELEASEBUILD)"
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCOREIPERFDIR)/makefile-network-iperf clean "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)"
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCORESCTPDIR)/makefile-network-sctp clean "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)"
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCOREDHCPDIR)/makefile-network-dhcp  clean "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)"
+
+
+.PHONY : xclean
+xclean:
+	@$(RM) $(OBJS)
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCORENETWORKDIR)/makefile-network xclean "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)"
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCOREIPERFDIR)/makefile-network-iperf xclean "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)"
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCORESCTPDIR)/makefile-network-sctp xclean "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)"
+	@$(MAKE) -C $(ROOTDIR) -f $(SYSCOREDHCPDIR)/makefile-network-dhcp xclean "ROOTDIR=$(ROOTDIR)" "RELEASEBUILD=$(RELEASEBUILD)"
+	@$(RM) $(SYSCORELIBRARY)
+
+

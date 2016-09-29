@@ -1,0 +1,121 @@
+ -- @file    PM-LOG-FILE-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+PM-LOG-FILE-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp, String256          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32             FROM SNMPv2-SMI;
+
+pmLogFileStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the files containing PM counters collected so far in the ENB.
+EMS can upload these files using FileUpload Procedure."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 122 }
+
+pmLogFileStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF PmLogFileStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the files containing PM counters collected so far in the ENB.
+EMS can upload these files using FileUpload Procedure.
+            This is a MULTI ROW Table"
+       ::= { pmLogFileStatus 1 }
+
+pmLogFileStatusEntry OBJECT-TYPE
+       SYNTAX      PmLogFileStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains PM log file status objects."
+       INDEX  { index }
+       ::= { pmLogFileStatusTable 1 }
+
+PmLogFileStatusEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       fileName            String256,
+       fileSizeInBytes     Unsigned32,
+       openedAt            DateAndTimeStamp,
+       closedAt            DateAndTimeStamp,
+       deletedAt           DateAndTimeStamp,
+       deleteReason        String256
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { pmLogFileStatusEntry 1 }
+
+fileName OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Name of the statistics log file with location]"
+       ::= { pmLogFileStatusEntry 2 }
+
+fileSizeInBytes OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Size of file in Bytes]"
+       ::= { pmLogFileStatusEntry 3 }
+
+openedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This is the time at which the file was opened for logging  in YYYYMMDDHHNNSSTTT format.]"
+       ::= { pmLogFileStatusEntry 4 }
+
+closedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This is the time at which the file was closed in YYYYMMDDHHNNSSTTT format.]"
+       ::= { pmLogFileStatusEntry 5 }
+
+deletedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This is the time at which the file was deleted in YYYYMMDDHHNNSSTTT format.]"
+       ::= { pmLogFileStatusEntry 6 }
+
+deleteReason OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Reason why PmLogFile has been deleted]"
+       ::= { pmLogFileStatusEntry 7 }
+
+END

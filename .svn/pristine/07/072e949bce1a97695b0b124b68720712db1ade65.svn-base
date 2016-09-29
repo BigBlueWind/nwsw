@@ -1,0 +1,339 @@
+ -- @file    GTP-GEN-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+GTP-GEN-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+gtpGenCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Statistics"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 110 }
+
+gtpGenCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF GtpGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Statistics
+            This is a SINGLE ROW Table"
+       ::= { gtpGenCounters 1 }
+
+gtpGenCountersEntry OBJECT-TYPE
+       SYNTAX      GtpGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains GTP counter objects."
+       INDEX  { index }
+       ::= { gtpGenCountersTable 1 }
+
+GtpGenCountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       numTxMsg            Counter32,
+       numRxMsg            Counter32,
+       numActvTnls         Counter32,
+       numErrInd           Counter32,
+       rxDesgMsg           Counter32,
+       invVerRx            Counter32,
+       invProtTypeRx       Counter32,
+       invMsgRx            Counter32,
+       invMsgLenRx         Counter32,
+       invIeOrderRx        Counter32,
+       invIeLenRx          Counter32,
+       invIeFormatRx       Counter32,
+       invManIeLenRx       Counter32,
+       missMandIeRx        Counter32,
+       unSuppExtHdrRx      Counter32,
+       wrngExtHdrRx        Counter32,
+       msgUnableCompRx     Counter32,
+       msgUnableCompTx     Counter32,
+       missMandIeTx        Counter32,
+       memAllocFldTx       Counter32,
+       invMsgTx            Counter32,
+       invTeidTx           Counter32,
+       invTeidRx           Counter32,
+       errSeqNoTx          Counter32,
+       errSeqNoRx          Counter32,
+       tpduExcdTx          Counter32,
+       invDatTypeTx        Counter32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { gtpGenCountersEntry 1 }
+
+numTxMsg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of messages transmitted ]"
+       ::= { gtpGenCountersEntry 2 }
+
+numRxMsg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of messages received  ]"
+       ::= { gtpGenCountersEntry 3 }
+
+numActvTnls OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of active tunnels ]"
+       ::= { gtpGenCountersEntry 4 }
+
+numErrInd OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Error Indications ]"
+       ::= { gtpGenCountersEntry 5 }
+
+rxDesgMsg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of discard messages received in invalid state of tunnel (unexpected messages) ]"
+       ::= { gtpGenCountersEntry 6 }
+
+invVerRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Invalid version received]"
+       ::= { gtpGenCountersEntry 7 }
+
+invProtTypeRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Invalid Protocol Type received]"
+       ::= { gtpGenCountersEntry 8 }
+
+invMsgRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Invalid Message received]"
+       ::= { gtpGenCountersEntry 9 }
+
+invMsgLenRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Invalid Message Length received]"
+       ::= { gtpGenCountersEntry 10 }
+
+invIeOrderRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ies received out of order]"
+       ::= { gtpGenCountersEntry 11 }
+
+invIeLenRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ie received with invalid length]"
+       ::= { gtpGenCountersEntry 12 }
+
+invIeFormatRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ie format is invalid]"
+       ::= { gtpGenCountersEntry 13 }
+
+invManIeLenRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Mandatory LE received with invalid length]"
+       ::= { gtpGenCountersEntry 14 }
+
+missMandIeRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Message received with missing  mandatory LE]"
+       ::= { gtpGenCountersEntry 15 }
+
+unSuppExtHdrRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Extension Header received is unsupported]"
+       ::= { gtpGenCountersEntry 16 }
+
+wrngExtHdrRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Wrong extension header received]"
+       ::= { gtpGenCountersEntry 17 }
+
+msgUnableCompRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Message received unable to comply]"
+       ::= { gtpGenCountersEntry 18 }
+
+msgUnableCompTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Message received from application unable to comply]"
+       ::= { gtpGenCountersEntry 19 }
+
+missMandIeTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Message received from application with missing  mandatory LE]"
+       ::= { gtpGenCountersEntry 20 }
+
+memAllocFldTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Message received from application for which memory allocation failed]"
+       ::= { gtpGenCountersEntry 21 }
+
+invMsgTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Invalid Message received from application]"
+       ::= { gtpGenCountersEntry 22 }
+
+invTeidTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Invalid teid received from application]"
+       ::= { gtpGenCountersEntry 23 }
+
+invTeidRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Invalid teid received]"
+       ::= { gtpGenCountersEntry 24 }
+
+errSeqNoTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Error in sequence number received from application]"
+       ::= { gtpGenCountersEntry 25 }
+
+errSeqNoRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Error in sequence number received]"
+       ::= { gtpGenCountersEntry 26 }
+
+tpduExcdTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TPDU size exceeded received from application]"
+       ::= { gtpGenCountersEntry 27 }
+
+invDatTypeTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TPDU size exceeded received from application]"
+       ::= { gtpGenCountersEntry 28 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { gtpGenCountersEntry 29 }
+
+END

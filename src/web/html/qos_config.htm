@@ -1,0 +1,652 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script> 
+    <script type='text/javascript' src='../script/validate.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip_chkbox.js'></script>
+    <script type="text/javascript">
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+            $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            var sessionID = parent.sessionID;
+            $(':text, :password, select').each(function() {
+                $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+            });
+
+            LteGet("qosConfig", null, ChkLock);
+
+            $("#btnApply").click(function() {
+                var msg = "";
+                var change = "false";
+
+                
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+                if (change == 'true') {
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                            else {
+                                if ($(this).is(':text, :password') == true)
+                                    msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                            }
+                        }
+                    });
+                    if (msg != "") {
+                        $(':text, :password, select').each(function() {
+                            $(this).attr('disabled', false);
+                        });
+                        if (parent.frames["Top"].isLocked == "unlocked")
+                            LockAttributes();
+                        alert(msg);
+                    }
+                    else {
+                        LteSet("qosConfig", $("#qosConfig"), $("#btnApply"), ChkLock);
+                    }
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#qosConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+
+
+
+function ChkSpecialValues() {
+    $("#btnApply").attr("disabled", false);
+    $('#qosProfileId,#qosProfileName,#qci,#logicalChannelGroup,#drbPriority,#rlcMode,#amRlcTPollRetransmit,#amRlcPollPDU,#amRlcPollByte,#amRlcMaxRetxThreshold,#amRlcTReordering,#amRlcTStatusProhibit,#discardTimer,#drbPrioritisedBitRate,#drbBucketSizeDuration,#statusReportRequired').attr('disabled', false).css('background-color', 'white');    
+}
+    
+function LockAttributes(){
+    $('#qosProfileId,#qosProfileName,#qci,#logicalChannelGroup,#drbPriority').attr('readonly', true).attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip();
+    FreezeList('#rlcMode,#amRlcTPollRetransmit,#amRlcPollPDU,#amRlcPollByte,#amRlcMaxRetxThreshold,#amRlcTReordering,#amRlcTStatusProhibit,#discardTimer,#drbPrioritisedBitRate,#drbBucketSizeDuration,#statusReportRequired');
+    $('#rlcMode,#amRlcTPollRetransmit,#amRlcPollPDU,#amRlcPollByte,#amRlcMaxRetxThreshold,#amRlcTReordering,#amRlcTStatusProhibit,#discardTimer,#drbPrioritisedBitRate,#drbBucketSizeDuration,#statusReportRequired').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+        if (parent.frames['Top'].isLocked == 'unlocked') 
+            FreezeList(this);
+    });    
+    $("#btnApply").attr("disabled", true);   
+}
+
+function MapIdName(fieldName) {
+    switch (fieldName) {
+        case "qosProfileId": return "QoS Profile ID";
+        case "qosProfileName": return "QoS Profile Name";
+        case "qci": return "QCI";
+        case "drbPriority": return "Logical Channel Priority";
+        case "logicalChannelGroup": return "Logical Channel Group";                
+    }
+}
+
+        
+        
+    </script>
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title" >Configuration > QoS</span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">                        
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left: 10px; width: 500px; height: 615px">
+        <form name='qosConfig' id='qosConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp QoS Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                    <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                QoS Profile ID
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="qosProfileId" name="qosProfileId" type="text" class="lteinput" validate="IntRangeChk" min="1" max="1"/>&nbsp; (1 ~ 1)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                QoS Profile Name
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="qosProfileName" name="qosProfileName" type="text" class="lteinput" validate="StrLengthValidate" min="3" max="15"/>&nbsp; (3 ~ 15 Characters)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                QCI
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="qci" name="qci" type="text" class="lteinput" validate="IntRangeChk" min="5" max="9"/>&nbsp; (5 ~ 9)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                RLC Mode
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="rlcMode" name="rlcMode" class="lteinput">
+                                    <option value="0">Ack Mode</option>
+                                    <option value="1">UnAck Mode</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; AM-RLC Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Poll Retransmit Timer
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="amRlcTPollRetransmit" name="amRlcTPollRetransmit" class="lteinput">
+                                    <option value="0">ms5</option>
+                                    <option value="1">ms10</option>
+                                    <option value="2">ms15</option>
+                                    <option value="3">ms20</option>
+                                    <option value="4">ms25</option>
+                                    <option value="5">ms30</option>
+                                    <option value="6">ms35</option>
+                                    <option value="7">ms40</option>
+                                    <option value="8">ms45</option>
+                                    <option value="9">ms50</option>
+                                    <option value="10">ms55</option>
+                                    <option value="11">ms60</option>
+                                    <option value="12">ms65</option>
+                                    <option value="13">ms70</option>
+                                    <option value="14">ms75</option>
+                                    <option value="15">ms80</option>
+                                    <option value="16">ms85</option>
+                                    <option value="17">ms90</option>
+                                    <option value="18">ms95</option>
+                                    <option value="19">ms100</option>
+                                    <option value="20">ms105</option>
+                                    <option value="21">ms110</option>
+                                    <option value="22">ms115</option>
+                                    <option value="23">ms120</option>
+                                    <option value="24">ms125</option>
+                                    <option value="25">ms130</option>
+                                    <option value="26">ms135</option>
+                                    <option value="27">ms140</option>
+                                    <option value="28">ms145</option>
+                                    <option value="29">ms150</option>
+                                    <option value="30">ms155</option>
+                                    <option value="31">ms160</option>
+                                    <option value="32">ms165</option>
+                                    <option value="33">ms170</option>
+                                    <option value="34">ms175</option>
+                                    <option value="35">ms180</option>
+                                    <option value="36">ms185</option>
+                                    <option value="37">ms190</option>
+                                    <option value="38">ms195</option>
+                                    <option value="39">ms200</option>
+                                    <option value="40">ms205</option>
+                                    <option value="41">ms210</option>
+                                    <option value="42">ms215</option>
+                                    <option value="43">ms220</option>
+                                    <option value="44">ms225</option>
+                                    <option value="45">ms230</option>
+                                    <option value="46">ms235</option>
+                                    <option value="47">ms240</option>
+                                    <option value="48">ms245</option>
+                                    <option value="49">ms250</option>
+                                    <option value="50">ms300</option>
+                                    <option value="51">ms350</option>
+                                    <option value="52">ms400</option>
+                                    <option value="53">ms450</option>
+                                    <option value="54">ms500</option>                                    
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Poll-PDU
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="amRlcPollPDU" name="amRlcPollPDU" class="lteinput">
+                                    <option value="0">p4</option>
+                                    <option value="1">p8</option>
+                                    <option value="2">p16</option>
+                                    <option value="3">p32</option>
+                                    <option value="4">p64</option>
+                                    <option value="5">p128</option>
+                                    <option value="6">p256</option>
+                                    <option value="7">Infinity</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Poll-Bytes
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="amRlcPollByte" name="amRlcPollByte" class="lteinput">
+                                    <option value="0">kB25</option>
+                                    <option value="1">kB50</option>
+                                    <option value="2">kB75</option>
+                                    <option value="3">kB100</option>
+                                    <option value="4">kB125</option>
+                                    <option value="5">kB250</option>
+                                    <option value="6">kB375</option>
+                                    <option value="7">kB500</option>
+                                    <option value="8">kB750</option>
+                                    <option value="9">kB1000</option>
+                                    <option value="10">kB1250</option>
+                                    <option value="11">kB1500</option>
+                                    <option value="12">kB2000</option>
+                                    <option value="13">kB3000</option>
+                                    <option value="14">Infinity</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Max Retransmissions Threshold
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="amRlcMaxRetxThreshold"  name="amRlcMaxRetxThreshold" class="lteinput">
+                                    <option value="0">t1</option>
+                                    <option value="1">t2</option>
+                                    <option value="2">t3</option>
+                                    <option value="3">t4</option>
+                                    <option value="4">t6</option>
+                                    <option value="5">t8</option>
+                                    <option value="6">t16</option>
+                                    <option value="7">t32</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Reordering Timer
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="amRlcTReordering" name="amRlcTReordering" class="lteinput">
+                                    <option value="0">ms0</option>
+                                    <option value="1">ms5</option>
+                                    <option value="2">ms10</option>
+                                    <option value="3">ms15</option>
+                                    <option value="4">ms20</option>
+                                    <option value="5">ms25</option>
+                                    <option value="6">ms30</option>
+                                    <option value="7">ms35</option>
+                                    <option value="8">ms40</option>
+                                    <option value="9">ms45</option>
+                                    <option value="10">ms50</option>
+                                    <option value="11">ms55</option>
+                                    <option value="12">ms60</option>
+                                    <option value="13">ms65</option>
+                                    <option value="14">ms70</option>
+                                    <option value="15">ms75</option>
+                                    <option value="16">ms80</option>
+                                    <option value="17">ms85</option>
+                                    <option value="18">ms90</option>
+                                    <option value="19">ms95</option>
+                                    <option value="20">ms100</option>
+                                    <option value="21">ms110</option>
+                                    <option value="22">ms120</option>
+                                    <option value="23">ms130</option>
+                                    <option value="24">ms140</option>
+                                    <option value="25">ms150</option>
+                                    <option value="26">ms160</option>
+                                    <option value="27">ms170</option>
+                                    <option value="28">ms180</option>
+                                    <option value="29">ms190</option>
+                                    <option value="30">ms200</option>                                    
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Status Prohibit Timer
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="amRlcTStatusProhibit"  name="amRlcTStatusProhibit" class="lteinput">
+                                    <option value="0">ms0</option>
+                                    <option value="1">ms5</option>
+                                    <option value="2">ms10</option>
+                                    <option value="3">ms15</option>
+                                    <option value="4">ms20</option>
+                                    <option value="5">ms25</option>
+                                    <option value="6">ms30</option>
+                                    <option value="7">ms35</option>
+                                    <option value="8">ms40</option>
+                                    <option value="9">ms45</option>
+                                    <option value="10">ms50</option>
+                                    <option value="11">ms55</option>
+                                    <option value="12">ms60</option>
+                                    <option value="13">ms65</option>
+                                    <option value="14">ms70</option>
+                                    <option value="15">ms75</option>
+                                    <option value="16">ms80</option>
+                                    <option value="17">ms85</option>
+                                    <option value="18">ms90</option>
+                                    <option value="19">ms95</option>
+                                    <option value="20">ms100</option>
+                                    <option value="21">ms105</option>
+                                    <option value="22">ms110</option>
+                                    <option value="23">ms115</option>
+                                    <option value="24">ms120</option>
+                                    <option value="25">ms125</option>
+                                    <option value="26">ms130</option>
+                                    <option value="27">ms135</option>
+                                    <option value="28">ms140</option>
+                                    <option value="29">ms145</option>
+                                    <option value="30">ms150</option>
+                                    <option value="31">ms155</option>
+                                    <option value="32">ms160</option>
+                                    <option value="33">ms165</option>
+                                    <option value="34">ms170</option>
+                                    <option value="35">ms175</option>
+                                    <option value="36">ms180</option>
+                                    <option value="37">ms185</option>
+                                    <option value="38">ms190</option>
+                                    <option value="39">ms195</option>
+                                    <option value="40">ms200</option>
+                                    <option value="41">ms205</option>
+                                    <option value="42">ms210</option>
+                                    <option value="43">ms215</option>
+                                    <option value="44">ms220</option>
+                                    <option value="45">ms225</option>
+                                    <option value="46">ms230</option>
+                                    <option value="47">ms235</option>
+                                    <option value="48">ms240</option>
+                                    <option value="49">ms245</option>
+                                    <option value="50">ms250</option>
+                                    <option value="51">ms300</option>
+                                    <option value="52">ms350</option>
+                                    <option value="53">ms400</option>
+                                    <option value="54">ms450</option>
+                                    <option value="55">ms500</option>        
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; PDCP Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                PDCP Discard Timer
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="discardTimer" name="discardTimer" class="lteinput">
+                                    <option value="0">ms50</option>
+                                    <option value="1">ms100</option>
+                                    <option value="2">ms150</option>
+                                    <option value="3">ms300</option>
+                                    <option value="4">ms500</option>
+                                    <option value="5">ms750</option>
+                                    <option value="6">ms1500</option>
+                                    <option value="7">Infinity</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                PDCP Status Report Required
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="statusReportRequired" name="statusReportRequired" class="lteinput">
+                                    <option value="0">FALSE</option>
+                                    <option value="1">TRUE</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; Logical Channel Configuration
+                            </td>
+                        </tr>
+                         <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Logical Channel Priority
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="drbPriority" name="drbPriority" type="text" class="lteinput" validate="IntRangeChk" min="1" max="16"/>&nbsp; (1 ~ 16)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Prioritised Bit Rate
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="drbPrioritisedBitRate" name="drbPrioritisedBitRate" class="lteinput">
+                                    <option value="0">0 kBps</option>
+                                    <option value="1">8 kBps</option>
+                                    <option value="2">16 kBps</option>
+                                    <option value="3">32 kBps</option>
+                                    <option value="4">64 kBps</option>
+                                    <option value="5">128 kBps</option>
+                                    <option value="6">256 kBps</option>
+                                    <option value="7">Infinity</option>                                    
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Bucket Size Duration
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="drbBucketSizeDuration" name="drbBucketSizeDuration" class="lteinput">
+                                    <option value="0">ms50</option>
+                                    <option value="1">ms100</option>
+                                    <option value="2">ms150</option>
+                                    <option value="3">ms300</option>
+                                    <option value="4">ms500</option>
+                                    <option value="5">ms1000</option>                                    
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Logical Channel Group
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="logicalChannelGroup" name="logicalChannelGroup" type="text" class="lteinput" validate="IntRangeChk" min="0" max="3"/>&nbsp; (0 ~ 3)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+# Config for CodeSourcery G++ Lite ARM-EABI (RTXC OS)
+#
+# Copyright 2008,2009 by Mindspeed Technologies
+# All rights reserved
+#
+
+CFLAGS = -march=armv6 -Wall $(DEFS) $(INC) $(OPT)
+ASFLAGS = $(DEFS) $(INC) -Wa,-march=armv6
+LIBS = --library=:BSP/$(OS)/BSPLIB.a
+LDFLAGS = -Wl,--entry=ResetHandler,--trace,--cref,--print-map,-Map=$(APP).lst,--script=BSP/$(OS)/turner.ld
+
+# Config for CodeSourcery G++ Lite ARM-EABI (RTXC Quadros OS)
+#
+# Copyright 2008 by Mindspeed Technologies
+# All rights reserved
+#
+
+PREFIX=arm-none-eabi-
+
+#
+# Tool definitions
+#
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp -c
+LD = $(PREFIX)gcc
+AR = $(PREFIX)ar
+
+
+#
+# Tool settings
+#
+DEF = -D$(BOARD) -DUSE_RTXC -D$(MACTYPE)
+INC = -I. -I../Common -IOSAL/$(OS) -IBSP -IBSP/$(OS) -I./PACKETIF/LINUX
+OPT = -O1 -g
+CFLAGS = -march=armv6 -Wall $(DEFS) $(INC) $(OPT)
+ASFLAGS = $(DEFS) $(INC) -Wa,-march=armv6
+LIBS = --library=:OSAL/$(OS)/$(OS).a --library=:OSAL/$(OS)/OSLIB.a --library=:BSP/$(OS)/BSPLIB.a
+LDFLAGS = -Wl,--entry=ResetHandler,--trace,--cref,--print-map,-Map=$(APP).lst,--script=BSP/$(OS)/turner.ld

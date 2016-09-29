@@ -1,0 +1,99 @@
+ -- @file    MAC-GEN-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+MAC-GEN-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+macGenCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Statistics"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 107 }
+
+macGenCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF MacGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Statistics
+            This is a SINGLE ROW Table"
+       ::= { macGenCounters 1 }
+
+macGenCountersEntry OBJECT-TYPE
+       SYNTAX      MacGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains MAC counter objects."
+       INDEX  { index }
+       ::= { macGenCountersTable 1 }
+
+MacGenCountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       numHarqFail         Counter32,
+       numUeCfg            Counter32,
+       numCellCfg          Counter32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { macGenCountersEntry 1 }
+
+numHarqFail OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of HARQ failures]"
+       ::= { macGenCountersEntry 2 }
+
+numUeCfg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UEs configured]"
+       ::= { macGenCountersEntry 3 }
+
+numCellCfg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Cells configured]"
+       ::= { macGenCountersEntry 4 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { macGenCountersEntry 5 }
+
+END

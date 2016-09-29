@@ -1,0 +1,89 @@
+ -- @file    PDCP-UPLANE-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+PDCP-UPLANE-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+pdcpUplaneCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the details of PDCP Uplane counters."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 134 }
+
+pdcpUplaneCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF PdcpUplaneCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the details of PDCP Uplane counters.
+            This is a SINGLE ROW Table"
+       ::= { pdcpUplaneCounters 1 }
+
+pdcpUplaneCountersEntry OBJECT-TYPE
+       SYNTAX      PdcpUplaneCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains PDCP counter objects."
+       INDEX  { index }
+       ::= { pdcpUplaneCountersTable 1 }
+
+PdcpUplaneCountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       rxSdus              Counter32,
+       txSdus              Counter32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { pdcpUplaneCountersEntry 1 }
+
+rxSdus OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of SDUs received from Upper Layer]"
+       ::= { pdcpUplaneCountersEntry 2 }
+
+txSdus OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of SDUs sent to Upper Layer]"
+       ::= { pdcpUplaneCountersEntry 3 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { pdcpUplaneCountersEntry 4 }
+
+END

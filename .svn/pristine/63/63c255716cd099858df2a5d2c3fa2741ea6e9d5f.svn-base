@@ -1,0 +1,459 @@
+ -- @file    SCTP-GEN-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+SCTP-GEN-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, DateAndTimeStamp                                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Counter32          FROM SNMPv2-SMI;
+
+sctpGenCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Statistics"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 111 }
+
+sctpGenCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SctpGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Statistics
+            This is a SINGLE ROW Table"
+       ::= { sctpGenCounters 1 }
+
+sctpGenCountersEntry OBJECT-TYPE
+       SYNTAX      SctpGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains SCTP counter objects."
+       INDEX  { index }
+       ::= { sctpGenCountersTable 1 }
+
+SctpGenCountersEntry ::= 
+   SEQUENCE {
+       index               Unsigned32,
+       noInitTx            Counter32,
+       noInitReTx          Counter32,
+       noInitRx            Counter32,
+       noIAckTx            Counter32,
+       noIAckRx            Counter32,
+       noShDwnTx           Counter32,
+       noShDwnReTx         Counter32,
+       noShDwnRx           Counter32,
+       noShDwnAckTx        Counter32,
+       noShDwnAckReTx      Counter32,
+       noShDwnAckRx        Counter32,
+       noCookieTx          Counter32,
+       noCookieReTx        Counter32,
+       noCookieRx          Counter32,
+       noCkAckTx           Counter32,
+       noCkAckRx           Counter32,
+       noDataTx            Counter32,
+       noDataReTx          Counter32,
+       noDataRx            Counter32,
+       noDAckTx            Counter32,
+       noDAckRx            Counter32,
+       noShDwnCmpltTx      Counter32,
+       noShDwnCmpltRx      Counter32,
+       noHBeatTx           Counter32,
+       noHBeatRx           Counter32,
+       noHBAckTx           Counter32,
+       noHBAckRx           Counter32,
+       noAbortTx           Counter32,
+       noAbortRx           Counter32,
+       noErrorTx           Counter32,
+       noErrorRx           Counter32,
+       noEcneTx            Counter32,
+       noEcneReTx          Counter32,
+       noEcneRx            Counter32,
+       noCwrTx             Counter32,
+       noCwrRx             Counter32,
+       noQueryTx           Counter32,
+       noQueryReTx         Counter32,
+       noQueryRspRx        Counter32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 1 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { sctpGenCountersEntry 1 }
+
+noInitTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number INITs sent]"
+       ::= { sctpGenCountersEntry 2 }
+
+noInitReTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number INITs resent]"
+       ::= { sctpGenCountersEntry 3 }
+
+noInitRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number INITs received]"
+       ::= { sctpGenCountersEntry 4 }
+
+noIAckTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number INIT_ACKs sent]"
+       ::= { sctpGenCountersEntry 5 }
+
+noIAckRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number INIT_ACKs received]"
+       ::= { sctpGenCountersEntry 6 }
+
+noShDwnTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SHUTDOWNs sent]"
+       ::= { sctpGenCountersEntry 7 }
+
+noShDwnReTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SHUTDOWNs resent]"
+       ::= { sctpGenCountersEntry 8 }
+
+noShDwnRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SHUTDOWNs received]"
+       ::= { sctpGenCountersEntry 9 }
+
+noShDwnAckTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SHUTDOWN_ACKs sent]"
+       ::= { sctpGenCountersEntry 10 }
+
+noShDwnAckReTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SHUTDOWN_ACKSs resent ]"
+       ::= { sctpGenCountersEntry 11 }
+
+noShDwnAckRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SHUTDOWN_ACKs received]"
+       ::= { sctpGenCountersEntry 12 }
+
+noCookieTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number COOKIEs sent]"
+       ::= { sctpGenCountersEntry 13 }
+
+noCookieReTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number COOKIEs resent]"
+       ::= { sctpGenCountersEntry 14 }
+
+noCookieRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number COOKIEs received]"
+       ::= { sctpGenCountersEntry 15 }
+
+noCkAckTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number COOKIE_ACKs sent]"
+       ::= { sctpGenCountersEntry 16 }
+
+noCkAckRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number COOKIE_ACKs received]"
+       ::= { sctpGenCountersEntry 17 }
+
+noDataTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number DATAs sent]"
+       ::= { sctpGenCountersEntry 18 }
+
+noDataReTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number DATAs resent]"
+       ::= { sctpGenCountersEntry 19 }
+
+noDataRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number DATAs received]"
+       ::= { sctpGenCountersEntry 20 }
+
+noDAckTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SACKs sent]"
+       ::= { sctpGenCountersEntry 21 }
+
+noDAckRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number SACKs received]"
+       ::= { sctpGenCountersEntry 22 }
+
+noShDwnCmpltTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of Shutdown completed sent ]"
+       ::= { sctpGenCountersEntry 23 }
+
+noShDwnCmpltRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of Shutdown completed  received]"
+       ::= { sctpGenCountersEntry 24 }
+
+noHBeatTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of HEARTBEATs sent ]"
+       ::= { sctpGenCountersEntry 25 }
+
+noHBeatRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of HEARTBEATs received]"
+       ::= { sctpGenCountersEntry 26 }
+
+noHBAckTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of HBEAT_ACKs sent]"
+       ::= { sctpGenCountersEntry 27 }
+
+noHBAckRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of HBEAT_ACKs received]"
+       ::= { sctpGenCountersEntry 28 }
+
+noAbortTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of ABORTs sent ]"
+       ::= { sctpGenCountersEntry 29 }
+
+noAbortRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of ABORTs received]"
+       ::= { sctpGenCountersEntry 30 }
+
+noErrorTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of ERRORs sent]"
+       ::= { sctpGenCountersEntry 31 }
+
+noErrorRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of ERRORs received]"
+       ::= { sctpGenCountersEntry 32 }
+
+noEcneTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number ECNEs sent]"
+       ::= { sctpGenCountersEntry 33 }
+
+noEcneReTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number ECNEs resent]"
+       ::= { sctpGenCountersEntry 34 }
+
+noEcneRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number ECNEs received]"
+       ::= { sctpGenCountersEntry 35 }
+
+noCwrTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of CWRs sent]"
+       ::= { sctpGenCountersEntry 36 }
+
+noCwrRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of CWRs received]"
+       ::= { sctpGenCountersEntry 37 }
+
+noQueryTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of DNS Queries Txmitted]"
+       ::= { sctpGenCountersEntry 38 }
+
+noQueryReTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of DNS Queries ReTxmitted]"
+       ::= { sctpGenCountersEntry 39 }
+
+noQueryRspRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of DNS Query Responses Received]"
+       ::= { sctpGenCountersEntry 40 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { sctpGenCountersEntry 41 }
+
+END

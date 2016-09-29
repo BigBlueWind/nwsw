@@ -1,0 +1,31 @@
+#!/bin/csh
+#
+# update all files
+#
+set PRROOT=/vobs/core_prd/ssi
+set CMROOT=/clearcase/tds/core_prd/crnt/cm
+
+if($#argv == 1) then
+  if($1 == "-n") then
+     set PRROOT=/vobs/core_prd/ssi
+     set CMROOT=/clearcase/tds/core_prd/crnt/cm
+  endif
+  if($1 == "-view") then
+     set PRROOT=/vobs/core_prd/ssi
+     set CMROOT=/clearcase/tds/core_prd/crnt/cm
+  endif
+endif
+
+chmod 755 *
+
+#SSI Linux/Solaris specific files
+cp $PRROOT/mtss_sol/src/pt/* .
+cp $PRROOT/mtss_sol/src/mt/* .
+
+#SSI build file
+cp $PRROOT/mtss_sol/src/build/* .
+
+#SSI sample files
+cp $PRROOT/mtss_sol/src/sample/* .
+
+chmod 755 *

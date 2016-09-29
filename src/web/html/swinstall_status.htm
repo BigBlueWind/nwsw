@@ -1,0 +1,140 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"/>
+<style type="text/css" lang="css">
+@import '../css/styles.css'; 
+    </style>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript" src="../script/lte_set_get.js"></script>
+<script type="text/javascript" src="../script/mapping.js"></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        $(document).bind("contextmenu", function(e) { alert("Due to Security Reasons, Right Click is not allowed !!!"); return false; });
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        LteGet("swInstallStatus", null, SetMapping);
+        document.onkeydown = fn;
+        var interval = "";
+        $("#rfrshInt").change(function() {
+            if ($("#rfrshInt").val() != "NONE") {
+                if (interval != "")
+                    clearInterval(interval);
+                interval = setInterval('LteGet("swInstallStatus", null, SetMapping)', $("#rfrshInt").val() * 1000);
+            }
+            else
+                clearInterval(interval);
+
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#swInstallStatus", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });            
+</script>
+</head>
+
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Monitor &gt; Software Install Status</span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-left: 10px; margin-top: 10px;'>
+        <table cellspacing="0" cellpadding="2" border="0" width="1045px" style="margin-top: 10px">
+            <tbody>
+                <tr>
+                 <td align="left" style="font-size:smaller;">Automatic Refresh Interval (Seconds)&nbsp;&nbsp; 
+                        :&nbsp;
+                        <select name="rfrshInt" id="rfrshInt">
+                            <option value="NONE">NONE</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="60">60</option>
+                        </select></td>
+                    <td align="right" class="txtPageTitle">
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left: 10px; margin-top: 10px; width: 450px;">
+        <form name='swInstallStatus' id='swInstallStatus' action="">
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align="left" class="tblTitleBg">
+                    &nbsp; Software Install Status
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                File Name
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" id="filename">                                
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Install Status
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" id="installStatus">
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Install Error Detail
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" id="installErrorDetail">
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body></html>

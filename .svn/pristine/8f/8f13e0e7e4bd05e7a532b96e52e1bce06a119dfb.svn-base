@@ -1,0 +1,228 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';
+          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;    
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        
+        
+        LteGet("ueEventHistoryLogConfig", null, ChkSpecialValues);
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";
+
+            if (($("#ueProcedureBitMap").val()) != UeDataCalculation()) {
+                $("#ueProcedureBitMap").val(UeDataCalculation());
+                change = "true";
+            }
+
+
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }
+                }
+            });
+            if (change == 'true') {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true)
+                                msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                        }
+                    }
+                });
+                if (msg != "") {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                    if (parent.frames["Top"].isLocked == "unlocked")
+                        LockAttributes();
+                    alert(msg);
+                }
+                else {
+                    LteSet("ueEventHistoryLogConfig", $("#ueEventHistoryLogConfig"), $("#btnApply"), ChkLock);
+                }
+                $(':text, :password, select').each(function() {
+                    $(this).attr('disabled', false);
+                });
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+        });
+        $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#ueEventHistoryLogConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+
+    });  
+    
+    function MapIdName(fieldName)
+    {
+        switch(fieldName)
+        {
+            case "ueEventHistoryIndex": return "UE Event History Index";
+            case "cRnti": return "UE C-RNTI";            
+        }
+    }
+
+    function UeDataCalculation() {
+        var data = 0;
+        if ($('#rrcConn').is(':checked') == true) { data = data | 1; }
+        if ($('#security').is(':checked') == true) { data = data | (1 << 1); }
+        /*if ($('#directTransfer').is(':checked') == true) { data = data | (1 << 2); }*/        
+        if ($('#ueCapability').is(':checked') == true) { data = data | (1 << 3); }
+        if ($('#rrcReconfig').is(':checked') == true) { data = data | (1 << 4); }
+        if ($('#initialCtxSetup').is(':checked') == true) { data = data | (1 << 5); }
+        if ($('#ueCtxRelease').is(':checked') == true) { data = data | (1 << 6); }
+        /*if ($('#handover').is(':checked') == true) { data = data | (1 << 7); }      */
+        return data;
+    }
+    function ChkSpecialValues() {
+        var data = parent.frames["MiddleRight"].document.getElementById("ueProcedureBitMap").value;
+
+        if (data & 1) { $('#rrcConn').attr('checked', true); } else { $('#rrcConn').attr('checked', false); }        
+        if (data & (1 << 1)) { $('#security').attr('checked', true); } else { $('#security').attr('checked', false); }
+        /*if (data & (1 << 2)) { $('#directTransfer').attr('checked', true); } else { $('#directTransfer').attr('checked', false); } */
+        if (data & (1 << 3)) { $('#ueCapability').attr('checked', true); } else { $('#ueCapability').attr('checked', false); }
+        if (data & (1 << 4)) { $('#rrcReconfig').attr('checked', true); } else { $('#rrcReconfig').attr('checked', false); }
+        if (data & (1 << 5)) { $('#initialCtxSetup').attr('checked', true); } else { $('#initialCtxSetup').attr('checked', false); }
+        if (data & (1 << 6)) { $('#ueCtxRelease').attr('checked', true); } else { $('#ueCtxRelease').attr('checked', false); }
+        /*if (data & (1 << 7)) { $('#handover').attr('checked', true); } else { $('#handover').attr('checked', false); }*/
+        
+    }
+    
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > UE Event History Log </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px;width:420px;height:615px">
+        <form name='ueEventHistoryLogConfig' id='ueEventHistoryLogConfig' action="">
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp UE Event History Log Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>                        
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                UE C-RNTI
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="ueEventHistoryIndex" name="ueEventHistoryIndex" type="hidden" class="lteinput"/>
+                                <input id="cRnti" name="cRnti" type="text" class="lteinput" validate="IntRangeChk" min="0" max="65535"/>&nbsp;(0 ~ 65535)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                UE Procedure
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                                <input id="ueProcedureBitMap" name="ueProcedureBitMap" type="hidden" class="lteinput"/>                                
+                                <input id="rrcConn" type="checkbox" /> RRC Connection <br />
+                                <input id="security" type="checkbox" /> Security <br />
+                                <input id="directTransfer" type="hidden"  />
+                                <input id="ueCapability" type="checkbox"  /> UE Capability <br />
+                                <input id="rrcReconfig" type="checkbox"  /> RRC Re-Configuration <br />
+                                <input id="initialCtxSetup" type="checkbox" /> Initial Context Setup <br />
+                                <input id="ueCtxRelease" type="checkbox"  /> UE Context Release <br />
+                                <input id="handover" type="hidden"  />                              
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                UE Event Measures
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>     
+                            <td>                       
+                                <select name="ueEventMeasures" id="ueEventMeasures" class="lteinput" style="width:210px">
+                                    <option value="1">Log All Events</option>
+                                    <option value="2">Log Failure</option>
+                                    <option value="3">Log Only Procedure</option>
+                                    <option value="4">Log Only UEs</option>                                    
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

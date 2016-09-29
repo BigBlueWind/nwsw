@@ -1,0 +1,173 @@
+ -- @file    TRACE-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/11/2012 5:46:41 PM
+ --
+
+TRACE-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI
+       TruthValue                                        FROM SNMPv2-TC;
+
+traceConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to configure message tracing"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 62 }
+
+traceConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF TraceConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to configure message tracing
+            This is a SINGLE ROW Table"
+       ::= { traceConfig 1 }
+
+traceConfigEntry OBJECT-TYPE
+       SYNTAX      TraceConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to message trace configuration."
+       INDEX  { traceProfileId }
+       ::= { traceConfigTable 1 }
+
+TraceConfigEntry ::= 
+   SEQUENCE {
+       traceProfileId         ProfileId,
+       traceRRC               TruthValue,
+       traceS1AP              TruthValue,
+       traceX2AP              TruthValue,
+       traceReserved1         TruthValue,
+       traceReserved2         TruthValue,
+       traceReserved3         TruthValue,
+       traceDestination       INTEGER,
+       traceDestUdpPort       Unsigned32,
+       traceDestIPAddress     OCTET STRING
+   }
+
+traceProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]
+           [Change_Condition : RW ]"
+       DEFVAL { 1 }
+       ::= { traceConfigEntry 1 }
+
+traceRRC OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             If TRUE then RRC messages will be traced.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { traceConfigEntry 2 }
+
+traceS1AP OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             If TRUE then S1AP messages will be traced.]
+           [Change_Condition : RW ]"
+       DEFVAL { true }
+       ::= { traceConfigEntry 3 }
+
+traceX2AP OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             if TRUE then X2AP messages will be traced.]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { traceConfigEntry 4 }
+
+traceReserved1 OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Reserved  for any future additions. eNodeB ignores the field when set]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { traceConfigEntry 5 }
+
+traceReserved2 OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Reserved for any future additions. eNodeB ignores the field when set]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { traceConfigEntry 6 }
+
+traceReserved3 OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Reserved for any future additions. eNodeB ignores the field when set]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { traceConfigEntry 7 }
+
+traceDestination OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   collectToFile(1),
+                   relayToRemoteHost(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Two modes of tracing are supported. 1) collectToFile : where traces are written to a file on eNodeB 2) relayToRemoteHost: where eNodeB relays each traced message to a remote host using UDP. In this mode two additional parameters need to be configured: traceDestUdpPort, traceDestIPAddress, which specifiy the host to which eNodeB should send the traces. When collectToFile is chosen then traceDestUdpPort and traceDestIPAddress are ignored. ]
+           [Change_Condition : RW ]"
+       DEFVAL { collectToFile }
+       ::= { traceConfigEntry 8 }
+
+traceDestUdpPort OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 10000 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Set the remote host UDP port for Wireshark Tracing]
+           [Change_Condition : RW ]"
+       DEFVAL { 10000 }
+       ::= { traceConfigEntry 9 }
+
+traceDestIPAddress OBJECT-TYPE
+       SYNTAX      OCTET STRING
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Set the remote host IP Address port for Wireshark Tracing]
+           [Change_Condition : RW ]"
+       DEFVAL { "127.0.0.1" }
+       ::= { traceConfigEntry 10 }
+
+END

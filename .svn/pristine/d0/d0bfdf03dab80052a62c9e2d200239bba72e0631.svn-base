@@ -1,0 +1,2369 @@
+ # Generated on : 01-03-2013 15:00:07
+timersConfig = (
+{
+ timerName = 1;                                       /*WaitInitComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 60;
+ description = "All processes and modules inside them should start and send START_IND to PRM in this time";
+ moduleId = 7;
+}, /* End Of Timer 1 */
+{
+ timerName = 2;                                       /*HealthCheckInterval */
+ timeUnit = 3;                                        /*Sec */
+ duration = 0;
+ description = "Duration between 2 health checks";
+ moduleId = 7;
+}, /* End Of Timer 2 */
+{
+ timerName = 3;                                       /*WaitHelloAck */
+ timeUnit = 3;                                        /*Sec */
+ duration = 60;
+ description = "Duration within which response to Hello should be received.";
+ moduleId = 7;
+}, /* End Of Timer 3 */
+{
+ timerName = 4;                                       /*WaitExitComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 15;
+ description = "Time given to modules to exit";
+ moduleId = 7;
+}, /* End Of Timer 4 */
+{
+ timerName = 5;                                       /*WaitBootLowerArmComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 10;
+ description = "Duration within boot-up of lower arm should be completed";
+ moduleId = 7;
+}, /* End Of Timer 5 */
+{
+ timerName = 6;                                       /*WaitRhSwInstallRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 600;
+ description = "Wait for RH Software Install Response";
+ moduleId = 7;
+}, /* End Of Timer 6 */
+{
+ timerName = 7;                                       /*WaitRhActivateRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 30;
+ description = "Wait for RH Software Activate Response";
+ moduleId = 7;
+}, /* End Of Timer 7 */
+{
+ timerName = 8;                                       /*WaitDehStatusReportPeriod */
+ timeUnit = 3;                                        /*Sec */
+ duration = 30;
+ description = " The interval at which HW status is checked";
+ moduleId = 8;
+}, /* End Of Timer 8 */
+{
+ timerName = 9;                                       /*WaitAllDeviceRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 20;
+ description = "This timer is used to wait for all devices to respond to DEH. ";
+ moduleId = 8;
+}, /* End Of Timer 9 */
+{
+ timerName = 10;                                      /*WaitRhInit */
+ timeUnit = 3;                                        /*Sec */
+ duration = 20;
+ description = "After receiving reset-complete, the init from LK should come within this time";
+ moduleId = 8;
+}, /* End Of Timer 10 */
+{
+ timerName = 11;                                      /*WaitRhDisableRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "Wait for Rsp Messages from Radio Head";
+ moduleId = 8;
+}, /* End Of Timer 11 */
+{
+ timerName = 12;                                      /*WaitRhEnableRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 10;
+ description = "Wait for Rsp Messages for Enable and Disable Commands Sent to RH";
+ moduleId = 8;
+}, /* End Of Timer 12 */
+{
+ timerName = 13;                                      /*WaitRhConfigRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "Wait for Config Rsp Messages coming from Operator";
+ moduleId = 8;
+}, /* End Of Timer 13 */
+{
+ timerName = 14;                                      /*WaitRhStatusRspForCih */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "Wait for Rsp Message from Radio Head For CIH Interface";
+ moduleId = 8;
+}, /* End Of Timer 14 */
+{
+ timerName = 15;                                      /*WaitRhStatusRspForSih */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "Wait for Rsp Message from Radio Head For SIH Interface";
+ moduleId = 8;
+}, /* End Of Timer 15 */
+{
+ timerName = 16;                                      /*WaitRhStatusRspForWih */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "Wait for Rsp Message from Radio Head For WIH Interface";
+ moduleId = 8;
+}, /* End Of Timer 16 */
+{
+ timerName = 17;                                      /*WaitBistComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 30;
+ description = "Wait for BIST to get Completed.";
+ moduleId = 8;
+}, /* End Of Timer 17 */
+{
+ timerName = 18;                                      /*WaitCpriLinkup */
+ timeUnit = 3;                                        /*Sec */
+ duration = 2;
+ description = "Wait for Cpri Link up Indication to Configure RH";
+ moduleId = 8;
+}, /* End Of Timer 18 */
+{
+ timerName = 19;                                      /*WaitTraceConfirm */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "Wait for Trace Duration to get completed.";
+ moduleId = 4;
+}, /* End Of Timer 19 */
+{
+ timerName = 20;                                      /*WaitTraceDuration */
+ timeUnit = 4;                                        /*Minute */
+ duration = 5;
+ description = "Wait for Trace Succ/Fail Response Message from LTH module.";
+ moduleId = 4;
+}, /* End Of Timer 20 */
+{
+ timerName = 21;                                      /*WaitEnableComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 120;
+ description = "Wait for Enable Procedure to get completed. On this timer expiry, BSM will check the status and get enabled or disabled.";
+ moduleId = 4;
+}, /* End Of Timer 21 */
+{
+ timerName = 22;                                      /*WaitDisableComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 30;
+ description = "Wait for disable procedure to get completed. ";
+ moduleId = 4;
+}, /* End Of Timer 22 */
+{
+ timerName = 23;                                      /*WaitConfigComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 90;
+ description = "Wait for config Procedure to get completed. ";
+ moduleId = 4;
+}, /* End Of Timer 23 */
+{
+ timerName = 24;                                      /*WaitGpsParametersRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 10;
+ description = "Wait for DEH to respond with GPS details";
+ moduleId = 4;
+}, /* End Of Timer 24 */
+{
+ timerName = 25;                                      /*WaitEmsRegRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 10;
+ description = "Wait for SIH to respond with Registeration response.";
+ moduleId = 4;
+}, /* End Of Timer 25 */
+{
+ timerName = 26;                                      /*WaitMmeLinkEstablish */
+ timeUnit = 3;                                        /*Sec */
+ duration = 30;
+ description = "This is the interval at which BSM will check whether the MME link has come up or not.";
+ moduleId = 4;
+}, /* End Of Timer 26 */
+{
+ timerName = 27;                                      /*WaitDeviceInitComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 25;
+ description = "Wait for DEH to respond to Device Init request";
+ moduleId = 4;
+}, /* End Of Timer 27 */
+{
+ timerName = 28;                                      /*WaitInitIpAddrComplete */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "Wait for Response after sending set IP address request to DEH.";
+ moduleId = 4;
+}, /* End Of Timer 28 */
+{
+ timerName = 29;                                      /*WaitCmdRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 10;
+ description = "Wait for command Response at CLI from BSM. ";
+ moduleId = 1;
+}, /* End Of Timer 29 */
+{
+ timerName = 30;                                      /*WaitCounterCollection */
+ timeUnit = 3;                                        /*Sec */
+ duration = 30;
+ description = "This is the interval for PMH to wait for response from CCPU modules after sending request";
+ moduleId = 10;
+}, /* End Of Timer 30 */
+{
+ timerName = 31;                                      /*WaitSnmpCmdRsp */
+ timeUnit = 3;                                        /*Sec */
+ duration = 10;
+ description = "This is the interval for SIH to wait for SNMP Cmd Response from BSM after sending request.";
+ moduleId = 2;
+}, /* End Of Timer 31 */
+{
+ timerName = 32;                                      /*WaitCounterReset */
+ timeUnit = 3;                                        /*Sec */
+ duration = 8;
+ description = "This is the interval for PMH to wait for response from CCPU modules after sending Clear Counter request";
+ moduleId = 10;
+}, /* End Of Timer 32 */
+{
+ timerName = 33;                                      /*WaitL2PMCounterControlProfile1 */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "PMH waits for response from UEH for START_COUNTER_REQ for profile 1";
+ moduleId = 10;
+}, /* End Of Timer 33 */
+{
+ timerName = 34;                                      /*WaitL2PMCounterControlProfile2 */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "PMH waits for response from UEH for START_COUNTER_REQ for profile 2";
+ moduleId = 10;
+}, /* End Of Timer 34 */
+{
+ timerName = 35;                                      /*WaitL2PMReportProfile1 */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "PMH starts this timer to guard the reporting interval for profile1";
+ moduleId = 10;
+}, /* End Of Timer 35 */
+{
+ timerName = 36;                                      /*WaitL2PMReportProfile2 */
+ timeUnit = 3;                                        /*Sec */
+ duration = 5;
+ description = "PMH starts this timer to guard the reporting interval for profile2";
+ moduleId = 10;
+}, /* End Of Timer 36 */
+{
+ timerName = 39;                                      /*WaitScheduledFileTransferToStart */
+ timeUnit = 3;                                        /*Sec */
+ duration = 0;
+ description = "Wait for the  Timer to expire to start the file transfer in scheduled mode";
+ moduleId = 5;
+} /* End Of Timer 39 */
+); /* End Of timersConfig */
+msgTrace = (
+{
+ msgId = 1;                                      # MSG_TIMEKEEPER_PRM_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 2;                                      # MSG_TIMEKEEPER_BSM_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 3;                                      # MSG_TIMEKEEPER_UDP_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 4;                                      # MSG_TIMEKEEPER_CIH1_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 5;                                      # MSG_TIMEKEEPER_CIH2_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 6;                                      # MSG_TIMEKEEPER_CIH3_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 7;                                      # MSG_TIMEKEEPER_WIH_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 8;                                      # MSG_TIMEKEEPER_DEH_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 9;                                      # MSG_TIMEKEEPER_PMH_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 10;                                     # MSG_TIMEKEEPER_FTH_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 11;                                     # MSG_TIMEKEEPER_SIH_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 12;                                     # MSG_FTH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 13;                                     # MSG_SCTP_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 14;                                     # MSG_EGTP_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 15;                                     # MSG_TUCL_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 16;                                     # MSG_MAC_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 17;                                     # MSG_PDCP_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 18;                                     # MSG_RLC_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 19;                                     # MSG_RRC_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 20;                                     # MSG_S1AP_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 21;                                     # MSG_UEH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 22;                                     # MSG_DEH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 23;                                     # MSG_SIH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 24;                                     # MSG_WIH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 25;                                     # MSG_BSM_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 26;                                     # MSG_LTH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 27;                                     # MSG_PMH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 28;                                     # MSG_UDH_PRM_START_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 29;                                     # MSG_PRM_BSM_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 30;                                     # MSG_PRM_FTH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 31;                                     # MSG_PRM_DEH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 32;                                     # MSG_PRM_WIH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 33;                                     # MSG_PRM_RRC_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 34;                                     # MSG_PRM_S1AP_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 35;                                     # MSG_PRM_RLC_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 36;                                     # MSG_PRM_PDCP_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 37;                                     # MSG_PRM_MAC_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 38;                                     # MSG_PRM_EGTP_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 39;                                     # MSG_PRM_SCTP_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 40;                                     # MSG_PRM_TUCL_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 41;                                     # MSG_PRM_UEH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 42;                                     # MSG_PRM_SIH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 43;                                     # MSG_PRM_LTH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 44;                                     # MSG_PRM_PMH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 45;                                     # MSG_PRM_UDH_EXIT_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 46;                                     # MSG_PRM_FTH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 47;                                     # MSG_PRM_SCTP_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 48;                                     # MSG_PRM_EGTP_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 49;                                     # MSG_PRM_TUCL_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 50;                                     # MSG_PRM_MAC_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 51;                                     # MSG_PRM_PDCP_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 52;                                     # MSG_PRM_RLC_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 53;                                     # MSG_PRM_RRC_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 54;                                     # MSG_PRM_S1AP_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 55;                                     # MSG_PRM_UEH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 56;                                     # MSG_PRM_DEH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 57;                                     # MSG_PRM_SIH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 58;                                     # MSG_PRM_WIH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 59;                                     # MSG_PRM_BSM_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 60;                                     # MSG_PRM_LTH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 61;                                     # MSG_PRM_PMH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 62;                                     # MSG_PRM_UDH_HELLO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 63;                                     # MSG_FTH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 64;                                     # MSG_SCTP_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 65;                                     # MSG_EGTP_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 66;                                     # MSG_TUCL_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 67;                                     # MSG_MAC_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 68;                                     # MSG_PDCP_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 69;                                     # MSG_RLC_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 70;                                     # MSG_RRC_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 71;                                     # MSG_S1AP_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 72;                                     # MSG_UEH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 73;                                     # MSG_DEH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 74;                                     # MSG_SIH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 75;                                     # MSG_WIH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 76;                                     # MSG_BSM_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 77;                                     # MSG_LTH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 78;                                     # MSG_PMH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 79;                                     # MSG_UDH_PRM_HELLO_ACK
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 80;                                     # MSG_BSM_S1M_OPSTART_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 81;                                     # MSG_S1M_BSM_OPSTART_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 82;                                     # MSG_S1M_BSM_OPSTART_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 83;                                     # MSG_BSM_UDH_OPSTART_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 84;                                     # MSG_UDH_BSM_OPSTART_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 85;                                     # MSG_UDH_BSM_OPSTART_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 86;                                     # MSG_BSM_CEM_OPSTART_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 87;                                     # MSG_CEM_BSM_OPSTART_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 88;                                     # MSG_CEM_BSM_OPSTART_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 89;                                     # MSG_BSM_DEH_OPSTART_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 90;                                     # MSG_DEH_BSM_OPSTART_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 91;                                     # MSG_DEH_BSM_OPSTART_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 92;                                     # MSG_BSM_PMH_OPSTART_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 93;                                     # MSG_PMH_BSM_OPSTART_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 94;                                     # MSG_PMH_BSM_OPSTART_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 95;                                     # MSG_BSM_S1M_OPSTOP_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 96;                                     # MSG_S1M_BSM_OPSTOP_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 97;                                     # MSG_BSM_UDH_OPSTOP_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 98;                                     # MSG_UDH_BSM_OPSTOP_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 99;                                     # MSG_BSM_CEM_OPSTOP_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 100;                                    # MSG_CEM_BSM_OPSTOP_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 101;                                    # MSG_BSM_DEH_OPSTOP_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 102;                                    # MSG_DEH_BSM_OPSTOP_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 103;                                    # MSG_BSM_PMH_OPSTOP_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 104;                                    # MSG_PMH_BSM_OPSTOP_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 105;                                    # MSG_BSM_SM_SCTP_INIT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 106;                                    # MSG_SM_BSM_SCTP_INIT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 107;                                    # MSG_SM_BSM_SCTP_INIT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 108;                                    # MSG_BSM_SM_EGTP_INIT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 109;                                    # MSG_SM_BSM_EGTP_INIT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 110;                                    # MSG_SM_BSM_EGTP_INIT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 111;                                    # MSG_BSM_SM_S1AP_INIT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 112;                                    # MSG_SM_BSM_S1AP_INIT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 113;                                    # MSG_SM_BSM_S1AP_INIT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 114;                                    # MSG_BSM_DEH_INIT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 115;                                    # MSG_DEH_BSM_INIT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 116;                                    # MSG_DEH_BSM_INIT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 117;                                    # MSG_BSM_SIH_INIT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 118;                                    # MSG_SIH_BSM_INIT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 119;                                    # MSG_SIH_BSM_INIT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 120;                                    # MSG_BSM_UEH_INIT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 121;                                    # MSG_UEH_BSM_INIT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 122;                                    # MSG_UEH_BSM_INIT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 123;                                    # MSG_BSM_UEH_UEEVENTHISTORYLOG_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 124;                                    # MSG_UEH_BSM_UEEVENTHISTORYLOG_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 125;                                    # MSG_UEH_BSM_UEEVENTHISTORYLOG_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 126;                                    # MSG_BSM_CEM_ENB_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 127;                                    # MSG_CEM_BSM_ENB_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 128;                                    # MSG_CEM_BSM_ENB_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 129;                                    # MSG_BSM_S1M_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 130;                                    # MSG_S1M_BSM_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 131;                                    # MSG_S1M_BSM_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 132;                                    # MSG_BSM_DEH_RH_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 133;                                    # MSG_DEH_BSM_RH_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 134;                                    # MSG_DEH_BSM_RH_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 135;                                    # MSG_BSM_PMH_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 136;                                    # MSG_PMH_BSM_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 137;                                    # MSG_PMH_BSM_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 138;                                    # MSG_BSM_UDH_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 139;                                    # MSG_UDH_BSM_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 140;                                    # MSG_UDH_BSM_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 141;                                    # MSG_BSM_PMH_COUNTER_INPUT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 142;                                    # MSG_PMH_BSM_COUNTER_INPUT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 143;                                    # MSG_PMH_BSM_COUNTER_INPUT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 144;                                    # MSG_BSM_FTH_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 145;                                    # MSG_BSM_UEH_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 146;                                    # MSG_BSM_PRM_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 147;                                    # MSG_BSM_DEH_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 148;                                    # MSG_BSM_LTH_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 149;                                    # MSG_BSM_CIH1_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 150;                                    # MSG_BSM_CIH2_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 151;                                    # MSG_BSM_CIH3_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 152;                                    # MSG_BSM_WIH_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 153;                                    # MSG_BSM_SIH_SET_MSG_TRACE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 154;                                    # MSG_BSM_FTH_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 155;                                    # MSG_BSM_SM_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 156;                                    # MSG_BSM_DEH_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 157;                                    # MSG_BSM_PRM_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 158;                                    # MSG_BSM_PMH_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 159;                                    # MSG_BSM_LTH_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 160;                                    # MSG_BSM_SIH_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 161;                                    # MSG_BSM_WIH_SET_LOG_CFG
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 162;                                    # MSG_CIH1_BSM_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 163;                                    # MSG_CIH2_BSM_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 164;                                    # MSG_CIH3_BSM_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 165;                                    # MSG_BSM_CIH1_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 166;                                    # MSG_BSM_CIH2_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 167;                                    # MSG_BSM_CIH3_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 168;                                    # MSG_BSM_CIH1_GET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 169;                                    # MSG_BSM_CIH2_GET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 170;                                    # MSG_BSM_CIH3_GET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 171;                                    # MSG_WIH_BSM_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 172;                                    # MSG_BSM_WIH_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 173;                                    # MSG_BSM_WIH_GET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 174;                                    # MSG_SIH_BSM_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 175;                                    # MSG_BSM_SIH_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 176;                                    # MSG_BSM_SIH_GET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 177;                                    # MSG_CIH1_BSM_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 178;                                    # MSG_CIH2_BSM_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 179;                                    # MSG_CIH3_BSM_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 180;                                    # MSG_BSM_CIH1_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 181;                                    # MSG_BSM_CIH2_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 182;                                    # MSG_BSM_CIH3_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 183;                                    # MSG_BSM_CIH1_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 184;                                    # MSG_BSM_CIH2_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 185;                                    # MSG_BSM_CIH3_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 186;                                    # MSG_WIH_BSM_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 187;                                    # MSG_BSM_WIH_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 188;                                    # MSG_BSM_WIH_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 189;                                    # MSG_SIH_BSM_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 190;                                    # MSG_BSM_SIH_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 191;                                    # MSG_BSM_SIH_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 192;                                    # MSG_BSM_PRM_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 193;                                    # MSG_PRM_BSM_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 194;                                    # MSG_BSM_PRM_RESTART_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 195;                                    # MSG_BSM_PRM_REBOOT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 196;                                    # MSG_PRM_BSM_REBOOT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 197;                                    # MSG_BSM_PRM_SW_ACTIVATE_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 198;                                    # MSG_PRM_BSM_SW_ACTIVATE_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 199;                                    # MSG_PRM_BSM_SW_ACTIVATE_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 200;                                    # MSG_PRM_BSM_SW_ACTIVATE_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 201;                                    # MSG_PRM_BSM_SW_ACTIVATE_REJ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 202;                                    # MSG_BSM_PRM_SW_INSTALL_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 203;                                    # MSG_PRM_BSM_SW_INSTALL_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 204;                                    # MSG_PRM_BSM_SW_INSTALL_ACCEPTED
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 205;                                    # MSG_PRM_BSM_SW_INSTALL_REJ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 206;                                    # MSG_PRM_BSM_SW_INSTALL_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 207;                                    # MSG_PRM_BSM_CONFIG_INSTALL_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 208;                                    # MSG_BSM_PRM_CONFIG_INSTALL_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 209;                                    # MSG_BSM_PRM_CONFIG_INSTALL_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 210;                                    # MSG_PRM_BSM_ALL_MODULES_UP_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 211;                                    # MSG_PRM_BSM_MOD_UP_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 212;                                    # MSG_PRM_BSM_MOD_DOWN_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 213;                                    # MSG_BSM_PRM_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 214;                                    # MSG_PRM_BSM_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 215;                                    # MSG_FTH_BSM_DOWNLOAD_CMPL_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 216;                                    # MSG_FTH_BSM_DOWNLOAD_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 217;                                    # MSG_FTH_BSM_UPLOAD_CMPL_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 218;                                    # MSG_FTH_BSM_UPLOAD_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 219;                                    # MSG_BSM_FTH_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 220;                                    # MSG_FTH_BSM_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 221;                                    # MSG_BSM_FTH_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 222;                                    # MSG_FTH_BSM_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 223;                                    # MSG_FTH_BSM_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 224;                                    # MSG_BSM_DEH_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 225;                                    # MSG_DEH_BSM_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 226;                                    # MSG_DEH_BSM_GET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 227;                                    # MSG_BSM_DEH_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 228;                                    # MSG_DEH_BSM_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 229;                                    # MSG_DEH_BSM_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 230;                                    # MSG_DEH_BSM_COMPONENT_DOWN_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 231;                                    # MSG_DEH_BSM_COMPONENT_UP_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 232;                                    # MSG_BSM_DEH_GPS_DETAIL_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 233;                                    # MSG_DEH_BSM_GPS_DETAIL_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 234;                                    # MSG_DEH_BSM_GPS_DETAIL_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 235;                                    # MSG_BSM_DEH_DEVICE_INIT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 236;                                    # MSG_DEH_BSM_DEVICE_INIT_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 237;                                    # MSG_DEH_BSM_DEVICE_INIT_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 238;                                    # MSG_BSM_DEH_SET_LED_COLOR
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 239;                                    # MSG_BSM_DEH_RH_RECONFIG_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 240;                                    # MSG_BSM_DEH_GET_ENB_ADDR_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 241;                                    # MSG_DEH_BSM_GET_ENB_ADDR_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 242;                                    # MSG_DEH_BSM_GET_ENB_ADDR_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 243;                                    # MSG_BSM_DEH_SET_IP_ADDR_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 244;                                    # MSG_DEH_BSM_SET_IP_ADDR_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 245;                                    # MSG_PRM_DEH_RH_SW_INSTALL_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 246;                                    # MSG_DEH_PRM_RH_SW_INSTALL_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 247;                                    # MSG_DEH_PRM_RH_SW_INSTALL_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 248;                                    # MSG_PRM_DEH_RH_SW_ACTIVATE_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 249;                                    # MSG_DEH_PRM_RH_SW_ACTIVATE_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 250;                                    # MSG_DEH_PRM_RH_SW_ACTIVATE_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 251;                                    # MSG_DEH_PRM_RH_VERSION_INFO
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 252;                                    # MSG_BSM_SIH_NOTI_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 253;                                    # MSG_S1M_BSM_LINK_UP_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 254;                                    # MSG_S1M_BSM_LINK_DOWN_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 255;                                    # MSG_S1M_BSM_LINK_CLOSED_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 256;                                    # MSG_S1M_BSM_RESET_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 257;                                    # MSG_S1M_BSM_UNKNOWN_ENB_UE_ID
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 258;                                    # MSG_BSM_UEH_GET_ACTIVE_UE_STATUS_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 259;                                    # MSG_UEH_BSM_GET_ACTIVE_UE_STATUS_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 260;                                    # MSG_BSM_UEH_GET_UE_EVENT_HISTORY_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 261;                                    # MSG_UEH_BSM_GET_UE_EVENT_HISTORY_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 262;                                    # MSG_BSM_UEH_MOD_STATE_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 263;                                    # MSG_UEH_BSM_MOD_STATE_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 264;                                    # MSG_BSM_CEM_CELL_BAR_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 265;                                    # MSG_CEM_BSM_CELL_BAR_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 266;                                    # MSG_BSM_CEM_CELL_UNBAR_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 267;                                    # MSG_CEM_BSM_CELL_UNBAR_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 268;                                    # MSG_BSM_UDH_GET_ACTIVE_RAB_STATUS_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 269;                                    # MSG_UDH_BSM_GET_ACTIVE_RAB_STATUS_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 270;                                    # MSG_BSM_UDH_GET_RAB_HISTORY_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 271;                                    # MSG_UDH_BSM_GET_RAB_HISTORY_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 272;                                    # MSG_BSM_UDH_MOD_STATE_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 273;                                    # MSG_UDH_BSM_MOD_STATE_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 274;                                    # MSG_BSM_PMH_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 275;                                    # MSG_PMH_BSM_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 276;                                    # MSG_PMH_BSM_GET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 277;                                    # MSG_BSM_PMH_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 278;                                    # MSG_PMH_BSM_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 279;                                    # MSG_PMH_BSM_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 280;                                    # MSG_PMH_BSM_MEASUREMENT_CMPL_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 281;                                    # MSG_PMH_BSM_COUNTER_FILE_AVAILABLE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 282;                                    # MSG_PMH_BSM_COUNTER_COLLECTION_FAILED
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 283;                                    # MSG_BSM_PMH_PM_FILE_UPLOADED
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 284;                                    # MSG_BSM_PMH_COUNTER_CLEAR_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 285;                                    # MSG_PMH_BSM_COUNTER_CLEAR_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 286;                                    # MSG_PMH_BSM_COUNTER_CLEAR_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 287;                                    # MSG_BSM_PMH_DIAG_COUNTER_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 288;                                    # MSG_PMH_BSM_DIAG_COUNTER_CMD_CMPL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 289;                                    # MSG_PMH_UEH_COUNTER_START_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 290;                                    # MSG_UEH_PMH_COUNTER_START_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 291;                                    # MSG_UEH_PMH_COUNTER_START_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 292;                                    # MSG_PMH_UEH_COUNTER_STOP_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 293;                                    # MSG_UEH_PMH_COUNTER_STOP_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 294;                                    # MSG_UEH_PMH_COUNTER_REPORT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 295;                                    # MSG_UEH_PMH_COUNTER_STOP_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 296;                                    # MSG_PMH_SM_PDCP_GEN_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 297;                                    # MSG_SM_PMH_PDCP_GEN_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 298;                                    # MSG_PMH_SM_PDCP_UPLANE_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 299;                                    # MSG_SM_PMH_PDCP_UPLANE_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 300;                                    # MSG_PMH_SM_EGTP_GEN_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 301;                                    # MSG_SM_PMH_EGTP_GEN_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 302;                                    # MSG_PMH_SM_RLC_GEN_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 303;                                    # MSG_SM_PMH_RLC_GEN_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 304;                                    # MSG_PMH_SM_MAC_GEN_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 305;                                    # MSG_SM_PMH_MAC_GEN_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 306;                                    # MSG_PMH_SM_MAC_RLCSAP_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 307;                                    # MSG_SM_PMH_MAC_RLCSAP_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 308;                                    # MSG_PMH_SM_MAC_PHYSAP_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 309;                                    # MSG_SM_PMH_MAC_PHYSAP_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 310;                                    # MSG_PMH_SM_SCTP_GEN_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 311;                                    # MSG_SM_PMH_SCTP_GEN_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 312;                                    # MSG_PMH_SM_RRC_GEN_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 313;                                    # MSG_SM_PMH_RRC_GEN_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 314;                                    # MSG_PMH_SM_RRC_CELL_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 315;                                    # MSG_SM_PMH_RRC_CELL_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 316;                                    # MSG_PMH_SM_S1AP_GEN_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 317;                                    # MSG_SM_PMH_S1AP_GEN_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 318;                                    # MSG_PMH_SM_S1AP_PEER_NODE_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 319;                                    # MSG_SM_PMH_S1AP_PEER_NODE_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 320;                                    # MSG_PMH_UEH_RRM_STAT_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 321;                                    # MSG_UEH_PMH_RRM_STAT_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 322;                                    # MSG_PMH_UDH_DSTATS_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 323;                                    # MSG_UDH_PMH_DSTATS_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 324;                                    # MSG_PMH_TFU_DSTATS_CFG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 325;                                    # MSG_TFU_PMH_DSTATS_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 326;                                    # MSG_TFU_DEH_CPRI_LINK_DOWN_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 327;                                    # MSG_TFU_DEH_CPRI_LINK_UP_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 328;                                    # MSG_COORD_NODEA_SESSION_CREATE_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 329;                                    # MSG_NODEA_COORD_SESSION_CREATE_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 330;                                    # MSG_NODEA_COORD_SESSION_CREATE_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 331;                                    # MSG_COORD_NODEB_SESSION_CREATE_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 332;                                    # MSG_NODEB_COORD_SESSION_CREATE_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 333;                                    # MSG_NODEB_COORD_SESSION_CREATE_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 334;                                    # MSG_COORD_NODEA_START_DATA_TX
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 335;                                    # MSG_NODEA_COORD_DATA_TX_RX_COMPLETE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 336;                                    # MSG_COORD_NODEB_START_DATA_TX
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 337;                                    # MSG_NODEB_COORD_DATA_TX_RX_COMPLETE
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 338;                                    # MSG_COORD_NODEA_SESSION_INFO_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 339;                                    # MSG_COORD_NODEB_SESSION_INFO_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 340;                                    # MSG_NODEA_COORD_SESSION_INFO_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 341;                                    # MSG_NODEB_COORD_SESSION_INFO_RSP
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 342;                                    # MSG_COORD_NODEA_SESSION_DEL_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 343;                                    # MSG_NODEA_COORD_SESSION_DEL_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 344;                                    # MSG_NODEA_COORD_SESSION_DEL_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 345;                                    # MSG_COORD_NODEB_SESSION_DEL_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 346;                                    # MSG_NODEB_COORD_SESSION_DEL_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 347;                                    # MSG_NODEB_COORD_SESSION_DEL_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 348;                                    # MSG_TIMEKEEPER_SHOW_USAGE_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 349;                                    # MSG_TIMEKEEPER_COORD_DATA_COMPLETE_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 350;                                    # MSG_TIMEKEEPER_NODEA_RCV_DATA_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 351;                                    # MSG_TIMEKEEPER_NODEB_RCV_DATA_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 352;                                    # MSG_TIMEKEEPER_NODEA_SEND_DATA_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 353;                                    # MSG_TIMEKEEPER_NODEB_SEND_DATA_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 354;                                    # MSG_TIMEKEEPER_LTH_TIMEOUT_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 355;                                    # MSG_SM_LTH_TRACE_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 356;                                    # MSG_LTH_SM_TRACE_START_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 357;                                    # MSG_SM_LTH_TRACE_START_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 358;                                    # MSG_SM_LTH_TRACE_START_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 359;                                    # MSG_LTH_SM_TRACE_STOP_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 360;                                    # MSG_SM_LTH_TRACE_STOP_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 361;                                    # MSG_SM_LTH_TRACE_STOP_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 362;                                    # MSG_BSM_SIH_STOP_TRACE_IND
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 363;                                    # MSG_BSM_LTH_GET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 364;                                    # MSG_LTH_BSM_GET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 365;                                    # MSG_BSM_LTH_INIT_CONFIG_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 366;                                    # MSG_LTH_BSM_INIT_CONFIG_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 367;                                    # MSG_LTH_BSM_INIT_CONFIG_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 368;                                    # MSG_BSM_LTH_SET_OBJ_REQ
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 369;                                    # MSG_LTH_BSM_SET_OBJ_SUCC
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 370;                                    # MSG_LTH_BSM_SET_OBJ_FAIL
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+},
+{
+ msgId = 371;                                    # MSG_IMC_PRM_PHYSHUTDOWN_CMD
+ msgTraceLevel = 3;
+ msgTraceDirection = 3;
+}
+);
+enbAddresses :
+{
+ backhaulPortMacAddress            = "b1:b2:b3:b4:b5:b6";
+ debugPortMacAddress               = "d1:d2:d3:d4:d5:d6";
+ uniqueProductId                   = "pwav-007";
+ staticIPAddressUsedAtDebugPort    = "192.168.1.5";
+ netmaskForDebugPort               = "255.255.255.0";
+ radioHeadIpAddress                = "192.168.1.6";
+ radioHeadMacAddress               = "40:00:C0:A8:0B:6E";
+};
+eventThresholds :
+{
+ index                             = 1;
+ cpuUsageHigh                      = 70;
+ cpuUsageNormal                    = 60;
+ memUsageHigh                      = 60;
+ memUsageNormal                    = 50;
+ enbLoadHighMbps                   = 20;
+ enbLoadNormalMbps                 = 10;
+};
+udhConfig :
+{
+ ulInactivityIntervalInSecs        = 0;
+ ueThroughtputTimerInSecs          = 5;
+ memoryDiagCfg                     = 0;
+};
+uehConfig :
+{
+ systemInfoValueTag                = 0;
+ prachResource                     = 1;
+ scSpacing                         = 0;          #15KHZ
+ cycPfxType                        = 0;          #cycPfxNormal
+ srsCfgPrd                         = 0;
+ srbPollRetrans                    = 52;         #ms400
+ srbPollPdu                        = 7;          #pInfinity
+ srbPollByte                       = 14;         #kBinfinity
+ srbMaxReTxThresh                  = 3;          #t4
+ srbTreordrng                      = 8;          #ms40
+ srbTStatProhibit                  = 7;          #ms35
+ srb1LogchcfgPrior                 = 1;
+ srb2LogchcfgPrior                 = 3;
+ macCfgTtiBundling                 = 0;          # FALSE 
+ deltaMcsEnabled                   = 0;
+ accumulationEnabled               = 0;
+ cqiPUCCHResIdx                    = 0;
+ cqiPmiConfigIdx                   = 25;
+ riConfigIdx                       = 483;
+ simultAckNackAndCQI               = 1;          # TRUE 
+ tpcRNTI                           = 0x01FA;
+ indexOfFormat3                    = 1;
+ srsPeriodicity                    = 2;          #srs10
+ transmissionComb                  = 0;
+ dedCyclicShift                    = 0;          #cs0
+ srPucchResIdx                     = 0;
+ srConfigIdx                       = 2;
+ dsrTransMax                       = 4;          #n64
+ drbGrp                            = 1;
+ ueCategory                        = 3;
+ repFact                           = 0;          #n2
+ n1PucchAnRep                      = 0;
+ formatInd                         = 0;
+ antennaSel                        = 0;
+ aPeriodicMode                     = 3;          #rm30
+ periodicMode                      = 0;
+ prdicityEnum                      = 20;
+ cqiOffst                          = 0;
+ cqiCfgk                           = 1;
+ maxUlHqTx                         = 4;          #n5
+ ueUlPwrTrgCqi                     = 9;
+ ackNackRepFactor                  = 4;
+ macInst                           = 0;
+ maxUePerUlSf                      = 1;
+ maxUePerDlSf                      = 1;
+ maxUlBwPerUe                      = 50;
+ maxDlBwPerUe                      = 50;
+ maxDlRetxBw                       = 50;
+ maxDlUeNewTxPerTti                = 1;
+ maxUlUeNewTxPerTti                = 1;
+ isCyclicPrefixUlExt               = 0;
+ isCyclicPrefixDlExt               = 0;
+ cellModSchm                       = 0;          # FALSE 
+ bcchPchRaCodeRate                 = 0;
+ pdcchCodeRate                     = 0;
+ dlCmnCodRateCcchCqi               = 3;
+ puschSubBndStrt                   = 6;
+ puschNoSubbnds                    = 6;
+ puschSubBandSz                    = 6;
+ puschSubBandDmrs                  = 0;
+ ulCmnCodRateCcchCqi               = 6;
+ isDlFreqSel                       = 0;
+ thresholdCqi                      = 0;
+ preambleFrmt                      = 0;
+ raWinSz                           = 10;
+ raOccSz                           = 1;
+ raOccSfnEnum                      = 1;
+ pucchPwrFmt3RntiSt                = 1;
+ pucchPwrFmt3RntiSz                = 1;
+ pucchPwrFmt3aRntiSt               = 1;
+ pucchPwrFmt3aRntiSz               = 1;
+ puschPwrFmt3RntiSt                = 1;
+ puschPwrFmt3RntiSz                = 1;
+ puschPwrFmt3aRntiSt               = 1;
+ puschPwrFmt3aRntiSz               = 1;
+ ueUlByteRate                      = 80000000;
+ preambleSetCfgPres                = 0;
+ preambleSetCfgStart               = 0;
+ preambleSetCfgSz                  = 0;
+ prachNumRes                       = 0;
+ crntiRtnTimer                     = 3;
+ numOfTxAnt                        = 2;
+ standaloneSrb1Timer               = 7;
+ contextReleaseTimer               = 6;
+ mmeRelIndTimer                    = 6;
+ rrcConnRelL2AckTimer              = 3;
+ isUeSecEnble                      = 1;
+ ueCatPollByteIdx                  = 2;
+ dupMode                           = 1;
+ ulUmSnFieldLen                    = 1;          #sn10
+ dlUmSnFieldLen                    = 1;          #sn10
+ umRlcTReordering                  = 16;         #ms80
+ ulCpLength                        = 0;
+ srbPrioritisedBitRate             = 7;
+ internalUeConfigTimer             = 9;          #ms10000
+ uePwrReconfTimerinSec             = 0;
+ isDlLaEnabled                     = 1;          # TRUE 
+ uehStateAuditTmrDurInSecs         = 30;
+ uehProcedureAuditTmrDurInSecs     = 60;
+ uehPucchAuditTmrDurInSecs         = 60;
+ memoryDiagCfg                     = 7;
+ maxMsg3PerUlSf                    = 1;
+};
+egtpConfig :
+{
+ nmbUSaps                          = 5;
+ maxNmbTSaps                       = 5;
+ nmbSrvs                           = 15;
+ timerRes                          = 1000;
+ resThreshUpper                    = 9;
+ resThreshLower                    = 1;
+ eguT3TimerEnabled                 = 1;          # TRUE 
+ eguT3TimerVal                     = 15;
+ nmbRetries                        = 3;
+ echoTmrEnabled                    = 1;          # TRUE 
+ echoTmrVal                        = 120;
+ reOrderTmrEnabled                 = 1;          # TRUE 
+ reOrderTmrVal                     = 20;
+ pvtExtId                          = 10;
+ pduWindSize                       = 20;
+ maxNumOfIp                        = 1;
+ nodeArch                          = 1;
+ nmbWorkerThread                   = 3;
+ loadDistTmrEnabled                = 1;          # TRUE 
+ loadDistTmrVal                    = 1;
+ tInitTmrEnabled                   = 1;          # TRUE 
+ tInitTmrVal                       = 10;
+ maxBndRetry                       = 3;
+ bndTmCfgEnabled                   = 1;          # TRUE 
+ bndTmCfgVal                       = 300;
+ tPar_u_sockParam_listenQSize      = 1;
+ tPar_u_sockParam_numOpts          = 300;
+ ipInfo_echoReqPvtExtValLength     = 0;
+ ipInfo_echoReqPvtExtValBuff       = "0x01";
+ ipInfo_echoRspPvtExtValLength     = 0;
+ ipInfo_echoRspPvtExtValBuff       = "0x07";
+ ipInfo_errIndPvtExtValLength      = 1;
+ ipInfo_errIndPvtExtValBuff        = "0x05";
+ tserv_tPar_u_sockParam_numOpts    = 0;
+ tserv_tPar_u_sockParam_listenQSize
+                                   = 5;
+ opnSrvRetryCnt                    = 3;
+ opnSrvTmrEnabled                  = 1;          # TRUE 
+ opnSrvTmrVal                      = 10;
+ hostNamePresent                   = 0;          # FALSE 
+ hostNameLen                       = 0;
+ gtp_C_Or_U                        = 1;
+};
+sctpConfig :
+{
+ maxNmbSctSaps                     = 10;
+ maxNmbTSaps                       = 5;
+ maxNmbAssoc                       = 10;
+ maxNmbEndp                        = 5;
+ maxNmbDstAddr                     = 5;
+ maxNmbSrcAddr                     = 5;
+ maxNmbTxChunks                    = 95000;
+ maxNmbRxChunks                    = 95000;
+ maxNmbInStrms                     = 100;
+ maxNmbOutStrms                    = 100;
+ initARwnd                         = 16000;
+ mtuInitial                        = 1500;
+ mtuMinInitial                     = 1500;
+ mtuMaxInitial                     = 1500;
+ performMtu                        = 0;          # FALSE 
+ timeRes                           = 1;
+ reConfig_MaxInitReTx              = 8;
+ reConfig_MaxAssocReTx             = 20;
+ reConfig_MaxPathReTx              = 1;
+ reConfig_AltAcceptFlg             = 0;          # FALSE 
+ reConfig_KeyTm                    = 600;
+ reConfig_Alpha                    = 12;
+ reConfig_Beta                     = 25;
+ reConfig_TIntTmr                  = 200;
+ reConfig_MaxBndRetry              = 2;
+ reConfig_MaxAckDelayTm            = 2;
+ reConfig_MaxAckDelayDg            = 5;
+ reConfig_RtoInitial               = 100;
+ reConfig_RtoMin                   = 210;
+ reConfig_RtoMax                   = 250;
+ reConfig_FreezeTm                 = 15;
+ reConfig_BundleTime               = 1;
+ reConfig_CookieLife               = 30000;
+ reConfig_HbeatIntervalTm          = 30000;
+ reConfig_MaxBurst                 = 4;
+ reConfig_MaxHbBurst               = 1;
+ reConfig_T5SdownGrdTm             = 250;
+ reConfig_HandleInitFlg            = 1;          # TRUE 
+ reConfig_NegAbrtFlg               = 1;          # TRUE 
+ reConfig_HBeatEnable              = 1;          # TRUE 
+ reConfig_FlcUpThr                 = 80000;
+ reConfig_FlcLowThr                = 3000;
+};
+s1apConfig :
+{
+ nmbSztSaps                        = 10;
+ nmbSctSaps                        = 10;
+ nmbConn                           = 10;
+ nmbPeer                           = 1;
+ timeRes                           = 10;
+ maxBndRetry                       = 3;
+ bndTmCfgEnabled                   = 1;          # TRUE 
+ bndTmCfgVal                       = 300;
+ s1apLocalPort                     = 36412;
+ s1apGuardTimer                    = 5;
+ assocCfg_nmbRetry                 = 1;
+ assocCfg_tmrAssocRecov_enb        = 1;          # TRUE 
+ assocCfg_tmrAssocRecov_val        = 50;
+ maxS1SetupAllowed                 = 3;
+};
+deviceMonitorConfig :
+{
+ index                             = 1;
+ baseBand                          = 0;          # FALSE 
+ radioHead                         = 1;          # TRUE 
+ backHaulPort                      = 0;          # FALSE 
+ debugPort                         = 0;          # FALSE 
+ tempSensor                        = 0;          # FALSE 
+ gps                               = 0;          # FALSE 
+ cpri                              = 1;          # TRUE 
+ clock                             = 0;          # FALSE 
+};

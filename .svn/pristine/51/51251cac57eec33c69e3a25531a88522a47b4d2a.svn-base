@@ -1,0 +1,82 @@
+ -- @file    CELL-ADMIN-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:47 PM
+ --
+
+CELL-ADMIN-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+cellAdmin MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allow operator to bar and unbar the cell"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 7 }
+
+cellAdminTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF CellAdminEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allow operator to bar and unbar the cell
+            This is a SINGLE ROW Table"
+       ::= { cellAdmin 1 }
+
+cellAdminEntry OBJECT-TYPE
+       SYNTAX      CellAdminEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Contents of cell admin table"
+       INDEX  { index }
+       ::= { cellAdminTable 1 }
+
+CellAdminEntry ::= 
+   SEQUENCE {
+       index           RowNumber,
+       cellId          Unsigned32,
+       cellCommand     INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { cellAdminEntry 1 }
+
+cellId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 255 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Cell Id Should be same as CellConfig.cellId]"
+       ::= { cellAdminEntry 2 }
+
+cellCommand OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   bar(1),
+                   unbar(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The command to bar or unbar the cell identified by CellId above]"
+       ::= { cellAdminEntry 3 }
+
+END

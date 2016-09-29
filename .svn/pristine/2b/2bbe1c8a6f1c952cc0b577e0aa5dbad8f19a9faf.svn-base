@@ -1,0 +1,175 @@
+<project name="LTE" basedir="." >
+
+
+<!--
+<property name="SRC1" location ="/nwsw"/>
+
+<property name="SRC2" location ="/nwsw/build/scripts"/>
+
+<property name="SRC3" location ="/nwsw/build/config"/>
+
+
+-->
+
+<property name="SRC1" location ="/home/hudson/jobs/upperarm/workspace/nwsw"/>
+
+<property name="SRC2" location ="/home/hudson/jobs/upperarm/workspace/nwsw/build/scripts"/>
+
+<property name="SRC3" location ="/home/hudson/jobs/upperarm/workspace/nwsw/build/config"/>
+
+
+
+
+
+
+<property name="pico" value="xx"/>
+<property name="prop" value="xx"/>
+
+
+<property name="relv" value="xxx"/>
+<property name="bufv" value="xxx"/>
+
+
+
+
+
+
+
+<target name="upperarm">
+
+
+
+  <exec dir="${SRC1}" executable="/bin/sh">
+ 
+
+  <arg line='-c "make clean"'/>
+  
+   
+ 
+
+ 
+  </exec>
+
+
+</target>
+
+
+
+
+
+
+
+<target name="upperarm4gmx">
+
+    <exec dir="${SRC1}" executable="/bin/sh">
+ 
+    <arg line='-c "make 4gmx"'/>
+
+
+ 
+    </exec>
+
+
+
+
+</target>
+
+
+
+
+
+
+<target name="NFSpackage">
+
+
+
+  <exec dir="${SRC2}" executable="/bin/sh">
+   
+  <arg line='-c "./create_package.sh"'/>
+
+
+ 
+  </exec>
+
+</target>
+
+
+
+
+
+
+
+<target name="JFFSpackage">
+
+  <exec dir="${SRC2}" executable="/bin/sh">
+
+  <arg line='-c "./create_package_jffs.sh"'/>
+
+
+ 
+  </exec>
+
+
+
+</target>
+
+
+
+<target name="RadioHead">
+
+<copy file="/home/naveen/SEC/PICO_V00.01.01.26/PICO_00.01.01.26.bin" todir="/home/naveen/19Nov12/nwsw/build/config/"/>
+
+
+
+<replace file="${SRC3}/packageInfo.txt" token='PICO_00.01.01.25.bin' value='PICO_00.01.01.26.bin'/>
+
+<replace file="${SRC3}/packageInfo.txt" token='0.0.1.1.25' value='0.0.1.1.26'/>
+
+
+
+<exec dir="${SRC3}" executable="/bin/sh">
+   
+    <arg line='-c "tar -cvzf rh.tgz packageInfo.txt PICO_00.01.01.26.bin"'/>
+
+
+</exec>
+
+
+
+</target>
+
+
+
+
+<target name="JFFSpackagesw">
+
+
+
+
+<replace file="${SRC3}/version.cfg" token='1' value='2'/>
+
+
+<replace file="${SRC3}/version.cfg" token='2' value='3'/> 
+
+
+<exec dir="${SRC2}" executable="/bin/sh">
+   
+    <arg line='-c "./create_swinstall_package.sh jffs SwInstall 1"'/>
+
+
+</exec>
+
+
+
+</target>
+
+
+
+
+</project>
+
+
+
+
+
+

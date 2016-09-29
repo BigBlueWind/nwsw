@@ -1,0 +1,89 @@
+ -- @file    L2-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+L2-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp, CounterId          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32             FROM SNMPv2-SMI;
+
+l2Counters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "L2 Counter"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 139 }
+
+l2CountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF L2CountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "L2 Counter
+            This is a MULTI ROW Table"
+       ::= { l2Counters 1 }
+
+l2CountersEntry OBJECT-TYPE
+       SYNTAX      L2CountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "L2 Counter profile 1"
+       INDEX  { index }
+       ::= { l2CountersTable 1 }
+
+L2CountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       counterId           CounterId,
+       value               Unsigned32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { l2CountersEntry 1 }
+
+counterId OBJECT-TYPE
+       SYNTAX      CounterId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Counter ID]"
+       ::= { l2CountersEntry 2 }
+
+value OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Counter ID value]"
+       ::= { l2CountersEntry 3 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { l2CountersEntry 4 }
+
+END

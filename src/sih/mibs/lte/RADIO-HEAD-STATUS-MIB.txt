@@ -1,0 +1,965 @@
+ -- @file    RADIO-HEAD-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+RADIO-HEAD-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                                          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32, Integer32          FROM SNMPv2-SMI
+       TruthValue                                                              FROM SNMPv2-TC;
+
+radioHeadStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Shows the configured values and state variables like VSWR, temperature"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 112 }
+
+radioHeadStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF RadioHeadStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Shows the configured values and state variables like VSWR, temperature
+            This is a SINGLE ROW Table"
+       ::= { radioHeadStatus 1 }
+
+radioHeadStatusEntry OBJECT-TYPE
+       SYNTAX      RadioHeadStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains radio head status objects."
+       INDEX  { radioHeadProfileId }
+       ::= { radioHeadStatusTable 1 }
+
+RadioHeadStatusEntry ::= 
+   SEQUENCE {
+       radioHeadProfileId                  ProfileId,
+       c1IQMap                             INTEGER,
+       c2IQMap                             INTEGER,
+       c3IQMap                             INTEGER,
+       c4IQMap                             INTEGER,
+       fwMode                              Unsigned32,
+       numberOfFA                          Unsigned32,
+       mappingOf1FAStatus                  INTEGER,
+       mappingOf2FAStatus                  INTEGER,
+       mappingOf3FAStatus                  INTEGER,
+       mappingOf4FAStatus                  INTEGER,
+       cvc1                                Unsigned32,
+       cvc2                                Unsigned32,
+       cvc3                                Unsigned32,
+       cvc4                                Unsigned32,
+       txFilterBandwidth                   Unsigned32,
+       rxFilterBandwidth                   Unsigned32,
+       dlRatio                             Unsigned32,
+       ulRatio                             Unsigned32,
+       vswrShutdownAlarmThreshold          Unsigned32,
+       overpowerShutdownAlarmThreshold     Unsigned32,
+       lowpowerAlarmThreshold              Unsigned32,
+       centerFrequency                     Unsigned32,
+       fa1ChannelBandwidthStatus           INTEGER,
+       fa2ChannelBandwidthStatus           INTEGER,
+       fa3ChannelBandwidthStatus           INTEGER,
+       fa4ChannelBandwidthStatus           INTEGER,
+       tx1stFaFrequency                    Unsigned32,
+       tx2ndFaFrequency                    Unsigned32,
+       tx3rdFaFrequency                    Unsigned32,
+       tx4thFaFrequency                    Unsigned32,
+       rx1stFaFrequency                    Unsigned32,
+       rx2ndFaFrequency                    Unsigned32,
+       rx3rdFaFrequency                    Unsigned32,
+       rx4thFaFrequency                    Unsigned32,
+       txDelay                             Unsigned32,
+       rxDelay                             Unsigned32,
+       txPathAFaControl                    Unsigned32,
+       txPathBFaControl                    Unsigned32,
+       rxPathAFaControl                    Unsigned32,
+       rxPathBFaControl                    Unsigned32,
+       multiMode                           TruthValue,
+       powerBoost                          TruthValue,
+       filterSwithingMode                  TruthValue,
+       pathATxOnOrOff                      Unsigned32,
+       pathATxEnableOrDisable              Unsigned32,
+       pathATemperature                    Integer32,
+       pathATxRFPower                      Integer32,
+       pathAReturnLoss                     Unsigned32,
+       pathAFa1RssiDigitalIQLevel          Unsigned32,
+       pathAFa2RssiDigitalIQLevel          Unsigned32,
+       pathAFa3RssiDigitalIQLevel          Unsigned32,
+       pathAFa4RssiDigitalIQLevel          Unsigned32,
+       pathAFa1TssiDigitalIQLevel          Unsigned32,
+       pathAFa2TssiDigitalIQLevel          Unsigned32,
+       pathAFa3TssiDigitalIQLevel          Unsigned32,
+       pathAFa4TssiDigitalIQLevel          Unsigned32,
+       pathAFa1TxAtten                     Unsigned32,
+       pathAFa2TxAtten                     Unsigned32,
+       pathAFa3TxAtten                     Unsigned32,
+       pathAFa4TxAtten                     Unsigned32,
+       pathBTxOnOrOff                      Unsigned32,
+       pathBTxEnableOrDisable              Unsigned32,
+       pathBTemperature                    Integer32,
+       pathBTxRFPower                      Integer32,
+       pathBReturnLoss                     Unsigned32,
+       pathBFa1RssiDigitalIQLevel          Unsigned32,
+       pathBFa2RssiDigitalIQLevel          Unsigned32,
+       pathBFa3RssiDigitalIQLevel          Unsigned32,
+       pathBFa4RssiDigitalIQLevel          Unsigned32,
+       pathBFa1TssiDigitalIQLevel          Unsigned32,
+       pathBFa2TssiDigitalIQLevel          Unsigned32,
+       pathBFa3TssiDigitalIQLevel          Unsigned32,
+       pathBFa4TssiDigitalIQLevel          Unsigned32,
+       pathBFa1TxAtten                     Unsigned32,
+       pathBFa2TxAtten                     Unsigned32,
+       pathBFa3TxAtten                     Unsigned32,
+       pathBFa4TxAtten                     Unsigned32
+   }
+
+radioHeadProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Radio Head Profile Identifier
+             Unique Identifier of the row.]"
+       ::= { radioHeadStatusEntry 1 }
+
+c1IQMap OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0: No use
+             1: use IQ mapping in 1.4MHz Ch BW
+             3: use IQ mapping in 3MHz Ch BW
+             5: use IQ mapping in 5MHz Ch BW
+             10: use IQ mapping in 10MHz Ch BW
+             15: use IQ mapping in 15MHz Ch BW
+             20: use IQ mapping in 20MHz Ch BW]"
+       ::= { radioHeadStatusEntry 2 }
+
+c2IQMap OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0: No use
+             1: use IQ mapping in 1.4MHz Ch BW
+             3: use IQ mapping in 3MHz Ch BW
+             5: use IQ mapping in 5MHz Ch BW
+             10: use IQ mapping in 10MHz Ch BW
+             15: use IQ mapping in 15MHz Ch BW
+             20: use IQ mapping in 20MHz Ch BW]"
+       ::= { radioHeadStatusEntry 3 }
+
+c3IQMap OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0: No use
+             1: use IQ mapping in 1.4MHz Ch BW
+             3: use IQ mapping in 3MHz Ch BW
+             5: use IQ mapping in 5MHz Ch BW
+             10: use IQ mapping in 10MHz Ch BW
+             15: use IQ mapping in 15MHz Ch BW
+             20: use IQ mapping in 20MHz Ch BW]"
+       ::= { radioHeadStatusEntry 4 }
+
+c4IQMap OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0: No use
+             1: use IQ mapping in 1.4MHz Ch BW
+             3: use IQ mapping in 3MHz Ch BW
+             5: use IQ mapping in 5MHz Ch BW
+             10: use IQ mapping in 10MHz Ch BW
+             15: use IQ mapping in 15MHz Ch BW
+             20: use IQ mapping in 20MHz Ch BW]"
+       ::= { radioHeadStatusEntry 5 }
+
+fwMode OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0 : User mode
+             1 : Factory mode]"
+       ::= { radioHeadStatusEntry 6 }
+
+numberOfFA OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 4 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             1~4  Number of FA]"
+       ::= { radioHeadStatusEntry 7 }
+
+mappingOf1FAStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(0),
+                   c1(1),
+                   c2(2),
+                   c3(3),
+                   c4(4)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0 : Not assigned
+             1 : C1
+             2 : C2
+             3 : C3
+             4 : C4]"
+       ::= { radioHeadStatusEntry 8 }
+
+mappingOf2FAStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(0),
+                   c1(1),
+                   c2(2),
+                   c3(3),
+                   c4(4)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0 : Not assigned
+             1 : C1
+             2 : C2
+             3 : C3
+             4 : C4]"
+       ::= { radioHeadStatusEntry 9 }
+
+mappingOf3FAStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(0),
+                   c1(1),
+                   c2(2),
+                   c3(3),
+                   c4(4)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0 : Not assigned
+             1 : C1
+             2 : C2
+             3 : C3
+             4 : C4]"
+       ::= { radioHeadStatusEntry 10 }
+
+mappingOf4FAStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(0),
+                   c1(1),
+                   c2(2),
+                   c3(3),
+                   c4(4)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0 : Not assigned
+             1 : C1
+             2 : C2
+             3 : C3
+             4 : C4]"
+       ::= { radioHeadStatusEntry 11 }
+
+cvc1 OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Connection Validity Check(CVC) value, written in the CVC field of C1 VSS.]"
+       ::= { radioHeadStatusEntry 12 }
+
+cvc2 OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Connection Validity Check(CVC) value, written in the CVC field of C2 VSS.]"
+       ::= { radioHeadStatusEntry 13 }
+
+cvc3 OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Connection Validity Check(CVC) value, written in the CVC field of C3 VSS.]"
+       ::= { radioHeadStatusEntry 14 }
+
+cvc4 OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Connection Validity Check(CVC) value, written in the CVC field of C4 VSS.]"
+       ::= { radioHeadStatusEntry 15 }
+
+txFilterBandwidth OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 5 .. 200 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 5~200 [MHz]]"
+       ::= { radioHeadStatusEntry 16 }
+
+rxFilterBandwidth OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 5 .. 200 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 5~200 [MHz]]"
+       ::= { radioHeadStatusEntry 17 }
+
+dlRatio OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 35 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Down Link Ratio]"
+       ::= { radioHeadStatusEntry 18 }
+
+ulRatio OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 21 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Up Link Ratio]"
+       ::= { radioHeadStatusEntry 19 }
+
+vswrShutdownAlarmThreshold OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 30 .. 100 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 3.0 ~ 10.0 [dB]. Ex: 45 = 4.5 dB.]"
+       ::= { radioHeadStatusEntry 20 }
+
+overpowerShutdownAlarmThreshold OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Over Power Shutdown AlarmThreshold]"
+       ::= { radioHeadStatusEntry 21 }
+
+lowpowerAlarmThreshold OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             lowpowerAlarmThreshold]"
+       ::= { radioHeadStatusEntry 22 }
+
+centerFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~3000.00 [MHz]. Ex: 1505 = 15.05 dB.]"
+       ::= { radioHeadStatusEntry 23 }
+
+fa1ChannelBandwidthStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Value: 5, 10, 20 [MHz]]"
+       ::= { radioHeadStatusEntry 24 }
+
+fa2ChannelBandwidthStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Value: 0, 5, 10 [MHz]]"
+       ::= { radioHeadStatusEntry 25 }
+
+fa3ChannelBandwidthStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Value: 5, 10, 20 [MHz]]"
+       ::= { radioHeadStatusEntry 26 }
+
+fa4ChannelBandwidthStatus OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-0(1),
+                   e-1(2),
+                   e-3(3),
+                   e-5(4),
+                   e-10(5),
+                   e-15(6),
+                   e-20(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Value: 0, 5, 10 [MHz]]"
+       ::= { radioHeadStatusEntry 27 }
+
+tx1stFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 28 }
+
+tx2ndFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 29 }
+
+tx3rdFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 30 }
+
+tx4thFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 31 }
+
+rx1stFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 32 }
+
+rx2ndFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 33 }
+
+rx3rdFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 34 }
+
+rx4thFaFrequency OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Refer to 3GPP TS 36.104(ch. 5.7)]"
+       ::= { radioHeadStatusEntry 35 }
+
+txDelay OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unit: ns
+             Real Range: 0~300 [us]. Ex: 255000 = 255 us]"
+       ::= { radioHeadStatusEntry 36 }
+
+rxDelay OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unit: ns
+             Real Range: 0~300 [us]. Ex: 255000 = 255 us]"
+       ::= { radioHeadStatusEntry 37 }
+
+txPathAFaControl OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Path On/Off is based on this element]"
+       ::= { radioHeadStatusEntry 38 }
+
+txPathBFaControl OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Path On/Off is based on this element]"
+       ::= { radioHeadStatusEntry 39 }
+
+rxPathAFaControl OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Path On/Off is based on this element]"
+       ::= { radioHeadStatusEntry 40 }
+
+rxPathBFaControl OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Path On/Off is based on this element]"
+       ::= { radioHeadStatusEntry 41 }
+
+multiMode OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0: Single Mode (One System)
+             1: Multi Mode (Two System)]"
+       ::= { radioHeadStatusEntry 42 }
+
+powerBoost OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0: Off 1: On]"
+       ::= { radioHeadStatusEntry 43 }
+
+filterSwithingMode OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0: External             
+              1: Internal                   
+             0xFF: In case that Filter Switching Mode is not used.]"
+       ::= { radioHeadStatusEntry 44 }
+
+pathATxOnOrOff OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Path On/Off is based on this element]"
+       ::= { radioHeadStatusEntry 45 }
+
+pathATxEnableOrDisable OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 4 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0 : Default Disable   1 : User Disable  2 : User Enable   3 . DU Enable  4 : Shutdown]"
+       ::= { radioHeadStatusEntry 46 }
+
+pathATemperature OBJECT-TYPE
+       SYNTAX      Integer32 (-400 .. 1000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: -40.0~100.0 [degree centigrade]. Ex: 505 = 50.5 degree centigrade.]"
+       ::= { radioHeadStatusEntry 47 }
+
+pathATxRFPower OBJECT-TYPE
+       SYNTAX      Integer32 (-3300 .. 500 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: -330.0~50.0 [dBm]. Ex 255 = 25.5 dBm.]"
+       ::= { radioHeadStatusEntry 48 }
+
+pathAReturnLoss OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 3000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range : 0.00~30.00 [dB]. Ex 105 = 1.05 dB.]"
+       ::= { radioHeadStatusEntry 49 }
+
+pathAFa1RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 50 }
+
+pathAFa2RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 51 }
+
+pathAFa3RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 52 }
+
+pathAFa4RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 53 }
+
+pathAFa1TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 54 }
+
+pathAFa2TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 55 }
+
+pathAFa3TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 56 }
+
+pathAFa4TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 57 }
+
+pathAFa1TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 58 }
+
+pathAFa2TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 59 }
+
+pathAFa3TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 60 }
+
+pathAFa4TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 61 }
+
+pathBTxOnOrOff OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Path On/Off is based on this element]"
+       ::= { radioHeadStatusEntry 62 }
+
+pathBTxEnableOrDisable OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 4 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0 : Default Disable   1 : User Disable  2 : User Enable   3 . DU Enable  4 : Shutdown]"
+       ::= { radioHeadStatusEntry 63 }
+
+pathBTemperature OBJECT-TYPE
+       SYNTAX      Integer32 (-400 .. 1000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: -40.0~100.0 [degree centigrade]. Ex: 505 = 50.5 degree centigrade.]"
+       ::= { radioHeadStatusEntry 64 }
+
+pathBTxRFPower OBJECT-TYPE
+       SYNTAX      Integer32 (-3300 .. 500 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: -330.0~50.0 [dBm]. Ex 255 = 25.5 dBm.]"
+       ::= { radioHeadStatusEntry 65 }
+
+pathBReturnLoss OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 3000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range : 0.00~30.00 [dB]. Ex 105 = 1.05 dB]"
+       ::= { radioHeadStatusEntry 66 }
+
+pathBFa1RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 67 }
+
+pathBFa2RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 68 }
+
+pathBFa3RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 69 }
+
+pathBFa4RssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Rx]"
+       ::= { radioHeadStatusEntry 70 }
+
+pathBFa1TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 71 }
+
+pathBFa2TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 72 }
+
+pathBFa3TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 73 }
+
+pathBFa4TssiDigitalIQLevel OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             For Tx]"
+       ::= { radioHeadStatusEntry 74 }
+
+pathBFa1TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 75 }
+
+pathBFa2TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 76 }
+
+pathBFa3TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 77 }
+
+pathBFa4TxAtten OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0~30.0 [dB]. Ex 105 = 10.5 dB.]"
+       ::= { radioHeadStatusEntry 78 }
+
+END

@@ -1,0 +1,542 @@
+<html>
+<head>
+<style type='text/css' lang='css'>
+     @import '../css/styles.css';
+</style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/mapping.js'></script>
+<script type='text/javascript'>
+    var sessionID = parent.sessionID;
+$(document).ready(function() {
+var fn = function(e) {
+return DisableRefresh(e);
+}
+document.onkeydown = fn;
+$(document).bind('contextmenu',             function(e) {              alert('Due to security reason, Right Click is not allowed.'); return false; });
+LteGet('gtpGenCounters', null, SetMapping);
+var interval = '';
+$('#rfrshInt').change(function() {
+ if ($('#rfrshInt').val() != 'NONE') {
+if (interval != '')
+clearInterval(interval);
+interval = setInterval('LteGet("gtpGenCounters", null, SetMapping)', $('#rfrshInt').val() * 1000);
+}
+else
+clearInterval(interval);
+});
+$('#btnHelp').click(function() {
+    window.open(sessionID + "-help.htm#gtpGenCounters", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+});
+});
+</script>
+</head>
+<body>
+<table width='100%'>
+<tr>
+<td align='left' width='60%'>
+<span class='title'>Monitor &gt; GTP Gen Counters</span>
+</td>
+<td align='right' width='40%'>
+<span class='cmdMsg' id='cmdMsg'></span>
+</td>
+</tr>
+</table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+<div style='margin-left: 10px; margin-top: 10px;'>
+<table cellspacing='0' cellpadding='2' border='0' width='1045px' style='margin-top: 10px'>
+<tbody>
+<tr>
+<td align='left' style='font-size:smaller;'>Automatic Refresh Interval (Seconds)&nbsp;&nbsp;
+:&nbsp;
+<select name='rfrshInt' id='rfrshInt'>
+<option value='NONE'>NONE</option>
+<option value='5'>5</option>
+<option value='10'>10</option>
+<option value='15'>15</option>
+<option value='30'>30</option>
+<option value='60'>60</option>
+</select></td>
+<td align='right' class='txtPageTitle'>
+<input type='button' value='Help' name='btnHelp' id='btnHelp' />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style='margin-left: 10px; margin-top: 10px; width: 580px;'>
+<form name='gtpGenCounters' id='gtpGenCounters' action=''>
+<table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+<tr>
+<td align='left' class='tblTitleBg'>
+&nbsp; GTP Gen Counters
+</td>
+</tr>
+<tr class='formheadingborder'>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div style='overflow-x: hidden; overflow-y: scroll; height: 600px; width: 580px; 
+border-bottom: 1px; scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black'>
+<table width='100%' cellspacing='0' cellpadding='2' border='0'>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Messages Transmitted 
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numTxMsg' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Messages Received  
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numRxMsg' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Active Tunnels 
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numActvTnls' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Error Indications 
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='numErrInd' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Number of Discard Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='rxDesgMsg' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Version Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invVerRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Protocol Type Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invProtTypeRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invMsgRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Total Invalid Length Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invMsgLenRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Out-of-Order Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invIeOrderRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Length Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invIeLenRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Format Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invIeFormatRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Mandatory LE Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invManIeLenRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Missing Mandatory LE Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='missMandIeRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Extension Header Unsupported Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='unSuppExtHdrRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Wrong Extension Header Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='wrngExtHdrRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Unable to Comply Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='msgUnableCompRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Unable to Comply Messages  Received from Application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='msgUnableCompTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Missing  Mandatory LE Messages  Received from Application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='missMandIeTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Memory Allocation Failed Messages Received from Application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='memAllocFldTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid Messages Received from Application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invMsgTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid TEID Messages Received from Application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invTeidTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid TEID Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invTeidRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Error in Sequence Number Messages Received from Application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='errSeqNoTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Error in Sequence Number Messages Received
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='errSeqNoRx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+TPDU Size Exceeded Messages Received from application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='tpduExcdTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg1'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Invalid TPDU Messages Received from Application
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='invDatTypeTx' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+<tr class='conTblRowBg2'>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+<td nowrap='nowrap' width='40%'>
+Last Collected At
+</td>
+<td nowrap='nowrap' class='rowcell'>
+:&nbsp;
+</td>
+<td nowrap='nowrap'id ='lastCollectedAt' >&nbsp;
+</td>
+<td nowrap='nowrap' class='rowcell'>
+&nbsp;
+</td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

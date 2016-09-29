@@ -1,0 +1,247 @@
+ -- @file    SCHEDULER-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+SCHEDULER-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+schedulerConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "MAC/Scheduler configuration"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 56 }
+
+schedulerConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SchedulerConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "MAC/Scheduler configuration
+            This is a SINGLE ROW Table"
+       ::= { schedulerConfig 1 }
+
+schedulerConfigEntry OBJECT-TYPE
+       SYNTAX      SchedulerConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to scheduler configuration."
+       INDEX  { schedulerProfileId }
+       ::= { schedulerConfigTable 1 }
+
+SchedulerConfigEntry ::= 
+   SEQUENCE {
+       schedulerProfileId      ProfileId,
+       schedulingAlgorithm     INTEGER,
+       maxDlHarqTx             Unsigned32,
+       maxUlHarqTx             INTEGER,
+       maxMsg4HarqTx           Unsigned32,
+       pcfichCfi               Unsigned32,
+       periodicPhrTimer        INTEGER,
+       prohibitPhrTimer        INTEGER,
+       dlPathlossChange        INTEGER,
+       periodicBsrTimer        INTEGER,
+       retxBsrTimer            INTEGER
+   }
+
+schedulerProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Scheduler Profile Identifier. This Id should be referred in CellConfig table entry to create the mapping of Cell->MAC/scheduler configuration.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { schedulerConfigEntry 1 }
+
+schedulingAlgorithm OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   basicSc1(0),
+                   profFair(1),
+                   roundRobin(2),
+                   maxCqi(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Defines the type of scheduling algorithm. 'rr' is Round Robin Scheduler for UL and DL. Other scheduler types are not supported as on date.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { roundRobin }
+       ::= { schedulerConfigEntry 2 }
+
+maxDlHarqTx OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 8 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum DL HARQ re-transmissions]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 4 }
+       ::= { schedulerConfigEntry 3 }
+
+maxUlHarqTx OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   n1(0),
+                   n2(1),
+                   n3(2),
+                   n4(3),
+                   n5(4),
+                   n6(5),
+                   n7(6),
+                   n8(7),
+                   n10(8),
+                   n12(9),
+                   n16(10),
+                   n20(11),
+                   n24(12),
+                   n28(13)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum UL HARQ re-transmissions. Corresponds to ul-SCH-Config ->maxHARQ-Tx in RRC MAC-Main config IE.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { n4 }
+       ::= { schedulerConfigEntry 4 }
+
+maxMsg4HarqTx OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 8 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum DL HARQ re-transmissions for Msg4]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 4 }
+       ::= { schedulerConfigEntry 5 }
+
+pcfichCfi OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 3 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             CFI value to be used in PCFICH. It denotes the number of OFDM symbols for PDCCH. Recommended value is 1 for 5MHz, 2/3 for 10-20MHz based on PUCCH dimensioning.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 2 }
+       ::= { schedulerConfigEntry 6 }
+
+periodicPhrTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sf10(0),
+                   sf20(1),
+                   sf50(2),
+                   sf100(3),
+                   sf200(4),
+                   sf500(5),
+                   sf1000(6),
+                   infinity(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Periodic PHR interval in subframes. Sf10 means 10 subframes, sf20 means 20 subframes and so on.]
+           [Change_Condition : RW ]"
+       DEFVAL { sf1000 }
+       ::= { schedulerConfigEntry 7 }
+
+prohibitPhrTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sf0(0),
+                   sf10(1),
+                   sf20(2),
+                   sf50(3),
+                   sf100(4),
+                   sf200(5),
+                   sf500(6),
+                   sf1000(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PHR is sent by UE if prohibitPHR-Timer expires or has expired and the path loss has changed more than dl-PathlossChange dB since the transmission of a PHR when UE has UL resources for new transmission]
+           [Change_Condition : RW ]"
+       DEFVAL { sf100 }
+       ::= { schedulerConfigEntry 8 }
+
+dlPathlossChange OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   dB1(0),
+                   dB3(1),
+                   dB6(2),
+                   infinity(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PHR is sent by UE if prohibitPHR-Timer expires or has expired and the path loss has changed more than dl-PathlossChange dB since the transmission of a PHR when UE has UL resources for new transmission]
+           [Change_Condition : RW ]"
+       DEFVAL { dB3 }
+       ::= { schedulerConfigEntry 9 }
+
+periodicBsrTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sf5(0),
+                   sf10(1),
+                   sf16(2),
+                   sf20(3),
+                   sf32(4),
+                   sf40(5),
+                   sf64(6),
+                   sf80(7),
+                   sf128(8),
+                   sf160(9),
+                   sf320(10),
+                   sf640(11),
+                   sf1280(12),
+                   sf2560(13),
+                   infinity(14)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Periodic BSR interval in subframes. Sf5 means 5 subframes, sf10 means 10, and so on.]
+           [Change_Condition : RW ]"
+       DEFVAL { sf10 }
+       ::= { schedulerConfigEntry 10 }
+
+retxBsrTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sf320(0),
+                   sf640(1),
+                   sf1280(2),
+                   sf2560(3),
+                   sf5120(4),
+                   sf10240(5)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Timer for BSR reporting in number of sub-frames. Value sf640 corresponds to 640 sub-frames, sf1280 corresponds to 1280 sub-frames and so on.]
+           [Change_Condition : RW ]"
+       DEFVAL { sf320 }
+       ::= { schedulerConfigEntry 11 }
+
+END

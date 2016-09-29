@@ -1,0 +1,24 @@
+#!/bin/csh
+#
+# update all files
+#
+set PRROOT=/vobs/core_prd/gprs/lteenb/src
+
+if($#argv == 1) then
+  if($1 == "-n") then
+    set PRROOT=/vobs/core_prd/gprs/lteenb/src
+  endif
+  if($1 == "-view") then
+    set PRROOT=/vobs/core_prd/gprs/lteenb/src
+  endif
+endif
+
+
+# LTEENB Product files
+echo "Copying files from ve directory"
+cp $PRROOT/ve/* .
+
+echo "Copying files from build directory"
+cp $PRROOT/build/* .
+
+chmod 755 *

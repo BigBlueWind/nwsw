@@ -1,0 +1,147 @@
+ -- @file    RADIO-HEAD-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+RADIO-HEAD-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+radioHeadConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to configure LK"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 58 }
+
+radioHeadConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF RadioHeadConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to configure LK
+            This is a SINGLE ROW Table"
+       ::= { radioHeadConfig 1 }
+
+radioHeadConfigEntry OBJECT-TYPE
+       SYNTAX      RadioHeadConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to radioHead configuration."
+       INDEX  { radioHeadProfileId }
+       ::= { radioHeadConfigTable 1 }
+
+RadioHeadConfigEntry ::= 
+   SEQUENCE {
+       radioHeadProfileId             ProfileId,
+       txAttenPathA                   Unsigned32,
+       txAttenPathB                   Unsigned32,
+       txDelay                        Unsigned32,
+       rxDelay                        Unsigned32,
+       vswrShutdownAlarmThreshold     Unsigned32,
+       overpowerAlarmThreshold        Unsigned32,
+       lowpowerAlarmThreshold         Unsigned32
+   }
+
+radioHeadProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Radio Head configuration identifier
+             Unique Identifier of the row.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { radioHeadConfigEntry 1 }
+
+txAttenPathA OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 270 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0 to 27.0[dB]. Ex: 135 = 13.5 dB.]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { radioHeadConfigEntry 2 }
+
+txAttenPathB OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 270 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0 to 27.0[dB]. Ex: 135 = 13.5 dB.]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { radioHeadConfigEntry 3 }
+
+txDelay OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300000 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0.0 to 300[us]. Ex: 145500 = 145.5 us.]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { radioHeadConfigEntry 4 }
+
+rxDelay OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 300000 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 0.0 to 300[us]. Ex: 145500 = 145.5 us.]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { radioHeadConfigEntry 5 }
+
+vswrShutdownAlarmThreshold OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 30 .. 100 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Real Range: 3.0 to 10.0[dB]. Ex: 75 = 7.5 dB.
+             Default is to be 6.0 dB. ]
+           [Change_Condition : RW ]"
+       DEFVAL { 60 }
+       ::= { radioHeadConfigEntry 6 }
+
+overpowerAlarmThreshold OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Digital IQ Level for Tx]
+           [Change_Condition : RW ]"
+       DEFVAL { 18915 }
+       ::= { radioHeadConfigEntry 7 }
+
+lowpowerAlarmThreshold OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 540000000 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Digital IQ Level for Tx]
+           [Change_Condition : RW ]"
+       DEFVAL { 1000 }
+       ::= { radioHeadConfigEntry 8 }
+
+END

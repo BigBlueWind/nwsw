@@ -1,0 +1,862 @@
+ -- @file    SYS-INFO2-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+SYS-INFO2-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                                          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32, Integer32          FROM SNMPv2-SMI
+       TruthValue                                                              FROM SNMPv2-TC;
+
+sysInfo2Config MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "SystemInformationBlockType2 contains radio resource configuration information that is common for all UEs"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 55 }
+
+sysInfo2ConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SysInfo2ConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "SystemInformationBlockType2 contains radio resource configuration information that is common for all UEs
+            This is a SINGLE ROW Table"
+       ::= { sysInfo2Config 1 }
+
+sysInfo2ConfigEntry OBJECT-TYPE
+       SYNTAX      SysInfo2ConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to sysInfo2 configuration."
+       INDEX  { sysInfo2ProfileId }
+       ::= { sysInfo2ConfigTable 1 }
+
+SysInfo2ConfigEntry ::= 
+   SEQUENCE {
+       sysInfo2ProfileId              ProfileId,
+       numRaPreambles                 INTEGER,
+       sizeRAPreamblesGroupA          INTEGER,
+       messageSizeGroupA              INTEGER,
+       messagePowerOffsetGroupB       INTEGER,
+       powerRampingStep               INTEGER,
+       preambleInitRcvdTgtPower       INTEGER,
+       preambleTransMax               INTEGER,
+       raRspWindowSize                INTEGER,
+       macContResolutionTimer         INTEGER,
+       maxHarqMsg3Tx                  Unsigned32,
+       modificationPeriodCoeff        INTEGER,
+       defaultPagCycle                INTEGER,
+       nB                             INTEGER,
+       rootSequenceIndex              Unsigned32,
+       prachConfigIndex               Unsigned32,
+       highSpeedFlag                  TruthValue,
+       zeroCorrelationZoneConfig      Unsigned32,
+       puschFreqHoppingSubBands       Unsigned32,
+       puschFreqHoppingMode           INTEGER,
+       puschFreqHoppingOffset         Unsigned32,
+       ulRsGroupHoppingEnabled        TruthValue,
+       ulRsGroupPusch                 Unsigned32,
+       ulRsSeqHoppingEnabled          TruthValue,
+       ulRsCyclicShiftPusch           Unsigned32,
+       deltaPucchShift                INTEGER,
+       n1PucchAn                      Unsigned32,
+       srsBandwidthConfig             INTEGER,
+       srsSubfrmConfig                INTEGER,
+       srsSimultaneousAnSrsTx         TruthValue,
+       poNominalPusch                 Integer32,
+       deltaFPucchFormat1             INTEGER,
+       deltaFPucchFormat1b            INTEGER,
+       deltaFPucchFormat2             INTEGER,
+       deltaFPucchFormat2a            INTEGER,
+       deltaFPucchFormat2b            INTEGER,
+       deltaPreambleMsg3              Integer32,
+       t300                           INTEGER,
+       t301                           INTEGER,
+       t310                           INTEGER,
+       n310                           INTEGER,
+       t311                           INTEGER,
+       n311                           INTEGER,
+       additionalSpectrumEmission     Unsigned32,
+       timeAlignmentTimer             INTEGER,
+       nRbCqi                         Unsigned32,
+       enable64QAM                    TruthValue,
+       nCsAn                          Unsigned32
+   }
+
+sysInfo2ProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             System Information Type 2 configuration profile identifier]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { sysInfo2ConfigEntry 1 }
+
+numRaPreambles OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   n4(0),
+                   n8(1),
+                   n12(2),
+                   n16(3),
+                   n20(4),
+                   n24(5),
+                   n28(6),
+                   n32(7),
+                   n36(8),
+                   n40(9),
+                   n44(10),
+                   n48(11),
+                   n52(12),
+                   n56(13),
+                   n60(14),
+                   n64(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of non-dedicated random access preambles]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { n52 }
+       ::= { sysInfo2ConfigEntry 2 }
+
+sizeRAPreamblesGroupA OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   n4(0),
+                   n8(1),
+                   n12(2),
+                   n16(3),
+                   n20(4),
+                   n24(5),
+                   n28(6),
+                   n32(7),
+                   n36(8),
+                   n40(9),
+                   n44(10),
+                   n48(11),
+                   n52(12),
+                   n56(13),
+                   n60(14)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Size of the random access preambles group A.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { n8 }
+       ::= { sysInfo2ConfigEntry 3 }
+
+messageSizeGroupA OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   b56(0),
+                   b144(1),
+                   b208(2),
+                   b256(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Threshold for preamble selection. Value in bits. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { b144 }
+       ::= { sysInfo2ConfigEntry 4 }
+
+messagePowerOffsetGroupB OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   minusInfinity(0),
+                   dB0(1),
+                   dB5(2),
+                   dB8(3),
+                   dB10(4),
+                   dB12(5),
+                   dB15(6),
+                   dB18(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Threshold for preamble selection. Value in dB. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { dB0 }
+       ::= { sysInfo2ConfigEntry 5 }
+
+powerRampingStep OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   dB0(0),
+                   dB2(1),
+                   dB4(2),
+                   dB6(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Power ramping factor in dB.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { dB2 }
+       ::= { sysInfo2ConfigEntry 6 }
+
+preambleInitRcvdTgtPower OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   minus120dBm(0),
+                   minus118dBm(1),
+                   minus116dBm(2),
+                   minus114dBm(3),
+                   minus112dBm(4),
+                   minus110dBm(5),
+                   minus108dBm(6),
+                   minus106dBm(7),
+                   minus104dBm(8),
+                   minus102dBm(9),
+                   minus100dBm(10),
+                   minus98dBm(11),
+                   minus96dBm(12),
+                   minus94dBm(13),
+                   minus92dBm(14),
+                   minus90dBm(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Initial preamble power in dBm. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { minus100dBm }
+       ::= { sysInfo2ConfigEntry 7 }
+
+preambleTransMax OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   n3(0),
+                   n4(1),
+                   n5(2),
+                   n6(3),
+                   n7(4),
+                   n8(5),
+                   n10(6),
+                   n20(7),
+                   n50(8),
+                   n100(9),
+                   n200(10)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum number of preamble transmission in integer. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { n6 }
+       ::= { sysInfo2ConfigEntry 8 }
+
+raRspWindowSize OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sf2(0),
+                   sf3(1),
+                   sf4(2),
+                   sf5(3),
+                   sf6(4),
+                   sf7(5),
+                   sf8(6),
+                   sf10(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Duration of the RA response window in subframes.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { sf6 }
+       ::= { sysInfo2ConfigEntry 9 }
+
+macContResolutionTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sf8(0),
+                   sf16(1),
+                   sf24(2),
+                   sf32(3),
+                   sf40(4),
+                   sf48(5),
+                   sf56(6),
+                   sf64(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Timer for MAC contention resolution in subframes. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { sf64 }
+       ::= { sysInfo2ConfigEntry 10 }
+
+maxHarqMsg3Tx OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 8 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum number of Msg3 HARQ transmissions, used for contention based random access.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 4 }
+       ::= { sysInfo2ConfigEntry 11 }
+
+modificationPeriodCoeff OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   n2(0),
+                   n4(1),
+                   n8(2),
+                   n16(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Actual modification period, expressed in number of radio frames= modificationPeriodCoeff * defaultPagingCycle.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { n4 }
+       ::= { sysInfo2ConfigEntry 12 }
+
+defaultPagCycle OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   rf32(0),
+                   rf64(1),
+                   rf128(2),
+                   rf256(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Default paging cycle, used to derive the parameter 'T' as defined in 36.304 which in turm derives the paging frame .]
+           [Change_Condition : RW ]"
+       DEFVAL { rf32 }
+       ::= { sysInfo2ConfigEntry 13 }
+
+nB OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   fourT(0),
+                   twoT(1),
+                   oneT(2),
+                   halfT(3),
+                   quarterT(4),
+                   oneEighthT(5),
+                   oneSixteenthT(6),
+                   oneThirtySecondT(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             nB is used as one of parameters to derive the Paging Frame and Paging Occasion. Value in multiples of defaultPagingCycle ('T'). ]
+           [Change_Condition : RW ]"
+       DEFVAL { oneT }
+       ::= { sysInfo2ConfigEntry 14 }
+
+rootSequenceIndex OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 837 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter defined the RACH_ROOT_SEQUENCE as defined in 36.211. It is used to find the set of 64 prach sequences in the cell.  This is found by including first, in the order of increasing cyclic shift, all the available cyclic shifts of a root Zadoff-Chu sequence with the logical index RACH_ROOT_SEQUENCE]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 22 }
+       ::= { sysInfo2ConfigEntry 15 }
+
+prachConfigIndex OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 63 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PRACH configuration index. This is used determine the allowed RA preamble format and subframes for RA transmission. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 12 }
+       ::= { sysInfo2ConfigEntry 16 }
+
+highSpeedFlag OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             High-speed-flag.TRUE corresponds to Restricted set and FALSE to
+             Unrestricted set]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { sysInfo2ConfigEntry 17 }
+
+zeroCorrelationZoneConfig OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ncs configuration index as defined in 36.211, used to derive the cyclic shift for the SC sequence for RA preamble]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 8 }
+       ::= { sysInfo2ConfigEntry 18 }
+
+puschFreqHoppingSubBands OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 4 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of sub-bands for PUSCH frequency hopping ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { sysInfo2ConfigEntry 19 }
+
+puschFreqHoppingMode OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   interSubFrame(0),
+                   intraAndInterSubFrame(1)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PUSCH frequency hopping mode]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { interSubFrame }
+       ::= { sysInfo2ConfigEntry 20 }
+
+puschFreqHoppingOffset OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 98 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PUSCH frequency hopping offset, expressed in terms of Resource Blocks (RBs)]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { sysInfo2ConfigEntry 21 }
+
+ulRsGroupHoppingEnabled OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Group hopping enabled on uplink ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { sysInfo2ConfigEntry 22 }
+
+ulRsGroupPusch OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 29 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Group assignment for generating the PUSCH RS sequence-shift pattern . This is used if Group hopping is enabled in uplink]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { sysInfo2ConfigEntry 23 }
+
+ulRsSeqHoppingEnabled OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Sequence hopping enabled on UL]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { sysInfo2ConfigEntry 24 }
+
+ulRsCyclicShiftPusch OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 7 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Cyclic shift for uplink Demodulating Reference signals]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { sysInfo2ConfigEntry 25 }
+
+deltaPucchShift OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ds1(0),
+                   ds2(1),
+                   ds3(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PUCCH delta-shift as defined in 36.211, used for PUCCH formats 1, 1a and 1b.Value ds1 corresponds to value 1 ds2 to 2 etc. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ds2 }
+       ::= { sysInfo2ConfigEntry 26 }
+
+n1PucchAn OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 2047 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Offset used to determine the ACK/NACK resource block in PDCCH]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 18 }
+       ::= { sysInfo2ConfigEntry 27 }
+
+srsBandwidthConfig OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   bw0(0),
+                   bw1(1),
+                   bw2(2),
+                   bw3(3),
+                   bw4(4),
+                   bw5(5),
+                   bw6(6),
+                   bw7(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SRS Bandwidth Configuration as defined in 36.211, 5.5.3.2 tables 1 to 4. Actual configuration depends on UL bandwidth. bw0 corresponds to value 0, bw1 to value 1 and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { bw0 }
+       ::= { sysInfo2ConfigEntry 28 }
+
+srsSubfrmConfig OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sc0(0),
+                   sc1(1),
+                   sc2(2),
+                   sc3(3),
+                   sc4(4),
+                   sc5(5),
+                   sc6(6),
+                   sc7(7),
+                   sc8(8),
+                   sc9(9),
+                   sc10(10),
+                   sc11(11),
+                   sc12(12),
+                   sc13(13),
+                   sc14(14),
+                   sc15(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Defines the cell specific sub frame configuration that corresponds to subframe configuration period  and the subframe offset for SRS transmission]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { sc0 }
+       ::= { sysInfo2ConfigEntry 29 }
+
+srsSimultaneousAnSrsTx OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             If the parameter SimultaneousAnSrsTx is set to FALSE, the UE shall not transmit SRS whenever SRS transmission and PUCCH transmission carrying ACK/NACK and/or positive SR happen to coincide in the same subframe.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { sysInfo2ConfigEntry 30 }
+
+poNominalPusch OBJECT-TYPE
+       SYNTAX      Integer32 (-126 .. 24 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Corresponds to parameter Po_nominal_pusch as defined in 36.213, used in UE uplink power control. This field is applicable for non-persistent
+             scheduling, only. Unit is dBm and actual rangle is -126..24 dBm, i.e. parameter value 0 corresponds to -126, value 1 corresponds to -125dBm, and so on. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { -65 }
+       ::= { sysInfo2ConfigEntry 31 }
+
+deltaFPucchFormat1 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   minus2dB(0),
+                   e-0dB(1),
+                   e-2dB(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ?F_PUCCH (F) for the PUCCH format 1 relative to PUCCH format 1a as defined in 36.213.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { e-0dB }
+       ::= { sysInfo2ConfigEntry 32 }
+
+deltaFPucchFormat1b OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-1dB(0),
+                   e-3dB(1),
+                   e-5dB(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ?F_PUCCH (F) for the PUCCH format 1b relative to PUCCH format 1a as defined in 36.213, used for UE uplink power control.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { e-3dB }
+       ::= { sysInfo2ConfigEntry 33 }
+
+deltaFPucchFormat2 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   minus2dB(0),
+                   e-0dB(1),
+                   e-1dB(2),
+                   e-2dB(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ?F_PUCCH (F) for the PUCCH format 2 relative to PUCCH format 1a as defined in 36.213, used for UE uplink power control.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { e-0dB }
+       ::= { sysInfo2ConfigEntry 34 }
+
+deltaFPucchFormat2a OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   minus2dB(0),
+                   e-0dB(1),
+                   e-2dB(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ?F_PUCCH (F) for the PUCCH format 2a relative to PUCCH format 1a as defined in 36.213, used for UE uplink power control.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { e-0dB }
+       ::= { sysInfo2ConfigEntry 35 }
+
+deltaFPucchFormat2b OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   minus2dB(0),
+                   e-0dB(1),
+                   e-2dB(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ?F_PUCCH (F) for the PUCCH format 2b relative to PUCCH format 1a as defined in 36.213, used for UE uplink power control.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { e-0dB }
+       ::= { sysInfo2ConfigEntry 36 }
+
+deltaPreambleMsg3 OBJECT-TYPE
+       SYNTAX      Integer32 (-1 .. 6 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ?PreambleMessage3 as defined in 36.213, used to derive the PUSCH power (re)transmissions corresponding to the random access response grant. Parameter actual range is {-1..6}, i.e. 0 means -1, 2 means 0, 3 means +1, and so on. Actual value used by UE = Paramater value * 2 [dB].]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 4 }
+       ::= { sysInfo2ConfigEntry 37 }
+
+t300 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms100(0),
+                   ms200(1),
+                   ms300(2),
+                   ms400(3),
+                   ms600(4),
+                   ms1000(5),
+                   ms1500(6),
+                   ms2000(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Request timer (Refer: 36.331, Sec7.3)]
+           [Change_Condition : RW ]"
+       DEFVAL { ms1000 }
+       ::= { sysInfo2ConfigEntry 38 }
+
+t301 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms100(0),
+                   ms200(1),
+                   ms300(2),
+                   ms400(3),
+                   ms600(4),
+                   ms1000(5),
+                   ms1500(6),
+                   ms2000(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Reestablishment Request timer(Refer: 36.331, Sec7.3)]
+           [Change_Condition : RW ]"
+       DEFVAL { ms1000 }
+       ::= { sysInfo2ConfigEntry 39 }
+
+t310 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms0(0),
+                   ms50(1),
+                   ms100(2),
+                   ms200(3),
+                   ms500(4),
+                   ms1000(5),
+                   ms2000(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Physical layer out of sync indication timer, (Refer: 36.331, Sec7.3)]
+           [Change_Condition : RW ]"
+       DEFVAL { ms1000 }
+       ::= { sysInfo2ConfigEntry 40 }
+
+n310 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   n1(0),
+                   n2(1),
+                   n3(2),
+                   n4(3),
+                   n6(4),
+                   n8(5),
+                   n10(6),
+                   n20(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum number of consecutive 'out-of-sync' indications received from Physical layer before T310 timer is started (Refer: 36.331, Sec7.3)]
+           [Change_Condition : RW ]"
+       DEFVAL { n3 }
+       ::= { sysInfo2ConfigEntry 41 }
+
+t311 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms1000(0),
+                   ms3000(1),
+                   ms5000(2),
+                   ms10000(3),
+                   ms15000(4),
+                   ms20000(5),
+                   ms30000(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             T311 timer that is started when RRC Connection re-establishment procedure is triggerred, and when this timer expires, the UE moves to IDLE state (Refer: 36.331, Sec7.3)]
+           [Change_Condition : RW ]"
+       DEFVAL { ms10000 }
+       ::= { sysInfo2ConfigEntry 42 }
+
+n311 OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   n1(0),
+                   n2(1),
+                   n3(2),
+                   n4(3),
+                   n5(4),
+                   n6(5),
+                   n8(6),
+                   n10(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum number of consecutive 'in-sync' indications received from physical layer. (Refer: 36.331, Sec7.3)]
+           [Change_Condition : RW ]"
+       DEFVAL { n1 }
+       ::= { sysInfo2ConfigEntry 43 }
+
+additionalSpectrumEmission OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 32 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Additional spectrum emmision]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { sysInfo2ConfigEntry 44 }
+
+timeAlignmentTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sf500(0),
+                   sf750(1),
+                   sf1280(2),
+                   sf1920(3),
+                   sf2560(4),
+                   sf5120(5),
+                   sf10240(6),
+                   infinity(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TimeAlignmentTimer is cell-specific TA timer used to control how long the UE is considered uplink time aligned. MAC must send TA to UE before expiry of this timer. Value in number of sub-frames. Value sf500 corresponds to 500 sub-frames,
+             sf750 corresponds to 750 sub-frames and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { infinity }
+       ::= { sysInfo2ConfigEntry 45 }
+
+nRbCqi OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 98 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This paramter is used to allocate band width in uplink for PUCCH formats 2/2a/2b transmission in each slot. Ref: Sec 5.4 of 36.211]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { sysInfo2ConfigEntry 46 }
+
+enable64QAM OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC: RadioResourceConfigCommonSIB->PUSCH-ConfigCommon->enable64QAM.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { sysInfo2ConfigEntry 47 }
+
+nCsAn OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 7 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PUCCH-ConfigCommon->nCS-AN]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { sysInfo2ConfigEntry 48 }
+
+END

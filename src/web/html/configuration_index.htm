@@ -1,0 +1,96 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+       
+    </style>
+     <script type='text/javascript' src='../script/jquery.js'></script>
+     <script type='text/javascript' src='../script/lte_set_get.js'></script>
+     <script type="text/javascript">
+         $(document).ready(function() {
+         var fn = function(e) {
+             return DisableRefresh(e);
+         }
+         document.onkeydown = fn;
+             $(document).bind("contextmenu", function(e) {alert("Due to security reason,Right Click is not allowed.");return false;});
+         });
+          
+       </script>      
+ 
+</head>
+<body>
+    <div style="margin-left: 10px;margin-top:20px">
+        <table width='850px'>
+            <tr>                
+                <td style="color: Navy" valign="middle">
+                    <h3>
+                        Configuration Management</h3>
+                </td>
+            </tr>
+        </table>
+        <table width='850px' class='tblBorder' style="height: 500px; background-color: #FAF9F3;margin-top:15px"
+            cellspacing='0' cellpadding='2' border='0'>
+            <tr>
+                <td align="left" valign="top" height='440px'>
+                    <br />
+                    <img src='../image/config.gif' style="margin-left: 10px;" />
+                </td>
+                <td width="100%" valign="top" style="font-size: smaller; font-family: Arial; font-style: normal;
+                    font-variant: inherit; font-variant: normal; height: 440px">
+                    <p style="margin-left: 20px; margin-right: 20px; margin-top: 20px; text-align: justify;">
+                        Configuration Management is responsible for editing and retrieval of configuration
+                        information for the various resources of eNodeB system. The resources may be physical
+                        (e.g. Physical Layer) or logical (e.g. Cell). The actual resource types that are
+                        managed are eNodeB specific. Present configuration data for any eNodeB resource
+                        is retrieved and displayed before any modification, so that the operator can selectively
+                        change the data items that need to be updated. For performing configuration, the
+                        operator first decides the resource on which the operation is to be performed.<br />
+                        <br />
+                        Most configuration commands operate on only one resource at a time. For some resources
+                        or their parameters its a requisite that eNodeB should be in LOCKED state, such
+                        parameters are disabled for editing in case eNodeB is in UNLOCKED state.<br />
+                        <br />
+                        <br />
+                        <br />
+                        Configuration of following is supported.</p>
+                    <table width="100%">
+                        <tr>
+                            <td style="font-size: smaller; font-family: Arial; font-style: normal; font-variant: inherit;
+                                font-variant: normal;vertical-align:text-top">
+                                <p style="margin-left: 20px; text-align: justify;">
+                                    - eNodeB Parameters<br />
+                                    - MME Parameters<br />
+                                    - Cell Parameters<br />
+                                    - Physical Layer Parameters<br />
+                                    - SIB1 & SIB2 & SIB3 Parameters<br />
+                                    - Scheduler Parameters<br />
+                                    - Quality of Service Parameters<br />
+                                    - Message Tracing Parameters<br />
+                                    - Logging Parameters<br />
+                                    - Radio Head Parameters<br />
+                                    - Trace Collector Parameters<br />                                    
+                                    <br />
+                                </p>
+                            </td>
+                            <td style="font-size: smaller; font-family: Arial; font-style: normal; font-variant: inherit;
+                                font-variant: normal;vertical-align:text-top">
+                                <p style="margin-left: 20px;width:100%;">
+                                    - Timers Parameters<br />
+                                    - EUTRA Profile/Neighbour Parameters<br />
+                                    - Event Threshold Parameters<br />
+                                    - eNodeB Address Parameters<br />
+                                    - SRS Dedicated Parameters<br />                                    
+                                    - Security Configuration<br />
+                                    - Counters Configuration<br />
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+    </table>
+</div>
+   
+</body>
+</html>
+

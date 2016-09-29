@@ -1,0 +1,179 @@
+ -- @file    RRC-CELL-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+RRC-CELL-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                             FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Counter32          FROM SNMPv2-SMI;
+
+rrcCellCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It Lists the Statistics counters for RRC (Cell Based)."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 129 }
+
+rrcCellCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF RrcCellCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It Lists the Statistics counters for RRC (Cell Based).
+            This is a SINGLE ROW Table"
+       ::= { rrcCellCounters 1 }
+
+rrcCellCountersEntry OBJECT-TYPE
+       SYNTAX      RrcCellCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains Statistics counter objects for RRC (Cell Based)."
+       INDEX  { index }
+       ::= { rrcCellCountersTable 1 }
+
+RrcCellCountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       cellId              Unsigned32,
+       pag                 Counter32,
+       connSetup           Counter32,
+       connReject          Counter32,
+       connReq             Counter32,
+       connReestabReq      Counter32,
+       connReestab         Counter32,
+       connReestabRej      Counter32,
+       numUEs              Counter32,
+       hoToEUTRASucc       Counter32,
+       hoFromEUTRAFail     Counter32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { rrcCellCountersEntry 1 }
+
+cellId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Cell ID]"
+       ::= { rrcCellCountersEntry 2 }
+
+pag OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Paging message]"
+       ::= { rrcCellCountersEntry 3 }
+
+connSetup OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Setup message]"
+       ::= { rrcCellCountersEntry 4 }
+
+connReject OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Reject message]"
+       ::= { rrcCellCountersEntry 5 }
+
+connReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Request message]"
+       ::= { rrcCellCountersEntry 6 }
+
+connReestabReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Reestablishment Request message]"
+       ::= { rrcCellCountersEntry 7 }
+
+connReestab OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Reestablishment Message]"
+       ::= { rrcCellCountersEntry 8 }
+
+connReestabRej OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RRC Connection Reestablishment Reject message]"
+       ::= { rrcCellCountersEntry 9 }
+
+numUEs OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UEs]"
+       ::= { rrcCellCountersEntry 10 }
+
+hoToEUTRASucc OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             successful HO to EUTRAN]"
+       ::= { rrcCellCountersEntry 11 }
+
+hoFromEUTRAFail OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             unsuccessful HO from EUTRAN]"
+       ::= { rrcCellCountersEntry 12 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { rrcCellCountersEntry 13 }
+
+END

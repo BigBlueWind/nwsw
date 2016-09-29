@@ -1,0 +1,154 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+
+    <script type='text/javascript' src='../script/validate.js'></script>
+
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });
+            $(':text, :password, select').each(function() {
+                $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+            });
+            LteGet('securityConfig', null, ChkLock);
+            $("#btnApply").click(function() {
+                var change = "false";
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+                if (change == 'true') {
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                        }
+                    });
+                    LteSet('securityConfig', $('#securityConfig'), $('#btnApply'), ChkLock);
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#securityConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });        
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Commands > Security </span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+        <tr>
+            <td align='left' valign='top' class='horline'>
+                <img src='../image/horline.gif' width='1' height='1'>
+            </td>
+        </tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' style='width: 60px' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 450px; height: 615px;'>
+        <form name='securityConfig' id='securityConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp; Security Configuration
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Ciphering Security Algorithm
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='uuCiphering' name='uuCiphering' class='lteinput'>
+                                    <option value='0'>EEA0</option>
+                                    <option value='1'>EEA1</option>
+                                    <option value='2'>EEA2</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Integrity Protection Security algorithm
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='uuIntegrityProtection' name='uuIntegrityProtection' class='lteinput'>
+                                    <option value='0'>RESERVED</option>
+                                    <option value='1'>EIA1</option>
+                                    <option value='2'>EIA2</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

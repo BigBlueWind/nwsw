@@ -1,0 +1,143 @@
+<html>
+<head>
+
+ <style>
+.nav3 {overflow: hidden; clear: both; float: left; width: 204px; min-height: 500px; margin: 0px; padding: 0px; color:White; font-size: 12px;}
+.nav3 ul {width: 204px; margin: 0px 0px 10px 0px; padding: 0px; }	
+
+.nav3 li
+{
+    font-size:13;font-style:inherit;font-family:Tahoma,Verdana
+}
+.nav3 li.title {margin: 0px 0px 0px 0px; color:White; text-transform:none; font-weight: bold; font-size: 14;border-top: solid 1px rgb(200,200,200);padding: 10px 7px 0px 5px;font-style:inherit;font-family:Tahoma,Verdana}
+.nav3 li a {display: block; min-height: 1.7em; height: auto !important; height: 1.7em; line-height: 1.7em; margin: 0px; padding: 0px 7px 0px 20px;  color:White; text-decoration: none; font-size: 100%;}
+
+
+
+
+
+
+        
+
+    </style>
+ <script type="text/javascript" src="../script/jquery.js"></script>
+ <script type='text/javascript' src='../script/lte_set_get.js'></script>
+     
+  <script language="javascript" type="text/javascript">
+      var sessionID = parent.sessionID;
+      $(document).ready(function() {
+          var fn = function(e) {
+              return DisableRefresh(e);
+          }
+          document.onkeydown = fn;
+          $(document).bind("contextmenu", function(e) {
+              alert("Due to security reasons,Right click not allowed.");
+              return false;
+          });
+          if (sessionID != null || sessionID != "undefined") {
+              $("#enb").attr("href", sessionID + "-enb_status.htm");
+              $("#upload").attr("href", sessionID + "-fileupload_status.htm");
+              $("#download").attr("href", sessionID + "-filedownload_status.htm");
+              $("#module").attr("href", sessionID + "-module_status.htm");
+              $("#component").attr("href", sessionID + "-component_status.htm");
+              $("#swpackage").attr("href", sessionID + "-swpackage_status.htm");
+              $("#swactivation").attr("href", sessionID + "-swactivation_status.htm");              
+              $("#radiohead").attr("href", sessionID + "-radiohead_status.htm");
+              //$("#trace").attr("href", sessionID + "-trace_status.htm");              
+              $("#swinstallhistory").attr("href", sessionID + "-swinstallhistory_status.htm");
+              $("#fileeventhistory").attr("href", sessionID + "-fileeventhistory_status.htm");
+              $("#activeue").attr("href", sessionID + "-activeue_status.htm");
+              $("#ueeventhistory").attr("href", sessionID + "-ueeventhistory_status.htm");
+              $("#activerab").attr("href", sessionID + "-activerab_status.htm");
+              $("#rabhistory").attr("href", sessionID + "-rabhistory_status.htm");
+              $("#pmlogfile").attr("href", sessionID + "-pmlogfile_status.htm");
+              $("#modulelogfile").attr("href", sessionID + "-modulelogfile_status.htm");
+              $("#activealarm").attr("href", sessionID + "-activealarm_status.htm");
+              $("#alarmhistory").attr("href", sessionID + "-alarmhistory_status.htm");
+              $("#location").attr("href", sessionID + "-location_status.htm");
+              $("#gpsstatus").attr("href", sessionID + "-gps_status.htm");
+              $("#macgencounters").attr("href", sessionID + "-macgencounters_status.htm");
+              $("#macuplanecounters").attr("href", sessionID + "-macuplanecounters_status.htm");
+              $("#rlcgencounters").attr("href", sessionID + "-rlcgencounters_status.htm");              
+              $("#pdcpgencounters").attr("href", sessionID + "-pdcpgencounters_status.htm");
+              $("#pdcpuplanecounters").attr("href", sessionID + "-pdcpuplanecounters_status.htm");
+              $("#gtpgencounters").attr("href", sessionID + "-gtpgencounters_status.htm");
+              $("#sctpgencounters").attr("href", sessionID + "-sctpgencounters_status.htm");
+              $("#rrcgencounters").attr("href", sessionID + "-rrcgencounters_status.htm");
+              $("#rrmcounters").attr("href", sessionID + "-rrmcounters_status.htm");              
+              $("#rrccellcounters").attr("href", sessionID + "-rrccellcounters_status.htm");
+              $("#s1apgencounters").attr("href", sessionID + "-s1apgencounters_status.htm");
+              $("#s1appeernodecounters").attr("href", sessionID + "-s1appeernodecounters_status.htm");
+              $("#ethernetcounters").attr("href", sessionID + "-ethernetcounters_status.htm");
+              $("#ipcounters").attr("href", sessionID + "-ipcounters_status.htm");
+              $("#ledstatus").attr("href", sessionID + "-led_status.htm");
+              $("#cellstatus").attr("href", sessionID + "-cell_status.htm");                  
+              $("#countercollection").attr("href", sessionID + "-countercollection_status.htm");
+              $("#l2counters").attr("href", sessionID + "-l2counters_status.htm");                 
+              parent.frames["MiddleRight"].document.location.href = sessionID + "-monitor_index.htm";           
+          }
+
+          $("#enb,#upload,#download,#module,#component,#swpackage,#swactivation,#radiohead,#swinstallhistory,#fileeventhistory,#activeue,#ueeventhistory,#activerab,#rabhistory,#pmlogfile,#modulelogfile,#activealarm,#alarmhistory,#location,#macgencounters,#macuplanecounters, #rlcgencounters, #pdcpgencounters, #gtpgencounters, #sctpgencounters, #pdcpuplanecounters, #rrcgencounters, #rrmcounters, #rrccellcounters,#s1apgencounters, #s1appeernodecounters,#ethernetcounters,#ipcounters,#ledstatus,#gpsstatus,#cellstatus,#countercollection,#l2counters").click(function() {
+          $("#enb,#upload,#download,#module,#component,#swpackage,#swactivation,#radiohead,#swinstallhistory,#fileeventhistory,#activeue,#ueeventhistory,#activerab,#rabhistory,#pmlogfile,#modulelogfile,#activealarm,#alarmhistory,#location,#macgencounters,#macuplanecounters, #rlcgencounters, #pdcpgencounters, #gtpgencounters, #sctpgencounters, #pdcpuplanecounters, #rrcgencounters, #rrmcounters, #rrccellcounters,#s1apgencounters, #s1appeernodecounters,#ethernetcounters,#ipcounters,#ledstatus,#gpsstatus,#cellstatus,#countercollection,#l2counters").css("color", "white").css("font-weight", "normal"); ;
+              $(this).css("color", "Navy").css("font-weight","bold");
+              
+          });
+      });
+  </script>   
+ 
+</head>
+<body bottommargin='0' topmargin='0' leftmargin='0' rightmargin='0' marginheight='0' marginwidth='0' style="background-color:#9B99CF" >
+<table cellpadding='0' cellspacing='0' width=205 style="border:1">
+<tr>
+<td >
+<div >
+
+<!-- Navigation Level 3 -->
+   <div class="nav3">
+      <ul>        
+        <li class="title">Monitor</li>
+            <li><a href="" id="activealarm" target="MiddleRight">Active Alarm Status</a></li>
+            <li><a href="" id="activerab" target="MiddleRight">Active RAB Status</a></li>
+            <li><a href="" id="activeue" target="MiddleRight">Active UE Status</a></li>
+            <li><a href="" id="alarmhistory" target="MiddleRight">Alarm History</a></li>
+            <li><a href="" id="cellstatus" target="MiddleRight">Cell Status</a></li>
+            <li><a href="" id= "component" target="MiddleRight">Component Status</a></li>
+            <!--li><a href="" id= "countercollection" target="MiddleRight">Counter Collection Status</a></li-->   
+            <li><a href="" id= "download" target="MiddleRight">Download Status</a></li>
+            <li><a href="" id= "enb" target="MiddleRight">EnodeB Status</a></li>
+            <li><a href="" id="ethernetcounters" target="MiddleRight">Ethernet Counters</a></li>
+            <li><a href="" id= "fileeventhistory" target="MiddleRight">File Event History</a></li>          
+            <li><a href="" id="gpsstatus" target="MiddleRight">GPS Status</a></li>
+            <li><a href="" id="gtpgencounters" target="MiddleRight">GTP General Counters</a></li>
+            <li><a href="" id="ipcounters" target="MiddleRight">IP Counters</a></li>
+            <!--li><a href="" id="l2counters" target="MiddleRight">L2 Counters Status</a></li-->
+            <li><a href="" id="ledstatus" target="MiddleRight">LED Status</a></li>
+            <li><a href="" id="location" target="MiddleRight">Location Status</a></li>
+            <li><a href="" id="macgencounters" target="MiddleRight">MAC General Counters</a></li>
+            <li><a href="" id="macuplanecounters" target="MiddleRight">MAC User Plane Counters</a></li>        
+            <li><a href="" id="modulelogfile" target="MiddleRight">Module Log File Status</a></li>
+            <li><a href="" id= "module" target="MiddleRight">Module Status</a></li>     
+            <li><a href="" id="pdcpgencounters" target="MiddleRight">PDCP General Counters</a></li>
+            <li><a href="" id="pdcpuplanecounters" target="MiddleRight">PDCP User Plane Counters</a></li>
+            <li><a href="" id="pmlogfile" target="MiddleRight">Performance Log File Status</a></li>
+            <li><a href="" id="rabhistory" target="MiddleRight">RAB History</a></li>
+            <li><a href="" id= "radiohead" target="MiddleRight">Radio Head Status</a></li> 
+            <li><a href="" id="rlcgencounters" target="MiddleRight">RLC General Counters</a></li>
+            <li><a href="" id="rrccellcounters" target="MiddleRight">RRC Cell Counters</a></li>
+            <li><a href="" id="rrcgencounters" target="MiddleRight">RRC General Counters</a></li>
+            <li><a href="" id="rrmcounters" target="MiddleRight">RRM Counters</a></li>        
+            <li><a href="" id="s1apgencounters" target="MiddleRight">S1AP General Counters</a></li>
+            <li><a href="" id="s1appeernodecounters" target="MiddleRight">S1AP Peer Node Counters</a></li>
+            <li><a href="" id="sctpgencounters" target="MiddleRight">SCTP General Counters</a></li>
+            <li><a href="" id= "swactivation" target="MiddleRight">Software Activation Status</a></li>
+            <li><a href="" id= "swinstallhistory" target="MiddleRight">Software Install History</a></li>
+            <li><a href="" id= "swpackage" target="MiddleRight">Software Package Status</a></li>
+            <!--li><a href="" id= "trace" target="MiddleRight">Trace Status</a></li-->
+            <li><a href="" id="ueeventhistory" target="MiddleRight">UE Event History</a></li>
+            <li><a href="" id= "upload" target="MiddleRight">Upload Status</a></li>
+        </ul>  
+    </div>
+</div>
+</td></tr>
+</table></body>
+</html>

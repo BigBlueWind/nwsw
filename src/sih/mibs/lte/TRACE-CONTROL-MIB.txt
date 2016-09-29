@@ -1,0 +1,98 @@
+ -- @file    TRACE-CONTROL-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:47 PM
+ --
+
+TRACE-CONTROL-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI;
+
+traceControl MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to enable/disable message tracing"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 6 }
+
+traceControlTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF TraceControlEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to enable/disable message tracing
+            This is a SINGLE ROW Table"
+       ::= { traceControl 1 }
+
+traceControlEntry OBJECT-TYPE
+       SYNTAX      TraceControlEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Parameters that need to be included in each trace-command"
+       INDEX  { index }
+       ::= { traceControlTable 1 }
+
+TraceControlEntry ::= 
+   SEQUENCE {
+       index             RowNumber,
+       traceCommand      INTEGER,
+       traceDuration     INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { traceControlEntry 1 }
+
+traceCommand OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   startTrace(1),
+                   stopTrace(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Allows operator to start and stop message tracing in eNodeB.
+             The 'duration' field indicates the period for which traces should be collected.
+             eNodeB starts collecting the trace after receiving this command and continues to collect for 'duration' minutes.
+             At end of 'duration', eNodeB stops the trace and eNode generates an alarm. The alarm contains the trace-file name.
+             
+The objects to be traced are configured in TraceConfig Table.
+             Traces are collected in a single-file in eNodeB.
+             Trace is a command; it does not persist across reboot, restart, activation.
+             
+Operator can stop an ongoing trace by sending stopTrace command. The 'duration' field in stopTrace command is 'dont care' i.e. ignored by eNodeB.]"
+       ::= { traceControlEntry 2 }
+
+traceDuration OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-5min(1),
+                   e-15min(2),
+                   e-30min(3),
+                   e-45min(4),
+                   e-60min(5)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Gives the duration in minutes for which the traces should be collected.
+             This field is ignored for stopTrace command.]"
+       ::= { traceControlEntry 3 }
+
+END

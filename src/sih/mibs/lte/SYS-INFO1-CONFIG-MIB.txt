@@ -1,0 +1,182 @@
+ -- @file    SYS-INFO1-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+SYS-INFO1-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                               FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32          FROM SNMPv2-SMI;
+
+sysInfo1Config MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "SystemInformationBlockType1 contains information relevant when evaluating if a UE is allowed to access a cell and defines the scheduling of other system information"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 54 }
+
+sysInfo1ConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SysInfo1ConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "SystemInformationBlockType1 contains information relevant when evaluating if a UE is allowed to access a cell and defines the scheduling of other system information
+            This is a SINGLE ROW Table"
+       ::= { sysInfo1Config 1 }
+
+sysInfo1ConfigEntry OBJECT-TYPE
+       SYNTAX      SysInfo1ConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to sysInfo1 configuration."
+       INDEX  { sysInfo1ProfileId }
+       ::= { sysInfo1ConfigTable 1 }
+
+SysInfo1ConfigEntry ::= 
+   SEQUENCE {
+       sysInfo1ProfileId        ProfileId,
+       intraFreqReselection     INTEGER,
+       qRxLevMin                Integer32,
+       qRxLevMinOffset          Unsigned32,
+       sib2Periodicity          INTEGER,
+       sib3Periodicity          INTEGER,
+       sib4Periodicity          INTEGER,
+       siWindowLength           INTEGER
+   }
+
+sysInfo1ProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             System Information Type 1 configuration profile identifier]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { sysInfo1ConfigEntry 1 }
+
+intraFreqReselection OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   allowed(0),
+                   notAllowed(1)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The parameter defines whether the cell reselection to intra-frequency cells is allowed when the highest ranked cell is barred, or treated as barred by the UE.]
+           [Change_Condition : RW ]"
+       DEFVAL { notAllowed }
+       ::= { sysInfo1ConfigEntry 2 }
+
+qRxLevMin OBJECT-TYPE
+       SYNTAX      Integer32 (-70 ..-22 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Minimum required RX level in the cell (dBm) for cell selection by UE. This parameter corresponds to Qrxlevmin as defined in 36.304. Actual value Qrxlev min = qRxLevMin * 2 [dBm].]
+           [Change_Condition : RW ]"
+       DEFVAL { -65 }
+       ::= { sysInfo1ConfigEntry 3 }
+
+qRxLevMinOffset OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 8 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter corresponds to Qrxlevminoffset in 36.304. Actual value Qrxlevminoffset = qRxLevMinOffset * 2 [dB]. If set to '0'(not defined), the (default) value of 0 [dB] for Qrxlevminoffset is applied. Affects the minimum required Rx level in the cell.]
+           [Change_Condition : RW ]"
+       DEFVAL { 1 }
+       ::= { sysInfo1ConfigEntry 4 }
+
+sib2Periodicity OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-80ms(0),
+                   e-160ms(1),
+                   e-320ms(2),
+                   e-640ms(3),
+                   e-1280ms(4),
+                   e-2560ms(5),
+                   e-5120ms(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SIB2 scheduling periodicity]
+           [Change_Condition : RW ]"
+       DEFVAL { e-160ms }
+       ::= { sysInfo1ConfigEntry 5 }
+
+sib3Periodicity OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-80ms(0),
+                   e-160ms(1),
+                   e-320ms(2),
+                   e-640ms(3),
+                   e-1280ms(4),
+                   e-2560ms(5),
+                   e-5120ms(6),
+                   disabled(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SIB3 scheduling periodicity]
+           [Change_Condition : RW ]"
+       DEFVAL { disabled }
+       ::= { sysInfo1ConfigEntry 6 }
+
+sib4Periodicity OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-80ms(0),
+                   e-160ms(1),
+                   e-320ms(2),
+                   e-640ms(3),
+                   e-1280ms(4),
+                   e-2560ms(5),
+                   e-5120ms(6),
+                   disabled(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SIB4 scheduling periodicity]
+           [Change_Condition : RW ]"
+       DEFVAL { disabled }
+       ::= { sysInfo1ConfigEntry 7 }
+
+siWindowLength OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-1ms(0),
+                   e-2ms(1),
+                   e-5ms(2),
+                   e-10ms(3),
+                   e-15ms(4),
+                   e-20ms(5),
+                   e-40ms(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             System information window length in ms]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { e-20ms }
+       ::= { sysInfo1ConfigEntry 8 }
+
+END

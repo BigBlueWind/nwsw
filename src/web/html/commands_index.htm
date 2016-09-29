@@ -1,0 +1,77 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';       
+        
+       
+    </style>
+     <script type='text/javascript' src='../script/jquery.js'></script>
+     <script type='text/javascript' src='../script/lte_set_get.js'></script>
+     <script type='text/javascript'>
+         $(document).ready(function() {
+         var fn = function(e) {
+             return DisableRefresh(e);
+         }
+         document.onkeydown = fn;
+             $(document).bind("contextmenu", function(e) {alert("Due to security reason,Right Click is not allowed.");return false;});
+         });
+       </script>     
+    
+</head>
+<body>     
+<div style="margin-left:10px;margin-top:20px" >
+    <table width='850px'>
+        <tr>
+            <td style="color: Navy" valign="middle">
+                <h3>Commands</h3>
+            </td>
+        </tr>
+    </table>
+       <table width='850px' class='tblBorder'; style="height:500px;background-color: #FAF9F3;margin-top:15px" cellspacing='0' cellpadding='2' border='0'>
+           <tr>
+               <td align="left" valign="top" height='440px'>
+                   <br />
+                   <img src='../image/commands.gif' style="margin-left: 10px;" />
+               </td>
+               <td width="100%" valign="top" style="font-size: smaller; font-family: Arial; font-style: normal;
+                   font-variant: inherit; font-variant: normal; height: 440px">
+                   <p style="margin-left: 20px; margin-right: 20px; margin-top: 20px; margin-bottom: 20px;
+                       text-align: justify;">
+                       The operator can access various eNodeB/Base Station commands in this section towards
+                       carrying-out various management based activities. Operator is provided with set
+                       of commands in command tree window for initiating file downloads (e.g. software),
+                       file uploads (e.g. logs), software install, etc. for the connected eNodeB.
+                       <br />
+                       <br />
+                       For some commands (e.g. Software Activation, Base Station Reboot, Hardware Administration,
+                       etc.) it's a requisite that eNodeB should be in LOCKED state, such parameters are
+                       disabled for editing in case eNodeB is in UNLOCKED state.
+                       <br />
+                       <br />
+                       <br />
+                       <br />
+                       Following commands are supported.</p>
+                   <table width="100%">
+                       <tr>
+                           <td style="font-size: smaller; font-family: Arial; font-style: normal; font-variant: inherit;
+                               font-variant: normal;vertical-align:text-top;">
+                               <p style="margin-left: 20px; text-align: justify;">
+                                   - Download/Upload files to/from eNodeB<br />
+                                   - Reboot/Shutdown entire Base Station<br />
+                                   - Change the administration state (Lock/Unlock) of eNodeB<br />                                  
+                                   - Software Installation and Activation for eNodeB<br />                                       
+                                   - Hardware Administration (reset Radio Head/WiFi/GPS)<br />                                       
+                                   - Start/Stop Tracing the protocol messages (RRC/S1AP/MAC)<br />
+                                   - Cell Administration <br />  
+                                   - Counter Control<br />    
+                               </p>
+                           </td>
+                       </tr>
+                   </table>
+               </td>
+           </tr>
+    </table>
+</div>
+   
+</body>
+</html>

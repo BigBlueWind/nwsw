@@ -1,0 +1,412 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';
+          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        var sessionID = parent.sessionID;
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        LteGet("sysInfo3Config", null, ChkLock);
+        if (parent.frames['Top'].link == 1) {
+            $('#btnBack').hide();
+            $('#pageTitle').html('Configuration > SysInfo3');
+        }
+        else
+            if (parent.frames['Top'].link == 2) {
+            $('#pageTitle').html('Configuration > Cell > SysInfo3');
+        }
+        else
+            $('#pageTitle').html('Configuration > eNodeB > Cell > SysInfo3')
+
+
+        $('#btnBack').click(function() {
+            if (sessionID != null && sessionID != 'undefined')
+                window.location.href = sessionID + '-cell_config.htm';
+            parent.frames['Top'].link--;
+        });
+
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";
+
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }
+                }
+            });
+
+            if (change == 'true') {
+                msg = "";
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true) {
+                                if (this.id == "pMax" && $("#pMaxChkb").is(":checked") == false)
+                                    msg = msg; 
+                                else
+                                    msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                            }
+                        }
+                    }
+                });
+                if (msg != "") {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });                    
+                    alert(msg);
+                }
+                else {
+                    $(':checkbox').each(function() {
+                        $(this).attr('disabled', true);
+                    });
+                    LteSet("sysInfo3Config", $("#sysInfo3Config"), $("#btnApply"), ChkLock);
+                }
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+        });
+        $('#ulEarfcnChkb,#pMaxChkb').click(function() {
+            if (this.id == 'pMaxChkb')
+                EnableInput(this.id, 'pMax', '34', 'pMaxHidden');
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#sysInfo3Config", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });
+    function ChkSpecialValues() {
+        if ($('#pMax').val() == '34') {
+            $('#pMaxChkb').attr('checked', false);
+            $('#pMax').attr('readonly', true).css('background-color', '#E6E6E6');
+        }
+        else {
+            $('#pMaxChkb').attr('checked', true);
+            $('#pMax').attr('disabled', false).css('background-color', 'white');
+            $('#pMaxHidden').val($('#pMax').val());
+        }        
+    }
+
+    function MapIdName(fieldName) {
+        switch (fieldName) {
+            case "sysInfo3ProfileId": return "SIB3 Profile Identifier";
+            case "threshServingLow": return "Thresh Serving Low";
+            case "cellReselectionPriority": return "Cell Reselection Priority";
+            case "qRxLevMin": return "Q Rx Lev Min";
+            case "pMax": return "P-Max";
+            case "sIntraSearch": return "S Intra Search";
+            case "neighCellConfig": return "Neighbour Cell Config";
+            case "tReselectionEutra": return "T Reselection EUTRA";
+        }
+    }
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class='title' id='pageTitle'></span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+        </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input type='button' value='Back' name='btnBack' id='btnBack'/>
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left: 10px; width: 450px; height: 615px">
+        <form name='sysInfo3Config' id='sysInfo3Config' action="">
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp SysInfo3 Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class="conTblRowBg1">
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SIB3 Profile Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="sysInfo3ProfileId" name="sysInfo3ProfileId" type="text" class="lteinput" validate="IntRangeChk" min="0" max="0" />(0 ~ 0)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; Cell Re-Selection Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Q hyst
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="qHyst" name="qHyst" class="lteinput">
+                                    <option value="0">dB0</option>
+                                    <option value="1">dB1</option>
+                                    <option value="2">dB2</option>
+                                    <option value="3">dB3</option>
+                                    <option value="4">dB4</option>
+                                    <option value="5">dB5</option>
+                                    <option value="6">dB6</option>
+                                    <option value="7">dB8</option>
+                                    <option value="8">dB10</option>
+                                    <option value="9">dB12</option>
+                                    <option value="10">dB14</option>
+                                    <option value="11">dB16</option>
+                                    <option value="12">dB18</option>
+                                    <option value="13">dB20</option>
+                                    <option value="14">dB22</option>
+                                    <option value="15">dB24</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; Inter Frequency Inter Rat Re-Selection Information
+
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Thresh Serving Low
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="threshServingLow" name="threshServingLow" type="text" class="lteinput" validate="IntRangeChk" min="0" max="31"/>
+                                (0 ~ 31)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Cell Reselection Priority
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="cellReselectionPriority" name="cellReselectionPriority" type="text" class="lteinput" validate="IntRangeChk" min="0" max="7"/>
+                                (0 ~ 7)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                         <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; Intra Frequency Cell Re-Selection Information
+
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Q Rx Lev Min
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="qRxLevMin" name="qRxLevMin" type="text" class="lteinput" validate="IntRangeChk" min="-70" max="-22"/>
+                                (-70 ~ -22)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                P Max
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="pMax" name="pMax" type="text" class="lteinput" validate="IntRangeChk" min="-30" max="33"/>
+                                (-30 ~ 33)
+                                <input id='pMaxChkb' type='checkbox' />
+                                    Used
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                S Intra Search
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="sIntraSearch" name="sIntraSearch" type="text" class="lteinput" validate="IntRangeChk" min="0" max="31"/>
+                                (0 ~ 31)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Allowed Meas Bandwidth
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="allowMeasBw" name="allowMeasBw" class="lteinput">
+                                    <option value="0">mbw6</option>
+                                    <option value="1">mbw15</option>
+                                    <option value="2">mbw25</option>
+                                    <option value="3">mbw50</option>
+                                    <option value="4">mbw75</option>
+                                    <option value="5">mbw100</option>
+                                    <option value="6">Same As Own Cell Dl B/W</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Neighbour Cell Config
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="neighCellConfig" name="neighCellConfig" type="text" class="lteinput" validate="IntRangeChk" min="0" max="3"/>
+                                (0 ~ 3)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                T Reselection EUTRA
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="tReselectionEutra" name="tReselectionEutra" type="text" class="lteinput" validate="IntRangeChk" min="0" max="7"/>
+                                (0 ~ 7)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Presence Antenna Port 1
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="presenceAntennaPort1" name="presenceAntennaPort1" class="lteinput">
+                                    <option value="0">FALSE</option>
+                                    <option value="1">TRUE</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+        <input id='pMaxHidden' type = 'hidden' />
+    </div>
+</body>
+</html>

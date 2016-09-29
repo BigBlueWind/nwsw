@@ -1,0 +1,446 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';        
+        .cellheight
+        {
+            height: 19px;
+        }        
+    </style>
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/mapping.js'></script>
+    <script type="text/javascript">
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+        $("#enodebId, #enodebName, #mmeIpAddr, #enodebIpAddr, #connectedToMME, #operationalState, #adminState, #numOfUesConnected, #uptime, #swType, #version, #builtOn, #swNotes,#componentType,#componentVersion,#notes").text("");
+            LteGet("enodebConfig", null, null);
+            LteGet("mmeConfig", null, null);
+            LteGet("locationStatus", null, SetMapping);
+            LteGet("enbStatus", null, SetMapping);
+            LteGet("swPackageStatus", null, SetMapping);
+            LteGet("componentStatus", null, SetMapping, 1);
+           
+            
+            $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $('#btnHelp').click(function() {
+                window.open(sessionID + "-help.htm#enodebConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });        
+
+
+    </script>
+  
+    
+    
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > General</span>     
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>               
+    <table width="100%"  border="0" cellspacing="0" cellpadding="0"><tr><td align="left" valign="top" class="horline"><img src="../image/horline.gif" width="1" height="1"></td></tr>
+    </table>
+    <div style="left: 10px; margin-top: 10px">
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input type="button" value="Help" name="btnHelp" id="btnHelp" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left: 10px; height: 615px; width: 450px">
+        <form name="enodebConfig" id="enodebConfig" action="">
+        <table width="100%" class="tblBorder" cellspacing="0" cellpadding="2" border="0">
+            <tr>
+                <td align="left" class="tblTitleBg" colspan="5">
+                    &nbsp;&nbsp;EnodeB Details
+                </td>
+            </tr>
+            <tr class="formheadingborder" >
+                <td colspan="5">
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    EnodeB Identifier
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="enodebId">
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    EnodeB Name
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="enodebName">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    MME IP Address
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="mmeIpAddr">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    EnodeB IP Address
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="enodebStaticIpAddr">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Location Source
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="locationSource">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Latitude
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="latitude">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+             <tr class="conTblRowBg1_general">
+                <td nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Longitude
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="longitude">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        </form>
+        <form name="enbStatus" id="enbStatus" action="">
+        <table width="100%" style="margin-top: 10px" class="tblBorder" cellspacing="0" cellpadding="2"
+            border="0">
+            <tr>
+                <td align="left" class="tblTitleBg" colspan="5">
+                    &nbsp;&nbsp;Operational Details
+                </td>
+            </tr>
+            <tr class="formheadingborder" >
+                <td colspan="5">
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Connected To MME
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="connectedToMME">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Operational State
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="operationalState">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Admin State
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="adminState">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Connected Users
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="numOfUesConnected">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Up Time
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="uptime">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        </form>
+        <form name="swPackageStatus" id="swPackageStatus" action="">
+        <table width="100%" style="margin-top: 10px" class="tblBorder" cellspacing="0" cellpadding="2"
+            border="0">
+            <tr>
+                <td align="left" class="tblTitleBg" colspan="5">
+                    &nbsp;&nbsp;Software Package Details
+                </td>
+            </tr>
+            <tr class="formheadingborder" >
+                <td colspan="5">
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Software Type
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="swType">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Version
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="version">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Built On (DD/MM/YYYY)
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="builtOn">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td width="1%" nowrap="1" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Description
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="swNotes">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>              
+        </table>
+        </form>
+        <form name="componentStatus" id="componentStatus" action="">
+        <table width="100%" style="margin-top: 10px" class="tblBorder" cellspacing="0" cellpadding="2"
+            border="0">
+            <tr>
+                <td align="left" class="tblTitleBg" colspan="5">
+                    &nbsp;&nbsp;Component Details
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td colspan="5">
+                </td>
+            </tr>
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Component Type
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="componentType">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr class="conTblRowBg2_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Component Version
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="componentVersion">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>            
+            <tr class="conTblRowBg1_general">
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    &nbsp;&nbsp;
+                </td>
+                <td width="35%" nowrap="nowrap" class="cellheight">
+                    Component Description
+                </td>
+                <td width="1%" nowrap="nowrap" class="cellheight">
+                    :
+                </td>
+                <td width="50%" nowrap="nowrap" class="cellheight" id="infoString">
+                    &nbsp;
+                </td>
+                <td width="2%" nowrap="nowrap" class="cellheight">
+                    &nbsp;
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>   
+</body>
+</html>

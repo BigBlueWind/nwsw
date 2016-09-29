@@ -1,0 +1,499 @@
+###############################################################################
+# Main configuration                                                          #
+###############################################################################
+
+ROOTDIR          := $(abspath .)
+
+# infinite amount of jobs (-j without params) just looks faster, but it isn't
+CONCURRENT_JOBS  := --jobs=4  
+  
+###############################################################################
+# There are several steps one need to take in order to add new option XXX:
+# 1. Add XXX_OPTION assignment below similar to other options.
+# 2. Add XXX_OPTION to the list of MAKE_OPTIONS variable below.
+# 3. Add if-stmt to assign actual XXX flag value depending on XXX_OPTION.
+# 4. Add if-stmt at the end of buildcfg file for XXX to add new compile option.
+# 5. Pass XXX option sub-make by adding it to "export" statement below
+###############################################################################
+
+NODDR1_OPTION     := $(findstring noddr1,$(MAKECMDGOALS))
+M128_OPTION       := $(findstring 128m,$(MAKECMDGOALS))
+M256_OPTION       := $(findstring 256m,$(MAKECMDGOALS))
+M512_OPTION       := $(findstring 512m,$(MAKECMDGOALS))
+M640_OPTION       := $(findstring 640m,$(MAKECMDGOALS))
+HBI_OPTION        := $(findstring hbi,$(MAKECMDGOALS))
+DEP_OPTION        := $(findstring dep,$(MAKECMDGOALS))
+DEBUG_OPTION      := $(findstring debug,$(MAKECMDGOALS))
+TDD_OPTION        := $(findstring tdd,$(MAKECMDGOALS))
+PCF_OPTION        := $(findstring pcf,$(MAKECMDGOALS))
+DEBUG_INFO_OPTION := $(findstring di,$(MAKECMDGOALS))
+PHYBIN_OPTION    := $(findstring phybin,$(MAKECMDGOALS))
+
+MAKE_OPTIONS      := $(strip $(NODDR1_OPTION) $(TDD_OPTION) \
+                   $(M128_OPTION) $(M256_OPTION) $(M512_OPTION) $(M640_OPTION) \
+                   $(HBI_OPTION) $(DEP_OPTION) $(PCF_OPTION) $(DEBUG_OPTION) \
+                   $(DEBUG_INFO_OPTION) $(PHYBIN_OPTION))
+
+# Build targets
+
+ACTUAL_TARGETS	:=
+
+P1A_TARGET		:= $(findstring p1a,$(MAKECMDGOALS))
+P1B_TARGET		:= $(findstring p1b,$(MAKECMDGOALS))
+P1C_TARGET		:= $(findstring p1c,$(MAKECMDGOALS))
+TM_TARGET		:= $(findstring tm,$(MAKECMDGOALS))
+
+BUILD_TARGETS	:= $(strip $(P1A_TARGET) $(P1B_TARGET) $(P1C_TARGET) $(TM_TARGET))
+
+ACTUAL_BUILD_TARGETS :=
+
+ifneq ($(TM_TARGET),)
+ACTUAL_BUILD_TARGETS	+= tm_actual
+endif
+
+ifneq ($(P1A_TARGET),)
+ACTUAL_BUILD_TARGETS	+= p1a_actual
+endif
+
+ifneq ($(P1B_TARGET),)
+ACTUAL_BUILD_TARGETS	+= p1b_actual
+endif
+
+ifneq ($(P1C_TARGET),)
+ACTUAL_BUILD_TARGETS	+= p1c_actual
+endif
+
+
+# Cleaning targets
+
+XMX_TARGET		:= $(findstring xmx,$(MAKECMDGOALS))
+XSC_TARGET		:= $(findstring xsc,$(MAKECMDGOALS))
+XMAC_TARGET		:= $(findstring xmac,$(MAKECMDGOALS))
+XPHY_TARGET		:= $(findstring xphy,$(MAKECMDGOALS))
+XAPP_TARGET		:= $(findstring xapp,$(MAKECMDGOALS))
+XCLEAN_TARGET	:= $(findstring xclean,$(MAKECMDGOALS))
+
+# clean can be found within xclean, so avoid dublicate
+# as xclean will do the clean anyway
+ifeq ($(XCLEAN_TARGET),)
+CLEAN_TARGET	:= $(findstring clean,$(MAKECMDGOALS))
+endif
+
+ACTUAL_CLEAN_TARGETS	:=
+
+ifneq ($(XMX_TARGET),)
+ACTUAL_CLEAN_TARGETS	+= xclean_mx 
+endif
+
+ifneq ($(XSC_TARGET),)
+ACTUAL_CLEAN_TARGETS	+= xclean_sc 
+endif
+
+ifneq ($(XPHY_TARGET),)
+ACTUAL_CLEAN_TARGETS	+= xclean_phy 
+endif
+
+ifneq ($(XMAC_TARGET),)
+ACTUAL_CLEAN_TARGETS	+= xclean_mac 
+endif
+
+ifneq ($(XAPP_TARGET),)
+ACTUAL_CLEAN_TARGETS	+= xclean_app 
+endif
+
+ifneq ($(CLEAN_TARGET),)
+ACTUAL_CLEAN_TARGETS	+= clean_all
+endif
+
+ifneq ($(XCLEAN_TARGET),)
+ACTUAL_CLEAN_TARGETS	+= xclean_all 
+endif
+
+CLEAN_TARGETS  := $(strip $(XMX_TARGET) $(XSC_TARGET) $(XMAC_TARGET) $(XPHY_TARGET)\
+						$(XAPP_TARGET) $(CLEAN_TARGET) $(XCLEAN_TARGET))
+
+ifneq ($(CLEAN_TARGETS),)
+ZEST=1
+# If at least 1 cleaning target provided while no build targets
+# provided explicitly, then don't build the code, just clean it
+ACTUAL_TARGETS := $(ACTUAL_CLEAN_TARGETS) $(ACTUAL_BUILD_TARGETS)
+else
+ifneq ($(MAKE_OPTIONS),)
+ifneq ($(BUILD_TARGETS),)
+ACTUAL_TARGETS	:= $(ACTUAL_BUILD_TARGETS)
+else
+#if there are some build options provided without a target: assume tm target
+ACTUAL_TARGETS := tm_actual
+endif
+else
+#if there are no build options and no target provided: assume tm target
+ACTUAL_TARGETS := tm_actual 
+endif
+endif
+
+ifneq ($(DEP_OPTION),)
+GENDEP=1
+CONCURRENT_JOBS :=
+XCLEAN_FOR_DEPS = xclean
+else
+GENDEP=0
+endif
+
+ifneq ($(PCF_OPTION),)
+PCF=PCF
+SHOWCO=1
+else
+SHOWCO=0
+endif
+
+ifneq ($(DEBUG_OPTION),)
+RELEASEBUILD=0
+DEBUGBUILD=1
+else
+RELEASEBUILD=1
+DEBUGBUILD=0
+endif
+
+ifneq ($(TDD_OPTION),)
+TDD_BUILD=1
+else
+TDD_BUILD=0
+endif
+
+ifneq ($(NODDR1_OPTION),)
+NODDR1=1
+else
+NODDR1=0
+endif
+
+ifneq ($(DEBUG_INFO_OPTION),)
+DEBUG_INFO=1
+else
+DEBUG_INFO=0
+endif
+
+SCATTER_FILE:=prj_512M.sct
+SCT=M512
+
+ifneq ($(M128_OPTION),)
+SCATTER_FILE:=prj.sct
+SCT=M128
+endif
+
+ifneq ($(M256_OPTION),)
+SCATTER_FILE:=prj_256M.sct
+SCT=M256
+endif
+
+ifneq ($(M512_OPTION),)
+SCATTER_FILE:=prj_512M.sct
+SCT=M512
+endif
+
+ifneq ($(M640_OPTION),)
+SCATTER_FILE:=prj_640M.sct
+SCT=M640
+endif
+
+
+include T4KDev/LTERT/buildcfg
+
+APPBUILDDIR := $(LTERTDIR)/$(BUILDDIR)
+
+INC = -I"$(OS4GMXINCDIR)" \
+       -I"$(OS4GMXARMINCDIR)" \
+       -I"$(SYSCOREDIR)" \
+       -I"$(SYSCORESERVICESDIR)" \
+       -I"$(SYSCOREDRIVERSDIR)" \
+       -I"$(SYSCOREFECDIR)" \
+       -I"$(SYSCOREMAPDIR)" \
+       -I"$(SYSCORECEVAREXDIR)" \
+       -I"$(SYSCORECEVADRV)" \
+ 
+CFLAGS := $(APPBUILDCFG) $(INC)
+
+VPATH := $(LTERTDIR) $(CEVABINPATH) $(CEVABINPATHDMP) $(CEVAREXSERVBINPATH) 
+
+SRC := main.c cevabincode$(TDD_SUFFIX).c cevabincodedmp.c rexservbincode.c
+
+OBJ := $(patsubst %.c, $(APPBUILDDIR)/%.o,$(notdir $(SRC)))
+
+###############################################################################
+# Build rules                                                                 #
+###############################################################################
+
+export SHELL ROOTDIR RELEASEBUILD PCF DEBUG_INFO GENDEP NODDR1
+
+.PHONY: $(MAKE_OPTIONS) $(BUILD_TARGETS) $(CLEAN_TARGETS) 
+$(MAKE_OPTIONS) $(BUILD_TARGETS) $(CLEAN_TARGETS) nonemptyholder: $(ACTUAL_TARGETS)
+
+.PHONY : tm_actual p1a_actual p1b_actual 
+tm_actual p1a_actual p1b_actual: $(XCLEAN_FOR_DEPS) $(APPBIN)
+	@echo $(DELIMETER)
+	@$(LS) -l $(APPBIN)
+	@echo $(DELIMETER)
+
+.PHONY : echo_app_build
+echo_app_build:	
+	@echo $(DELIMETER)
+	@echo   Mode       : $(MAIN_TARGET)
+	@echo   U-ARM Mem  : $(SCT) 
+	@echo   Scatter    : $(SCATTER_FILE)
+	@echo   NODDR1     : $(NODDR1)
+	@echo   HBI        : $(HBI)
+	@echo $(DELIMETER)
+
+.PHONY : echo_app_compile
+echo_app_compile:	
+	@echo $(DELIMETER)
+	@echo Compiling LteRT ...
+	@echo $(DELIMETER)
+
+ifeq ($(GENDEP),1)
+DEPFILE  := $(APPBUILDDIR)/larm.dep
+CLEANDEP := clean_dep
+else
+-include $(APPBUILDDIR)/larm.dep
+endif
+
+.PHONY : $(APPBIN)
+$(APPBIN): $(APPBUILDDIR) \
+			$(BINDIR) \
+			$(CLEANDEP) \
+			$(FOURGMXLIB) \
+			$(SYSCORELIBRARY) \
+			$(LTETESTMACLIBRARY) $(LTECUSTOMMACLIBRARY) \
+			$(LTEPHYMSPDLIBRARY) $(LTEPHYMSPDLIBRARYBIN)\
+			$(LTEPHYLOWERLIBRARY) \
+			$(LTEPHYUPPERLIBRARY) \
+			$(SCATTER_FILE) \
+			echo_app_compile \
+			$(OBJ) \
+			echo_app_build
+	@echo Linking $(APPBIN)
+	@$(LD) $(OBJ) $(LD_FLAGS) $(FOURGMXLIB) $(SYSCORELIBRARY) \
+					$(LTEPHYMSPDLIBRARY) $(LTEPHYMSPDLIBRARYBIN) \
+					$(LTECUSTOMMACLIBRARY) $(LTETESTMACLIBRARY) \
+					$(LTEPHYUPPERLIBRARY) $(LTEPHYLOWERLIBRARY)
+	@echo Generating $(subst .elf,.asm,$(APPBIN))
+	@fromelf --text -c $(APPBIN) > $(subst .elf,.asm,$(APPBIN))
+	@fromelf --text -s $(APPBIN) --output $(APPBUILDDIR)/out.txt
+#	@$(LTERTDIR)/sym_parser.exe $(APPBUILDDIR)/out.txt $(APPBIN)
+	
+#@fromelf --text -d $(APPBIN) > $(subst .elf,.hex,$(APPBIN))
+
+$(BINDIR) :
+	$(MKDIR) $(BINDIR)
+	
+$(APPBUILDDIR)/%.o : %.c
+	echo $<
+	$(CC) $(CFLAGS) -o "$@" "$<" 
+ifeq ($(GENDEP),1)
+	$(CC) -M --no_depend_system_headers $(CFLAGS) -o "$@" "$<" >>$(DEPFILE)
+endif
+
+$(APPBUILDDIR):
+	@$(MKDIR) $(APPBUILDDIR)
+	
+.PHONY : $(FOURGMXLIB) mx
+$(FOURGMXLIB) mx:
+	@echo $(DELIMETER)
+	@echo 4GMX building ...
+	@echo $(DELIMETER)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(OS4GMXDIR)/makefile-4gmx $(MAIN_TARGET)
+
+ 
+.PHONY : $(SYSCORELIBRARY) sc 
+$(SYSCORELIBRARY) sc:
+	@echo $(DELIMETER)
+	@echo SysCore building ...
+	@echo $(DELIMETER)
+	@$(RM) $(SYSCOREDIR)/$(BUILDDIR)/console.o
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(SYSCOREDIR)/makefile-syscore $(MAIN_TARGET)
+
+
+.PHONY : $(LTETESTMACLIBRARY) mac  
+$(LTETESTMACLIBRARY) mac:
+	@echo $(DELIMETER)
+	@echo LTE MAC building ...
+	@echo $(DELIMETER)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTETESTMACDIR)/makefile-ltetestmac $(MAIN_TARGET)
+                     
+.PHONY : phy
+phy : $(LTEPHYMSPDLIBRARY) $(LTEPHYLOWERLIBRARY) $(LTEPHYUPPERLIBRARY)
+ 
+.PHONY : $(LTEPHYMSPDLIBRARY) 
+$(LTEPHYMSPDLIBRARY):
+	@echo $(DELIMETER)
+	@echo LTE PHY MSPD lib building ...
+	@echo $(DELIMETER)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYMSPDLIBDIR)/makefile-ltelibmspd $(MAIN_TARGET)
+												 
+.PHONY : $(LTEPHYLOWERLIBRARY) 
+$(LTEPHYLOWERLIBRARY):
+	@echo $(DELIMETER)
+	@echo LTE PHY lower lib building ...
+	@echo $(DELIMETER)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYRTDIR)/makefile-phyrtlow $(MAIN_TARGET)
+
+.PHONY : $(LTEPHYUPPERLIBRARY) 
+$(LTEPHYUPPERLIBRARY):
+	@echo $(DELIMETER)
+	@echo LTE PHY upper lib building ...
+	@echo $(DELIMETER)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYRTDIR)/makefile-phyrtlib $(MAIN_TARGET)
+
+ifneq ($(P1_BUILD_PRESENT),)
+ifneq ($(P1C_TARGET),)
+.PHONY : $(LTECUSTOMMACLIBRARY)
+$(LTECUSTOMMACLIBRARY) :
+	@echo $(DELIMETER)
+	@echo Building custom P1 MAC library ...
+	@echo $(DELIMETER)
+	@$(MAKE) -C $(P1MACDIR)/enbapp/build ms4gmxe2elib
+endif
+endif
+.PHONY : help
+help:
+	@echo $(DELIMETER)
+	@echo   LteRT application builder
+	@echo   Usage: larm [options] [targets]
+	@echo $(DELIMETER)
+	@echo   Options:
+	@echo   128m      - L-ARM code starts at 128MB  
+	@echo   256m      - L-ARM code starts at 256MB  [default]
+	@echo   512m      - L-ARM code starts at 512MB
+	@echo   640m      - L-ARM code starts at 640MB
+	@echo   tdd       - Select TDD PHY              [default: $(TDD_BUILD)]
+	@echo   noddr1    - Use DDR-0 only, no DDR1     [default: $(NODDR1)]
+	@echo   debug     - Select debug build          [default: $(DEBUGBUILD)]
+	@echo   hbi       - HBI Mode build              [default: $(HBI)]
+	@echo   dep       - Generate dependencies       [default: $(GENDEP)]
+	@echo   pcf       - Show compile options        [default: $(SHOWCO)]
+	@echo   di        - insert debug info           [default: 0 ]
+	@echo   -----------------------------------------------------
+	@echo   Targets:
+	@echo   tm        - Build Test MAC              [default]
+	@echo   p1a       - Pick R-s MAC in CVS
+	@echo   p1b       - Pick R-s MAC in GIT tree
+	@echo   p1c       - Build R-s in GIT tree
+	@echo   clean     - Clean all object files
+	@echo   xclean    - Clean all object files, libs and apps
+	@echo   xmx       - xclean 4GMX
+	@echo   xsc       - xclean SysCore
+	@echo   xphy      - xclean PHY
+	@echo   xmac      - xclean Test MAC
+	@echo   xapp      - xclean all apps
+	@echo $(DELIMETER)
+
+
+###############################################################################
+# Cleaning rules                                                              #
+###############################################################################
+
+.PHONY : clean_mac xlean_mac clean_sc xclean_sc clean_mx xclean_mx
+.PHONY : clean_phy xclean_phy clean_app xclean_app clean xclean echo_clean echo_xclean
+
+clean_mac:
+	@echo Clean MAC temporaries : $(BUILDDIR)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTETESTMACDIR)/makefile-ltetestmac clean
+
+xclean_mac:
+	@echo Clean MAC library and temporaries : $(BUILDDIR)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTETESTMACDIR)/makefile-ltetestmac xclean 
+
+clean_sc:
+	@echo Clean SysCore temporaries : $(BUILDDIR)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(SYSCOREDIR)/makefile-syscore clean
+	
+xclean_sc:
+	@echo Clean SysCore library and temporaries : $(BUILDDIR)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(SYSCOREDIR)/makefile-syscore xclean
+
+clean_mx:
+	@echo Clean 4GMX temporaries : $(BUILDDIR)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(OS4GMXDIR)/makefile-4gmx clean
+	
+xclean_mx:
+	@echo Clean 4GMX library and temporaries: $(BUILDDIR)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(OS4GMXDIR)/makefile-4gmx xclean
+	
+clean_phy:
+	@echo Clean PHY temporaries : $(BUILDDIR)
+ifeq ($(PHYBIN_OPTION),)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYMSPDLIBDIR)/makefile-ltelibmspd clean
+endif
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYRTDIR)/makefile-phyrtlow clean
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYRTDIR)/makefile-phyrtlib clean
+
+xclean_phy:
+	@echo Clean PHY libararies and temporaries: $(BUILDDIR)
+ifeq ($(PHYBIN_OPTION),)
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYMSPDLIBDIR)/makefile-ltelibmspd xclean
+endif
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYRTDIR)/makefile-phyrtlow xclean
+	@$(MAKE) -C $(ROOTDIR) $(CONCURRENT_JOBS) -f $(LTEPHYRTDIR)/makefile-phyrtlib xclean
+		
+clean_app:
+	echo Clean LteRT application temporaries : $(BUILDDIR)
+	@$(RM) $(LTERTDIR)/Release/*.o
+	@$(RM) $(LTERTDIR)/Debug/*.o
+	@$(RM) $(LTERTDIR)/*.err
+	@$(RM) $(LTERTDIR)/*.lst
+	@$(RM) $(LTERTDIR)/*.sym
+	@$(RM) $(LTERTDIR)/*.hex
+	@$(RM) $(LTERTDIR)/*.asm
+	@$(RM) $(LTERTDIR)/_test_asm
+	@$(RM) $(LTERTDIR)/_test_codedata
+	@$(RM) $(LTERTDIR)/_test_datasec
+	@$(RM) $(LTERTDIR)/_test_relocation
+	@$(RM) $(LTERTDIR)/_test_context
+	@$(RM) $(LTERTDIR)/_data
+ifneq ($(P1_BUILD_PRESENT),)
+	@$(RM) $(P1MACDIR)/ltecl/*.o
+	@$(RM) $(P1MACDIR)/ltephy/*.o
+	@$(RM) $(P1MACDIR)/cm/*.o
+	@$(RM) $(P1MACDIR)/enbapp/src/*.o
+	@$(RM) $(P1MACDIR)/ltemac/*.o
+	@$(RM) $(P1MACDIR)/lterlcpdcp/*.o
+	@$(RM) $(P1MACDIR)/mt4gmx/*.o
+endif
+	
+xclean_app: clean_app
+	echo Clean LteRT application binaries : $(BUILDDIR)
+	@$(RM) $(LTERTDIR)/*.elf
+	@$(RM) $(LTERTDIR)/*.axf
+	@$(RM) $(LTERTDIR)/*.a
+	@$(RM) $(LTERTDIR)/*.asm
+	@$(RM) $(LTERTDIR)/*.sym	
+	@$(RM) $(LTERTDIR)/*.hex
+	@$(RM) $(LTERTDIR)/*.lst
+ifneq ($(P1_BUILD_PRESENT),)
+	@$(RM) $(P1MACDIR)/enbapp/build/enodeb.a
+endif
+			
+xclean_all: echo_xclean xclean_mac xclean_sc xclean_mx xclean_phy xclean_app
+ifeq ($(RELEASEBUILD),1)
+	@$(MAKE) -C $(ROOTDIR) -f $(LTERTDIR)/makefile-larm debug xclean
+endif
+	
+clean_all: echo_clean clean_mac clean_mx clean_sc clean_phy clean_app
+ifeq ($(RELEASEBUILD),1)
+	@$(MAKE) -C $(ROOTDIR) -f $(LTERTDIR)/makefile-larm debug clean
+endif
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+echo_clean:
+	@echo $(DELIMETER)
+	@echo Clean all temporaries : $(BUILDDIR)
+	@echo $(DELIMETER)
+
+echo_xclean:
+	@echo $(DELIMETER)
+	@echo Clean all libraries : $(BUILDDIR)
+	@echo $(DELIMETER)
+
+	

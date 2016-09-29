@@ -1,0 +1,93 @@
+ -- @file    SECURITY-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/3/2012 9:40:48 AM
+ --
+
+SECURITY-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI;
+
+securityConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Contains  Configuration Parameters for Security  includes Chipering and IntegrityProtection "
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 69 }
+
+securityConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SecurityConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Contains  Configuration Parameters for Security  includes Chipering and IntegrityProtection 
+            This is a SINGLE ROW Table"
+       ::= { securityConfig 1 }
+
+securityConfigEntry OBJECT-TYPE
+       SYNTAX      SecurityConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry defines information for Security Configuration"
+       INDEX  { index }
+       ::= { securityConfigTable 1 }
+
+SecurityConfigEntry ::= 
+   SEQUENCE {
+       index                     RowNumber,
+       uuCiphering               INTEGER,
+       uuIntegrityProtection     INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SNMP Index to security algorithms]
+           [Change_Condition : RW ]"
+       DEFVAL { 0 }
+       ::= { securityConfigEntry 1 }
+
+uuCiphering OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   eea0(0),
+                   eea1(1),
+                   eea2(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Ciphering algorithms supported]
+           [Change_Condition : RW ]"
+       DEFVAL { eea1 }
+       ::= { securityConfigEntry 2 }
+
+uuIntegrityProtection OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   reserved(0),
+                   eia1(1),
+                   eia2(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Integrity Protection algorithms supported]
+           [Change_Condition : RW ]"
+       DEFVAL { eia1 }
+       ::= { securityConfigEntry 3 }
+
+END

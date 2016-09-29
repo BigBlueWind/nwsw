@@ -1,0 +1,69 @@
+
+include T4KDev/LTERT/buildcfg
+
+DHCPBUILDDIR := $(SYSCOREDHCPDIR)/$(BUILDDIR)
+DHCPLIB := $(DHCPBUILDDIR)/dhcp.a
+
+VPATH := $(SYSCOREDHCPDIR)
+
+# C sources
+C_SRCS += dhcp.c
+
+INC := -I"$(SYSCOREDHCPDIR)" \
+       -I"$(SYSCORESERVICESDIR)" \
+	   -I"$(SYSCORENETWORKDIR)" \
+	   -I"$(SYSCOREDRIVERSDIR)" \
+ 	   -I"$(OS4GMXINCDIR)" \
+	   -I"$(OS4GMXARMINCDIR)"
+	   
+# Object files
+C_OBJS = $(patsubst %.c,$(DHCPBUILDDIR)/%.o,$(notdir $(C_SRCS)))
+
+OBJS = $(C_OBJS) $(S_OBJS)
+
+CFLAGS = $(COREBUILDCFG) $(INC)
+
+.PHONY : all
+all : $(PCF) $(DHCPLIB)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(DHCPBUILDDIR)/dhcp.dep
+CLEANDEP = clean_dep
+else
+-include $(DHCPBUILDDIR)/dhcp.dep
+endif
+
+$(DHCPLIB) : $(DHCPBUILDDIR) $(CLEANDEP) $(OBJS)
+	@echo Creating $(DHCPLIB)
+	@$(AR) $(AR_FLAGS) $(DHCPLIB) $(OBJS)
+
+$(DHCPBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) -o"$@" "$<"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(DHCPBUILDDIR)/%.o : %.s
+	@echo $<
+	@$(AS) $(AS_FLAGS) -o"$@" "$<"
+
+$(DHCPBUILDDIR):
+	@$(MKDIR) $(DHCPBUILDDIR)
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean:
+	@$(RM) $(OBJS)
+
+.PHONY : xclean
+xclean: clean
+	@$(RM) $(DHCPLIB)

@@ -1,0 +1,43 @@
+<html>
+<head>
+    <title>LTE Base Station</title>
+    <link rel="shortcut icon" href="../image/favicon.ico" /> 
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type="text/javascript">
+        var arrStr = window.location.pathname.substr(1).split("-");
+        var sessionID = arrStr[0];
+        var source = "default";
+        function Render() {
+            if (sessionID != null) {
+                window.frames["Top"].location.href = sessionID + "-top.htm";
+                window.frames["MiddleLeft"].location.href = sessionID + "-config.htm";                
+                window.frames["MiddleDown"].location.href = sessionID + "-result.htm";
+                window.frames["Bottom"].location.href = sessionID + "-bottom.htm";
+                window.frames["MiddleRight"].location.href = sessionID + "-general_details.htm";
+            }
+            else {
+                self.close();
+            }
+        }
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn; 
+                           
+    </script> 
+    
+</head>
+<frameset frameborder='0' framespacing='0' rows='44,*,25' border='0' onload="Render()">
+     <frame name='Top' id='Top' scrolling='no' target='_self' src='' frameborder='0'></frame>
+     	<frameset cols='205,*' frameborder='0' framespacing='0'  border='0'>
+ 		<frame name='MiddleLeft' id='MiddleLeft' src='' frameborder='0'> </frame>
+ 		<frameset rows='* ,135' frameborder='0' framespacing='0'  scrolling='no' border='0'>
+			<frame name='MiddleRight' id='MiddleRight' src='' scrolling='no' ></frame> 
+			<frame name='MiddleDown' id='MiddleDown' scrolling='no' target='_self' src='' > </frame>
+		</frameset>
+	</frameset>
+     <frame name='Bottom' id='Bottom' scrolling='no' noresize  target='_self' src='' frameborder='0'></frame>
+</frameset>
+</html>
+

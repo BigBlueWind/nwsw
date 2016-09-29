@@ -1,0 +1,177 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+
+    <script type='text/javascript' src='../script/validate.js'></script>
+
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });            
+            $('#btnApply').click(function() {
+                var msg = '';
+                if (msg != '') {
+                    alert(msg);
+                }
+                else {
+                    LteSet('counterControl', $('#counterControl'), $('#btnApply'), null);
+                }
+            });
+        });
+        function LockAttributes() {
+        }
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Commands > Counter Control</span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+        <tr>
+            <td align='left' valign='top' class='horline'>
+                <img src='../image/horline.gif' width='1' height='1'>
+            </td>
+        </tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' style='width: 60px' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 450px; height: 615px;'>
+        <form name='counterControl' id='counterControl' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp; Counter Control
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Profile Id
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input type='hidden' id='index' />
+                                <select id='profileId' name='profileId' class='lteinput'>
+                                    <option value='1'>PROFILE1</option>
+                                    <option value='2'>PROFILE2</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Command
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='counterCommand' name='counterCommand' class='lteinput'>
+                                    <option value='1'>START</option>
+                                    <option value='2'>STOP</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Measurement Duration
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='measurementDuration' name='measurementDuration' class='lteinput'>
+                                    <option value='1'>2MINS</option>
+                                    <option value='2'>15MINS</option>
+                                    <option value='3'>30MINS</option>
+                                    <option value='4'>1HOUR</option>
+                                    <option value='5'>2HOUR</option>
+                                    <option value='6'>INFINITE</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Reporting interval
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <select id='reportingDuration' name='reportingDuration' class='lteinput'>
+                                    <option value='1'>2MINS</option>
+                                    <option value='2'>15MINS</option>
+                                    <option value='3'>30MINS</option>
+                                    <option value='4'>1HOUR</option>
+                                    <option value='5'>2HOUR</option>
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

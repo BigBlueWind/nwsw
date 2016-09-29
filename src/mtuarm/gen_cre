@@ -1,0 +1,4 @@
+cd ./mt
+make -f domt.mak.01
+make -f doss.mak.01
+cd ..

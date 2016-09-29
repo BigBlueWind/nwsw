@@ -1,0 +1,173 @@
+ -- @file    COUNTER-COLLECTION-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+COUNTER-COLLECTION-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp, String256, ProfileId          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32                        FROM SNMPv2-SMI
+       TruthValue                                                      FROM SNMPv2-TC;
+
+counterCollectionStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "counterCollectionStatus"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 140 }
+
+counterCollectionStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF CounterCollectionStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "counterCollectionStatus
+            This is a MULTI ROW Table"
+       ::= { counterCollectionStatus 1 }
+
+counterCollectionStatusEntry OBJECT-TYPE
+       SYNTAX      CounterCollectionStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "counterCollectionStatus"
+       INDEX  { index }
+       ::= { counterCollectionStatusTable 1 }
+
+CounterCollectionStatusEntry ::= 
+   SEQUENCE {
+       index                     RowNumber,
+       profileId                 ProfileId,
+       isRunning                 TruthValue,
+       measurementDuration       INTEGER,
+       reportingDuration         INTEGER,
+       numOfSamplesCollected     Unsigned32,
+       numOfamplesRemaining      Unsigned32,
+       pmLogFileName             String256,
+       startedAt                 DateAndTimeStamp,
+       stoppedAt                 DateAndTimeStamp,
+       stoppedReason             OCTET STRING
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { counterCollectionStatusEntry 1 }
+
+profileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Profile ID]"
+       ::= { counterCollectionStatusEntry 2 }
+
+isRunning OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             0:Not running 1:Running]"
+       ::= { counterCollectionStatusEntry 3 }
+
+measurementDuration OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-2mins(1),
+                   e-15mins(2),
+                   e-30mins(3),
+                   e-1hour(4),
+                   e-2hour(5),
+                   infinite(6)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Duration for which measurement started]"
+       ::= { counterCollectionStatusEntry 4 }
+
+reportingDuration OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-2mins(1),
+                   e-15mins(2),
+                   e-30mins(3),
+                   e-1hour(4),
+                   e-2hour(5)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Duration on new file need to created]"
+       ::= { counterCollectionStatusEntry 5 }
+
+numOfSamplesCollected OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of samples collected]"
+       ::= { counterCollectionStatusEntry 6 }
+
+numOfamplesRemaining OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of samples remaining]"
+       ::= { counterCollectionStatusEntry 7 }
+
+pmLogFileName OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Name of the opned statistics log file with location]"
+       ::= { counterCollectionStatusEntry 8 }
+
+startedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Measurement start time]"
+       ::= { counterCollectionStatusEntry 9 }
+
+stoppedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Measurement stop time]"
+       ::= { counterCollectionStatusEntry 10 }
+
+stoppedReason OBJECT-TYPE
+SYNTAX      OCTET STRING (SIZE (2..256))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Additional Info, why measurement stopped]"
+       ::= { counterCollectionStatusEntry 11 }
+
+END

@@ -1,0 +1,127 @@
+ -- @file    TRACE-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/12/2012 11:51:03 AM
+ --
+
+TRACE-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+traceStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Shows the message-tracing status: if message tracing is ON or OFF, traced file name, errors. "
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 113 }
+
+traceStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF TraceStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Shows the message-tracing status: if message tracing is ON or OFF, traced file name, errors. 
+            This is a SINGLE ROW Table"
+       ::= { traceStatus 1 }
+
+traceStatusEntry OBJECT-TYPE
+       SYNTAX      TraceStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains trace objects."
+       INDEX  { index }
+       ::= { traceStatusTable 1 }
+
+TraceStatusEntry ::= 
+   SEQUENCE {
+       index                             RowNumber,
+       traceId                           Unsigned32,
+       traceState                        INTEGER,
+       traceDurationConfiguredInMins     Unsigned32,
+       traceDurationElapsedInMins        Unsigned32,
+       traceMessageCounter               Unsigned32,
+       traceDestination                  INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { traceStatusEntry 1 }
+
+traceId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 10 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier for trace session. Assigned by eNodeB when trace is started.]"
+       ::= { traceStatusEntry 2 }
+
+traceState OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   traceOn(1),
+                   traceOff(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates if eNodeB is collecting traces or not.
+             State is set to traceOn when startTrace is received and eNodeB sent SUCCESSFUL response to it.
+             State is set to traceOff otherwise.]"
+       ::= { traceStatusEntry 3 }
+
+traceDurationConfiguredInMins OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 5 .. 60 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The duration for which trace is to be collected, as recevied in the startTrace command.]"
+       ::= { traceStatusEntry 4 }
+
+traceDurationElapsedInMins OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 60 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total Elapsed Time in minutes since the trace has been started]"
+       ::= { traceStatusEntry 5 }
+
+traceMessageCounter OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 4294967295 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Shows number of messages captured since starting of the trace]"
+       ::= { traceStatusEntry 6 }
+
+traceDestination OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   collectToFile(1),
+                   relayToRemoteHost(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Two modes of tracing are supported. 1) collectToFile : where traces are written to a file on eNodeB 2) relayToRemoteHost: where eNodeB relays each traced message to a remote host using UDP. In this mode two additional parameters need to be configured: traceDestUdpPort, traceDestIPAddress, which specifiy the host to which eNodeB should send the traces. When collectToFile is chosen then traceDestUdpPort and traceDestIPAddress are ignored. ]"
+       ::= { traceStatusEntry 7 }
+
+END

@@ -1,0 +1,94 @@
+ -- @file    LOCATION-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+LOCATION-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, Latitude, Longitude          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY                 FROM SNMPv2-SMI;
+
+locationStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Location of ENB."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 126 }
+
+locationStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF LocationStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Location of ENB.
+            This is a SINGLE ROW Table"
+       ::= { locationStatus 1 }
+
+locationStatusEntry OBJECT-TYPE
+       SYNTAX      LocationStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Longitude and Latitude of the BS."
+       INDEX  { index }
+       ::= { locationStatusTable 1 }
+
+LocationStatusEntry ::= 
+   SEQUENCE {
+       index              RowNumber,
+       locationSource     INTEGER,
+       latitude           Latitude,
+       longitude          Longitude
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { locationStatusEntry 1 }
+
+locationSource OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   configuredbyOam(1),
+                   gps(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Source for the ENB to arrive at its present location coordinates.
+             configuredByOam: these values were configured manuall by EMS/Web-craft/CLI
+             gps: these values are reported by gps receiver on ENB]"
+       ::= { locationStatusEntry 2 }
+
+latitude OBJECT-TYPE
+       SYNTAX      Latitude
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Latitude of ENB. Format is MMNN.PPPPPP(N/S). MM -> Degrees, NN -> Minutes, PPPPPP -> Decimal precision, North (N) or South (S).]"
+       ::= { locationStatusEntry 3 }
+
+longitude OBJECT-TYPE
+       SYNTAX      Longitude
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Longitude of ENB. Format is MMMNN.PPPPPP(E/W). MMM -> Degrees, NN -> Minutes, PPPPPP -> Decimal precision, East (E) or West (W).]"
+       ::= { locationStatusEntry 4 }
+
+END

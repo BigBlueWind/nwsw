@@ -1,0 +1,504 @@
+﻿<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/mapping.js'></script>
+    <script type='text/javascript'>
+        var interval = "";
+        var sessionID = parent.sessionID;
+        function addRowMultiColStatus(tableID, sno, data) {
+            if (data.col[0].value == "" || data.col[0].value == null || data.col[0].value == "0") {
+                return;
+            }
+            var table = parent.frames["MiddleRight"].document.getElementById(tableID);
+            var maintable = parent.frames["MiddleRight"].document.getElementById("maintable");
+            var div = parent.frames["MiddleRight"].document.getElementById("maindiv");
+            div.style.width = parseInt(div.style.width) + 200;
+            maintable.width = "100%";
+            var mainrow = maintable.rows[0];
+            var maincell = mainrow.insertCell(mainrow.cells.length);
+            maincell.align = "center";
+            maincell.width = "200px";
+            maincell.className = "tblTitleBg";
+            maincell.innerHTML = "Protocol";  //SetMultiColMapping("ipCounters", data.col[0].param, data.col[0].value);
+            maintable.rows[1].cells[0].colSpan = maintable.rows[1].cells[0].colSpan + 1;
+            maintable.rows[2].cells[0].colSpan = maintable.rows[2].cells[0].colSpan + 1;
+            table.width = "100%";
+            table.border = "0";
+            table.cellpadding = "0";
+            table.cellspacing = "0";
+            table.overflow = "auto";
+
+            if (table != null) {
+                for (var row = 0; row < data.col.length; row++) {
+                    var rowinsert = table.rows[row];
+                    var cell = rowinsert.insertCell(rowinsert.cells.length);
+                    cell.align = "center";
+                    cell.width = "200px";
+                    cell.innerHTML = data.col[row].value;
+                    if (row == 0)
+                        cell.innerHTML = SetMultiColMapping("ipCounters", data.col[0].param, data.col[0].value);
+                    if( (row + 1) == (data.col.length)){
+                        cell.innerHTML = DisplayTime(data.col[row].value);
+                    } 
+                }
+            }
+        }
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });
+            UpdateMultiColTable('ipCounters', 'ipCountersTable');
+            var interval = '';
+            $('#rfrshInt').change(function() {
+                if ($('#rfrshInt').val() != 'NONE') {
+                    if (interval != '')
+                        clearInterval(interval);
+                    interval = setInterval('UpdateMultiColTable("ipCounters", "ipCountersTable")', $('#rfrshInt').val() * 1000);
+                }
+                else
+                    clearInterval(interval);
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#ipCounters", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Monitor &gt; IP Counters</span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td>
+        </tr>
+    </table>
+    <div style='margin-left: 10px; margin-top: 10px;'>
+        <table cellspacing='0' cellpadding='2' border='0' width='1043px' style='margin-top: 10px'>
+            <tbody>
+                <tr>
+                    <td align='left' style='font-size: smaller;'>
+                        Automatic Refresh Interval (Seconds)&nbsp;&nbsp; :
+                        <select name='rfrshInt' id='rfrshInt'>
+                            <option value='NONE'>NONE</option>
+                            <option value='5'>5</option>
+                            <option value='10'>10</option>
+                            <option value='15'>15</option>
+                            <option value='30'>30</option>
+                            <option value='60'>60</option>
+                        </select>
+                    </td>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="maindiv" style='margin-left: 10px; margin-top: 10px; width: 400px;'>
+        <form name='ipCounters' id='ipCounters' action=''>
+        <table id="maintable" width='100%' class='tblBorder' cellspacing='0' cellpadding='0'
+            border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg' width="400px">
+                    &nbsp; IP Counters
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <div style='overflow-x: hidden; overflow-y: scroll; height: 600px; 
+                    border-bottom: 1px; scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black'>
+                    <table id='ipCountersTable' width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                IP Version
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Total Number of Incoming IP Datagrams
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Total Number of Octets received in IP Datagrams
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Incoming IP Datagrams discarded due to Header Errors
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                               Number of Incoming IP Datagrams discarded as no route was found to transmit
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                               Number of Incoming IP Datagrams discarded due to Address Errors	
+
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of locally-addressed IP Datagrams received, but discarded due to Unknown protocols
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Incoming IP Datagrams discarded due to lack of buffer	
+
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Incoming IP Datagrams Forwarded to final destination	
+
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of IP Fragments received which needs reassembling	
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of IP Fragments successfully reassembled
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Failures detected by IP re-assembly algorithm
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Incoming IP datagrams which encountered no problem, but were discarded
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Total Number of IP datagrams succesfully delivered to IP user-protocols 
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Total Number of IP datagrams from IP user protocols to IP
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Local IP datagrams discarded as no route was found to transmit
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Outgoing IP datagrams successfully forwarded to their destination
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Outgoing IP datagrams discarded due to lack of buffer space
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Outgoing IP datagrams that requires fragmentation
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                               Number of Outgoing IP datagrams successfully fragmented
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Outgoing IP datagrams discarded due to unsuccessfully fragmentation
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Output datagram fragments
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Total Number of Outgoing IP Datagrams supplied to Lower Layers	
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Total Number of Octets in IP datagrams delivered to Lower Layers	
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of IP Multicast Packets Received
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of Octets received in IP Multicast datagrams
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of IP Multicast Datagrams transmitted	
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Total Number of Octets transmitted in IP Multicast Datagrams
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of IP Broadcast Packets Received
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Number of IP Broadcast Packets Received                                
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Discontinuity Time
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                                Refresh Rate
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap' width='314px' align='left'>
+                               Last Collected At
+                            </td>
+                            <td nowrap='nowrap' width='3px' align='center'>
+                                :
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

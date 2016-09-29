@@ -1,0 +1,324 @@
+ -- @file    EUTRA-HO-PROFILE-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+EUTRA-HO-PROFILE-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId                                               FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32          FROM SNMPv2-SMI
+       TruthValue                                                   FROM SNMPv2-TC;
+
+eutraHoProfileConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "HO profile configuration - measurement thresholds , event thresholds "
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 60 }
+
+eutraHoProfileConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EutraHoProfileConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "HO profile configuration - measurement thresholds , event thresholds 
+            This is a SINGLE ROW Table"
+       ::= { eutraHoProfileConfig 1 }
+
+eutraHoProfileConfigEntry OBJECT-TYPE
+       SYNTAX      EutraHoProfileConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to enodeb configuration"
+       INDEX  { hoProfileId }
+       ::= { eutraHoProfileConfigTable 1 }
+
+EutraHoProfileConfigEntry ::= 
+   SEQUENCE {
+       hoProfileId               ProfileId,
+       a3Offset                  Integer32,
+       reportOnLeave             TruthValue,
+       a5Threshold1              Unsigned32,
+       a5Threshold2              Unsigned32,
+       hysteresis                Unsigned32,
+       timeToTrigger             INTEGER,
+       triggerQuantity           INTEGER,
+       reportQuantity            INTEGER,
+       filterCoefficientRsrq     INTEGER,
+       filterCoefficientRsrp     INTEGER,
+       reportInterval            INTEGER,
+       reportAmount              INTEGER,
+       maxReportCells            Unsigned32,
+       supportedEvents           INTEGER,
+       sMeasure                  Unsigned32
+   }
+
+hoProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { eutraHoProfileConfigEntry 1 }
+
+a3Offset OBJECT-TYPE
+       SYNTAX      Integer32 (-30 .. 30 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Offset value to be used in EUTRA measurement report triggering condition for event a3. The actual value is IE value * 0.5 dB.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 3 }
+       ::= { eutraHoProfileConfigEntry 2 }
+
+reportOnLeave OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates whether or not the UE shall initiate the measurement reporting procedure when the leaving condition is met for event A3 for a neighbor cell.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { true }
+       ::= { eutraHoProfileConfigEntry 3 }
+
+a5Threshold1 OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 34 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter defines the RSRQ or RSRP threshold1 to be used in EUTRA measurement report triggering condition for event a5, depending on the trigger choice selected in parameter triggerQuantity. Mapping to actual values is specified in 3GPP TS 36.133. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 20 }
+       ::= { eutraHoProfileConfigEntry 4 }
+
+a5Threshold2 OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 34 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter defines the RSRQ or RSRP threshold2 to be used in EUTRA measurement report triggering condition for event a5, depending on the trigger choice selected in parameter triggerQuantity. Mapping to actual values is specified in 3GPP TS 36.133. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 30 }
+       ::= { eutraHoProfileConfigEntry 5 }
+
+hysteresis OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 30 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter is used used within the entry and leave condition of an event triggered reporting condition. The actual value is IE value * 0.5 dB.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 6 }
+       ::= { eutraHoProfileConfigEntry 6 }
+
+timeToTrigger OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms0(0),
+                   ms40(1),
+                   ms64(2),
+                   ms80(3),
+                   ms100(4),
+                   ms128(5),
+                   ms160(6),
+                   ms256(7),
+                   ms320(8),
+                   ms480(9),
+                   ms512(10),
+                   ms640(11),
+                   ms1024(12),
+                   ms1280(13),
+                   ms2560(14),
+                   ms5120(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Time during which measurement report triggering condition needs to be met in order to trigger a measurement report. Value ms0 corresponds to 0 miliseconds etc.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms1024 }
+       ::= { eutraHoProfileConfigEntry 7 }
+
+triggerQuantity OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   rsrp(0),
+                   rsrq(1)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The quantities used to evaluate the triggering condition for the event. The values rsrp and rsrq correspond to Reference Signal Received Power (RSRP) and Reference Signal Received Quality (RSRQ).]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { rsrp }
+       ::= { eutraHoProfileConfigEntry 8 }
+
+reportQuantity OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sameAsTriggerQuantity(0),
+                   both(1)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The quantities to be included in the measurement report. The value both means that both the rsrp and rsrq quantities are to be included in the measurement report.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { sameAsTriggerQuantity }
+       ::= { eutraHoProfileConfigEntry 9 }
+
+filterCoefficientRsrq OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   fc0(0),
+                   fc1(1),
+                   fc2(2),
+                   fc3(3),
+                   fc4(4),
+                   fc5(5),
+                   fc6(6),
+                   fc7(7),
+                   fc8(8),
+                   fc9(9),
+                   fc11(10),
+                   fc13(11),
+                   fc15(12),
+                   fc17(13),
+                   fc19(14)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Specifies the filtering coefficient used for RSRQ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { fc4 }
+       ::= { eutraHoProfileConfigEntry 10 }
+
+filterCoefficientRsrp OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   fc0(0),
+                   fc1(1),
+                   fc2(2),
+                   fc3(3),
+                   fc4(4),
+                   fc5(5),
+                   fc6(6),
+                   fc7(7),
+                   fc8(8),
+                   fc9(9),
+                   fc11(10),
+                   fc13(11),
+                   fc15(12),
+                   fc17(13),
+                   fc19(14)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Specifies the filtering coefficient used for RSRP]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { fc4 }
+       ::= { eutraHoProfileConfigEntry 11 }
+
+reportInterval OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms120(0),
+                   ms240(1),
+                   ms480(2),
+                   ms640(3),
+                   ms1024(4),
+                   ms2048(5),
+                   ms5120(6),
+                   ms10240(7),
+                   min1(8),
+                   min6(9),
+                   min12(10),
+                   min30(11),
+                   min60(12)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Interval between successive measurement reports. Value ms120 corresponds with 120 ms, ms240 corresponds with 240 ms and so on, while value min1 corresponds with 1 min, min6 corresponds with 6 min and so on]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms1024 }
+       ::= { eutraHoProfileConfigEntry 12 }
+
+reportAmount OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   r1(0),
+                   r2(1),
+                   r4(2),
+                   r8(3),
+                   r16(4),
+                   r32(5),
+                   r64(6),
+                   infinity(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of times a measurement report is sent.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { infinity }
+       ::= { eutraHoProfileConfigEntry 13 }
+
+maxReportCells OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 8 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum number of cells that can be included in a measurement report.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 3 }
+       ::= { eutraHoProfileConfigEntry 14 }
+
+supportedEvents OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   a3(0),
+                   a5(1),
+                   a3A5(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter control the UE measurement report Events supported by eNB.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { a3A5 }
+       ::= { eutraHoProfileConfigEntry 15 }
+
+sMeasure OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 97 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Serving cell quality threshold controlling whether or not the UE is required to perform measurements of intra-frequency, inter-frequency and inter-RAT neighbouring cells. Value 0 indicates to disable s-Measure.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { eutraHoProfileConfigEntry 16 }
+
+END

@@ -1,0 +1,234 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+
+    <script type='text/javascript' src='../script/mapping.js'></script>
+
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+        var interval = "";
+        function addRowStatus(tableID, sno, data) {
+            var table = parent.frames["MiddleRight"].document.getElementById(tableID);
+            if (table != null) {
+                var rowCount = table.rows.length;
+                table.width = "1600px";
+                table.border = "0";
+                table.cellpadding = "0";
+                table.cellspacing = "0";
+                table.overflow = "auto"
+                var row = table.insertRow(rowCount);
+                var cell1 = row.insertCell(0);
+                if (data.col[0].value == "" || data.col[0].value == null || data.col[0].value == "0") {
+                    if (sno == 1) {
+                        cell1.align = "center";
+                        cell1.width = "100%"
+                        cell1.innerHTML = "<span class='errormsg'>No L2 Counters Present.</span>";
+                    }
+                }
+                else {
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+                    var cell6 = row.insertCell(5);
+                    var cell7 = row.insertCell(6);
+                    var cell8 = row.insertCell(7);
+                    var cell9 = row.insertCell(8);
+                    var cell10 = row.insertCell(9);
+                    var cell11 = row.insertCell(10);
+                    if (rowCount % 2 == 1) {
+                        row.className = 'conTblRowBg2';
+                    }
+                    else {
+                        row.className = 'conTblRowBg1';
+                    }
+                    DisplayTimeUptoMilliSecond(data.col[1].value);
+                    SetMultiRowMapping("activeAlarmStatus", data.col[3].param, data.col[3].value);
+                    
+                    cell1.align = "center";
+                    cell1.width = "5%";
+                    cell1.innerHTML = data.col[0].value;
+                    cell2.align = "center";
+                    cell2.width = "7%";
+                    cell2.innerHTML = SetMultiRowMapping("counterCollectionStatus", data.col[1].param, data.col[1].value);
+                    cell3.align = "center";
+                    cell3.width = "8%";
+                    cell3.innerHTML = SetMultiRowMapping("counterCollectionStatus", data.col[2].param, data.col[2].value);
+                    cell4.align = "center";
+                    cell4.width = "10%";
+                    cell4.innerHTML = SetMultiRowMapping("counterCollectionStatus", data.col[3].param, data.col[3].value);
+                    cell5.align = "center";
+                    cell5.width = "8%";
+                    cell5.innerHTML = SetMultiRowMapping("counterCollectionStatus", data.col[4].param, data.col[4].value);
+                    cell6.align = "center";
+                    cell6.width = "8%";
+                    cell6.innerHTML = data.col[5].value;
+                    cell7.align = "center";
+                    cell7.width = "8%";
+                    cell7.innerHTML = data.col[6].value;
+                    cell8.align = "center";
+                    cell8.width = "20%";
+                    cell8.innerHTML = data.col[7].value;
+                    cell9.align = "center";
+                    cell9.width = "10%";
+                    cell9.innerHTML = DisplayTimeUptoMilliSecond(data.col[8].value);
+                    cell10.align = "center";
+                    cell10.width = "10%";
+                    cell10.innerHTML = DisplayTimeUptoMilliSecond(data.col[9].value);
+                    cell11.align = "center";
+                    cell11.width = "6%";
+                    cell11.innerHTML = data.col[10].value;             
+                }
+            }
+        }
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });
+            updateTable('counterCollectionStatus', 'counterCollectionStatusTable');
+            var interval = '';
+            $('#rfrshInt').change(function() {
+                if ($('#rfrshInt').val() != 'NONE') {
+                    if (interval != '')
+                        clearInterval(interval);
+                    interval = setInterval('updateTable("counterCollectionStatus", "counterCollectionStatusTable")', $('#rfrshInt').val() * 1000);
+                }
+                else
+                    clearInterval(interval);
+            });
+
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#counterCollectionStatus", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+        $("#data").bind("scroll", function() {
+            $("#header").scrollLeft($("#data").scrollLeft());
+        });
+        });
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Monitor &gt; L2 Counters Status</span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+    </table>
+    <div style='margin-left: 10px; margin-top: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1045px' >
+            <tbody>
+                <tr>
+                    <td align='left' style='font-size: smaller;'>
+                        Automatic Refresh Interval (Seconds)&nbsp;&nbsp; :&nbsp;
+                        <select name='rfrshInt' id='rfrshInt'>
+                            <option value='NONE'>NONE</option>
+                            <option value='5'>5</option>
+                            <option value='10'>10</option>
+                            <option value='15'>15</option>
+                            <option value='30'>30</option>
+                            <option value='60'>60</option>
+                        </select>
+                    </td>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 1040px; border: 1px; border-style: solid; border-color: silver'>
+        <div id="header" style='width: 1040px; overflow: hidden'>
+            <table width='1600px'cellspacing='0' cellpadding='0'>
+                <thead>
+                    <tr>
+                        <td width='5%' align='center' class='tblTitleBg'>
+                            Seq No.
+                        </td>
+                        <td width='7%' align='center' class='tblTitleBg'>
+                            Profile Id
+                        </td>
+                        <td width='8%' align='center' class='tblTitleBg'>
+                            Running
+                        </td>
+                        <td width='10%' align='center' class='tblTitleBg'>
+                            Measurement Duration
+                        </td>
+                        <td width='8%' align='center' class='tblTitleBg'>
+                            Reporting Duration
+                        </td>
+                        <td width='8%' align='center' class='tblTitleBg'>
+                            Samples Collected
+                        </td>
+                        <td width='8%' align='center' class='tblTitleBg'>
+                            Samples Remaining
+                        </td>
+                        <td width='20%' align='center' class='tblTitleBg'>
+                            File Name
+                        </td>
+                        <td width='10%' align='center' class='tblTitleBg'>
+                            Start Time
+                        </td>
+                        <td width='10%' align='center' class='tblTitleBg'>
+                            Stop Time
+                        </td>
+                        <td width='6%' align='center' class='tblTitleBg'>
+                            Stop Reason
+                        </td>
+                    </tr>
+                    <tr class="formheadingborder">
+                        <td colspan='11'>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id='data' style='width: 1040px; height: 610px; overflow-y: scroll; overflow-x: scroll;
+            scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black;'>
+            <form name='counterCollectionStatus' id='counterCollectionStatus' action=''>
+            <table id='counterCollectionStatusTable' width='1600px'  border='0' cellpadding='0' cellspacing='0'>
+                <tr>
+                    <th width='5%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='7%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='8%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='10%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='8%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='8%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='8%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='20%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='10%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='10%' align='center' nowrap='nowrap'>
+                    </th>
+                    <th width='6%' align='center' nowrap='nowrap'>
+                    </th>
+                </tr>                
+            </table>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

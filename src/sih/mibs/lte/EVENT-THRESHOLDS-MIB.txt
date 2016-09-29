@@ -1,0 +1,136 @@
+ -- @file    EVENT-THRESHOLDS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:57 PM
+ --
+
+EVENT-THRESHOLDS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                                    FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+eventThresholds MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "This tables contains the thresolds for raising alarms."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 206 }
+
+eventThresholdsTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EventThresholdsEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "This tables contains the thresolds for raising alarms.
+            This is a SINGLE ROW Table"
+       ::= { eventThresholds 1 }
+
+eventThresholdsEntry OBJECT-TYPE
+       SYNTAX      EventThresholdsEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing thresholds for raising alarms."
+       INDEX  { index }
+       ::= { eventThresholdsTable 1 }
+
+EventThresholdsEntry ::= 
+   SEQUENCE {
+       index                 RowNumber,
+       cpuUsageHigh          Unsigned32,
+       cpuUsageNormal        Unsigned32,
+       memUsageHigh          Unsigned32,
+       memUsageNormal        Unsigned32,
+       enbLoadHighMbps       Unsigned32,
+       enbLoadNormalMbps     Unsigned32
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of the row]
+           [Change_Condition : RW ]"
+       DEFVAL { 1 }
+       ::= { eventThresholdsEntry 1 }
+
+cpuUsageHigh OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 100 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Percent CPU at which CPU High Alarm should be raised]
+           [Change_Condition : RW ]"
+       DEFVAL { 70 }
+       ::= { eventThresholdsEntry 2 }
+
+cpuUsageNormal OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 100 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Once cpuHighAlarm is raised, the % CPU at which the alarm should be cleared.]
+           [Change_Condition : RW ]"
+       DEFVAL { 60 }
+       ::= { eventThresholdsEntry 3 }
+
+memUsageHigh OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 100 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             % memory usage at which High Memory Usage Alarm will be raised]
+           [Change_Condition : RW ]"
+       DEFVAL { 60 }
+       ::= { eventThresholdsEntry 4 }
+
+memUsageNormal OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 100 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Once memUsageHigh alarm is raised, the level to which % memory used should fall in order to clear the memUsageHigh alarm.]
+           [Change_Condition : RW ]"
+       DEFVAL { 50 }
+       ::= { eventThresholdsEntry 5 }
+
+enbLoadHighMbps OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 500 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ENB LoadState would be marked as overloaded if total user plane traffic (PDCP SDUs) served by ENB is above this number (currentLoad > enbLoadHigh).
+             Affects Status->EnbStatus->LoadState]
+           [Change_Condition : RW ]"
+       DEFVAL { 20 }
+       ::= { eventThresholdsEntry 6 }
+
+enbLoadNormalMbps OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 500 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ENB LoadState would be marked as normalLoad if total user plane traffic (PDCP SDUs) served by ENB is between this number and enbLoadHigh ( enbLoadNormal < currentLoad < enbLoadHigh).
+             ENB LoadState would be marked as lowLoad if total user plane traffic (PDCP SDUs) served by ENB is between 0 and enbLoadNormal ( 0 < currentLoad < enbLoadNormal).
+             Affects Status->EnbStatus->LoadState]
+           [Change_Condition : RW ]"
+       DEFVAL { 10 }
+       ::= { eventThresholdsEntry 7 }
+
+END

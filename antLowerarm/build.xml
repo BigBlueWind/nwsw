@@ -1,0 +1,113 @@
+ <project name="LTE" basedir=".">
+
+
+<!--<property name="SRC" location="${basedir}\ltephy\mindSpeed\lowercore\T4KDev\LTERT"/>-->
+<!--<property name="SRC" location="c:\LTE\trunk\aussie\l2+\nwsw\lowerarm\ltephy\mindSpeed\lowercore\T4KDev\LTERT"/>-->
+<property name="PWV_SRC" location="C:\.hudson\jobs\LTE1\workspace\lowerarm\ltephy\mindSpeed\lowercore\T4KDev\LTERT"/>
+                              
+<!--
+
+<path id="project.classpath"> 
+
+<pathelement location="C:\Program Files (x86)\apache-ant-1.8.3\lib\svnant-1.0.0\lib\jsvn.jar" /> 
+<pathelement location="C:\Program Files (x86)\apache-ant-1.8.3\lib\svnant-1.0.0\lib\svnant.jar" />
+<pathelement location="C:\Program Files (x86)\apache-ant-1.8.3\lib\svnant-1.0.0\lib\svnClientAdapter.jar" />
+<pathelement location="C:\Program Files (x86)\apache-ant-1.8.3\lib\svnant-1.0.0\lib\commons-lang-2.0.jar" /> 
+<pathelement location="C:\Program Files (x86)\apache-ant-1.8.3\lib\svnant-1.0.0\lib\jakarta-regexp-1.3.jar" /> 
+<pathelement location="C:\Program Files (x86)\apache-ant-1.8.3\lib\svnant-1.0.0\lib\svnjavahl.jar" /> 
+
+</path> 
+
+<taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask" classpathref="project.classpath"/>
+
+
+-->
+
+
+<target name= "clean">
+
+<echo> below is the o/p for basedir </echo>
+<echo> ${basedir} </echo>
+
+
+<echo> below is the o/p for SRCDIR </echo>
+<echo> ${PWV_SRC} </echo>
+
+<sleep milliseconds="10"/>
+
+
+<echo> clean target started </echo>
+
+
+ <exec dir="${PWV_SRC}" executable="cmd">
+    
+     <arg value="/c"/>
+     <arg value="larm.bat xclean"/>
+     <arg value="-p"/>
+ </exec>
+
+<echo> clean target finished </echo>
+
+</target>
+
+
+<target name= "JFFS">
+
+<echo> compiling target started </echo>
+<echo> ${PWV_SRC} </echo>
+
+ <exec dir="${PWV_SRC}" executable="cmd">
+ <arg value="/c"/>
+ <arg value="larm.bat p1c"/>
+ <arg value="-p"/>
+ </exec>
+<sleep milliseconds="10"/>
+<sleep milliseconds="10"/>
+<sleep milliseconds="10"/>
+<sleep milliseconds="10"/>
+<sleep milliseconds="10"/>
+
+<echo> compiling target finished </echo>
+
+</target>
+
+
+<!--
+
+<target name="rename"> 
+
+
+   <echo> rename target is started  </echo>
+
+  <move file="${PWV_SRC}\ltearm.elf" tofile="C:\.hudson\jobs\LTE1\workspace\build\bin\4gmx\lowerarm\lowerarm_512.elf"/>
+
+                                                                                                               
+   <echo> rename target is completed  </echo>
+
+</target>
+
+
+<target name="commit">  
+
+
+
+    <echo> SVN-Commit-started </echo>
+
+
+   <svn username="nsannisetty" password="krish@1981">
+    
+   <commit dir="${PWV_SRC}\build\bin\4gmx\lowerarm\lowerarm_512.elf"/>
+
+
+     Message="commited lowerarm_512.elf for testing purpose"/>
+
+    </svn>  
+
+    
+</target> 
+
+-->
+
+
+</project>
+

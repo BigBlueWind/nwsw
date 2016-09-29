@@ -1,0 +1,61 @@
+#!/bin/csh
+#
+# update all files
+#
+set PRROOT=/vobs/core_prd/gprs/x2ap/src
+
+if($#argv == 1) then
+  if($1 == "-n") then
+    set PRROOT=/vobs/core_prd/gprs/x2ap/src
+  endif
+  if($1 == "-view") then
+    set PRROOT=/vobs/core_prd/gprs/x2ap/src
+  endif
+endif
+
+
+# X2AP Product files
+echo "Copying files from cz directory"
+cp $PRROOT/cz/*.[hx] .
+
+# X2AP Product files
+#echo "Copying files from cz parent directory"
+cp $PRROOT/tr/* .
+
+#X2AP acceptance files
+echo "Copying files from acc directory"
+cp $PRROOT/acc/* .
+
+#X2AP  Sample files
+echo "Copying files from sample directory"
+cp $PRROOT/sample/* .
+
+
+#X2AP XML Files
+echo "Copying files from xml directory"
+cp $PRROOT/xml/czac_cmd1.xml .
+cp $PRROOT/xml/czac_cmd2.xml .
+cp $PRROOT/xml/czac_tc1.xml .
+cp $PRROOT/xml/czac_tc2.xml .
+cp $PRROOT/xml/czac_tc3.xml .
+cp $PRROOT/xml/czac_tc4.xml .
+cp $PRROOT/xml/czac_tc5.xml .
+cp $PRROOT/xml/czac_tc6.xml .
+cp $PRROOT/xml/czac_tc7.xml .
+cp $PRROOT/xml/czac_tc8.xml .
+cp $PRROOT/xml/czac_tc9.xml .
+cp $PRROOT/xml/czac_tg1.xml .
+cp $PRROOT/xml/czac_tg2.xml .
+cp $PRROOT/xml/czac_tg3.xml .
+cp $PRROOT/xml/czac_tg4.xml .
+cp $PRROOT/xml/czac_tg5.xml .
+cp $PRROOT/xml/czac_tg6.xml .
+cp $PRROOT/xml/czac_tg7.xml .
+cp $PRROOT/xml/czac_tg8.xml .
+cp $PRROOT/xml/czac_tg9.xml .
+
+#X2AP build files
+echo "Copying files from build directory"
+cp $PRROOT/build/* .
+
+chmod 755 *

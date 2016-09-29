@@ -1,0 +1,117 @@
+ -- @file    LOGIN-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+LOGIN-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                  FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+loginStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "This table shows the users that are currently logged into the EnodeB."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 132 }
+
+loginStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF LoginStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "This table shows the users that are currently logged into the EnodeB.
+            This is a MULTI ROW Table"
+       ::= { loginStatus 1 }
+
+loginStatusEntry OBJECT-TYPE
+       SYNTAX      LoginStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains login objects."
+       INDEX  { index }
+       ::= { loginStatusTable 1 }
+
+LoginStatusEntry ::= 
+   SEQUENCE {
+       index                         RowNumber,
+       who                           OCTET STRING,
+       priviledgeLevel               INTEGER,
+       oamInterfaceType              INTEGER,
+       oamInterfaceSessionNumber     Unsigned32,
+       loggedInAt                    DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The row number]"
+       ::= { loginStatusEntry 1 }
+
+who OBJECT-TYPE
+SYNTAX      OCTET STRING (SIZE (3..8))
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             login name]"
+       ::= { loginStatusEntry 2 }
+
+priviledgeLevel OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   level1(1),
+                   level2(2),
+                   level3(3)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The administrative priviledge level at which the user is logged in]"
+       ::= { loginStatusEntry 3 }
+
+oamInterfaceType OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   cli(1),
+                   web(2),
+                   ems(3)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The OAM Interface via which he/she is logged in]"
+       ::= { loginStatusEntry 4 }
+
+oamInterfaceSessionNumber OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             An OAM Interface can support multiple logins (called sessions). This identifies the session number.]"
+       ::= { loginStatusEntry 5 }
+
+loggedInAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The time at which he logged in.]"
+       ::= { loginStatusEntry 6 }
+
+END

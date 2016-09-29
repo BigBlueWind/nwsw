@@ -1,0 +1,108 @@
+#
+# Makefile to build MAC library
+#
+# (c) 2010-2012 Mindspeed Technologies
+#
+
+include T4KDev/LTERT/buildcfg
+
+TESTMACBUILDDIR := $(LTETESTMACDIR)/$(BUILDDIR)
+
+VPATH := $(LTETESTMACDIR) $(LTEMACDIR) $(LTEMACDIR)/e_tm
+
+INC = -I"$(LTETESTMACDIR)" \
+      -I"$(LTEMACDIR)" \
+      -I"$(LTEMACDIR)/e_tm" \
+      -I"$(OS4GMXINCDIR)" \
+      -I"$(OS4GMXARMINCDIR)" \
+      -I"$(SYSCOREFECDIR)" \
+      -I"$(SYSCOREDIR)" \
+      -I"$(SYSCOREDRIVERSDIR)" \
+      -I"$(SYSCOREDRIVERSDIR)/CPRI" \
+      -I"$(SYSCOREDRIVERSDIR)/FEC" \
+      -I"$(SYSCOREDRIVERSDIR)/MAP" \
+      -I"$(SYSCORESERVICESDIR)" \
+      -I"$(LTEPHYINCDIR)" \
+      -I"$(LTEPHYRTDIR)" \
+      -I"$(COMMONDIR)" \
+      -I../../TranscedeLibs/api -I../TranscedeLibs/api -I./TranscedeLibs/api
+
+CFLAGS = $(MACBUILDCFG) $(INC) -DETM
+
+SRC = \
+	e_tm.c \
+	e_tm_tables.c \
+	enbMacEntry.c \
+	enbMacIface.c \
+	enbApiHdlr.c \
+	enbMac.c \
+	enbMac2PhyIface.c \
+	enbMacDlScheduler.c \
+	LteTestTables.c \
+	LteMacTestCfgMgr.c \
+	enbMacUlScheduler.c  \
+	api_log_1ms.c \
+	dci_decode.c \
+	dci_encode.c \
+	MacUtils.c \
+	bs_static_config.c \
+	e_tm.c \
+	e_tm_tables.c \
+	lte_harq.c \
+	lte_pdcch.c \
+	lte_pucch.c \
+	lte_pdsch.c \
+	lte_pusch.c \
+	lte_phich.c \
+	lte_pbch.c \
+	lte_modulation.c \
+	lte_scheduler.c \
+	lte_vectors.c \
+	lte_rnti.c \
+	lte_if.c \
+	lte_mac_state.c \
+	lte_nmm_state.c
+
+OBJ := $(patsubst %.c, $(TESTMACBUILDDIR)/%.o,$(notdir $(SRC)))
+
+.PHONY: $(MAIN_TARGET) echo_stuff
+$(MAIN_TARGET) : $(PCF) $(LTETESTMACLIBRARY)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(TESTMACBUILDDIR)/ltetestmac.dep
+CLEANDEP = clean_dep
+else
+-include $(TESTMACBUILDDIR)/ltetestmac.dep
+endif
+
+$(LTETESTMACLIBRARY): $(TESTMACBUILDDIR) $(CLEANDEP) $(OBJ)
+	@echo $(DELIMETER1)
+	@echo Creating $(LTETESTMACLIBRARY)
+	@$(AR) $(AR_FLAGS) $(LTETESTMACLIBRARY) $(OBJ)
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+$(TESTMACBUILDDIR):
+	@$(MKDIR) $(TESTMACBUILDDIR)
+	
+$(TESTMACBUILDDIR)/%.o : %.c
+	@echo $(subst $(ROOTDIR)/,,$<)
+	@$(CC) $(CFLAGS) $< -o $@
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean:
+	@$(RM) $(OBJ)
+
+.PHONY : xclean
+xclean:	clean
+	@$(RM) $(LTETESTMACLIBRARY)

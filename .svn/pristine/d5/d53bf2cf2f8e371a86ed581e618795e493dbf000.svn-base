@@ -1,0 +1,120 @@
+ -- @file    SW-PACKAGE-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+SW-PACKAGE-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, SwType, VersionString, DateAndTimeStamp, String256          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY                                                FROM SNMPv2-SMI
+       TruthValue                                                                  FROM SNMPv2-TC;
+
+swPackageStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Lists the versions of SW packages installed on the eNodeB"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 104 }
+
+swPackageStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SwPackageStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Lists the versions of SW packages installed on the eNodeB
+            This is a MULTI ROW Table"
+       ::= { swPackageStatus 1 }
+
+swPackageStatusEntry OBJECT-TYPE
+       SYNTAX      SwPackageStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains list of software package configuration objects."
+       INDEX  { index }
+       ::= { swPackageStatusTable 1 }
+
+SwPackageStatusEntry ::= 
+   SEQUENCE {
+       index          RowNumber,
+       swType         SwType,
+       version        VersionString,
+       builtOn        DateAndTimeStamp,
+       swNotes        String256,
+       isRunning      TruthValue,
+       packageDir     String256
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { swPackageStatusEntry 1 }
+
+swType OBJECT-TYPE
+       SYNTAX      SwType
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNB-Pico SW Image types for various components.]"
+       ::= { swPackageStatusEntry 2 }
+
+version OBJECT-TYPE
+       SYNTAX      VersionString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The release.revision.bugfix.vendor.svnversion]"
+       ::= { swPackageStatusEntry 3 }
+
+builtOn OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Package building date, must be in YYYYMMDDHHNNSSTTT format. ]"
+       ::= { swPackageStatusEntry 4 }
+
+swNotes OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Software component release notes]"
+       ::= { swPackageStatusEntry 5 }
+
+isRunning OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates whether this version is currently running]"
+       ::= { swPackageStatusEntry 6 }
+
+packageDir OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Absolute path where the package is installed]"
+       ::= { swPackageStatusEntry 7 }
+
+END

@@ -1,0 +1,11 @@
+radioHeadSimulatorConfig :
+{	
+  radioHeadIpAddr = "172.17.5.8";   # Used to run RH Simulator    
+  enodebIpAddr    = "172.17.5.8";   # Used to send NOTI to EnodeB
+  version         = "1.0.0.0.0";      # RH Simulator Version
+}; /* End of Radio Head Simulator */
+ 
+emsSimulatorConfig :                     
+{    
+  version = "1.0.0.0.0";  # EMS Simulator Version
+}; /* End of EMS Simulator */

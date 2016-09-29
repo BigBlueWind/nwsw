@@ -1,0 +1,123 @@
+#!/bin/csh
+#
+# update common files
+#
+set CMROOT=/vobs/core_prd/cm
+
+
+if($#argv == 1) then
+  if($1 == "-n") then
+    set CMROOT=/clearcase/tds/core_prd/next/cm
+  endif
+  if($1 == "-view") then
+    set CMROOT=/vobs/core_prd/cm
+  endif
+endif
+
+if($#argv == 2) then
+  set VIEWBASE=$2
+  set CMROOT=$VIEWBASE/vobs/core_prd/cm
+  if($1 == "-n") then
+    set CMROOT=$VIEWBASE/vobs/core_prd/next/cm
+  endif
+  if($1 == "-view") then
+    set CMROOT=$VIEWBASE/vobs/core_prd/cm
+  endif
+  if($1 == "--link") then
+    set CP_CMD="cp -s"
+  endif
+endif
+
+
+# Common Interface Files
+cp $CMROOT/inf/lcz/src/* .
+cp $CMROOT/inf/sct/src/* .
+cp $CMROOT/inf/czt/src/* .
+cp $CMROOT/inf/cm_tpt/src/* .
+cp $CMROOT/inf/cm_dns/src/* .
+
+#common files
+cp $CMROOT/tech/cm_cm/src/envdep.h .
+cp $CMROOT/tech/cm_cm/src/envind.h .
+cp $CMROOT/tech/cm_cm/src/envopt.h .
+cp $CMROOT/tech/cm_cm/src/gen.h .
+cp $CMROOT/tech/cm_cm/src/gen.x .
+cp $CMROOT/tech/cm_cm/src/sm_bdy1.c .
+cp $CMROOT/tech/cm_cm/src/sm_ex_ms.c .
+cp $CMROOT/tech/cm_cm/src/ssi.h .
+cp $CMROOT/tech/cm_cm/src/ssi.x .
+cp $CMROOT/tech/cm_cm/src/cm_tkns.c .
+cp $CMROOT/tech/cm_cm/src/cm_tkns.h .
+cp $CMROOT/tech/cm_cm/src/cm_tkns.x .
+cp $CMROOT/tech/cm_cm/src/cm_gen.h .
+cp $CMROOT/tech/cm_cm/src/cm_gen.c .
+cp $CMROOT/tech/cm_cm/src/ss_ptsp.c .
+
+
+cp $CMROOT/lib/cm_xta/py/cm_xta_checkfile.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_cmdmap.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_genattr.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_gen_cmd.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_gen_tc_num.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_pyattr.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_pycmd.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_py.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_tc_doc.py .
+cp $CMROOT/lib/cm_xta/py/cm_xta_tc_xmldoc.py .
+
+cp $CMROOT/lib/cm_xta/src/cm_xta.h .
+cp $CMROOT/lib/cm_xta/src/cm_xta.x .
+cp $CMROOT/lib/cm_xta/src/cm_xta_ex_ms.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_flag.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_inthdl.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_intreg.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_intutl.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_ipc.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_ldfsm.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_log.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_master.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_py.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_py.x .
+cp $CMROOT/lib/cm_xta/src/cm_xta_queue.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_reg.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_res.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_slave.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_tafsm.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_tcfsm.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_tgfsm.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_tmr.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_tst.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_txn.c .
+cp $CMROOT/lib/cm_xta/src/cm_xta_xml.c .
+
+cp $CMROOT/lib/timer/src/cm5.h .
+cp $CMROOT/lib/timer/src/cm5.x .
+cp $CMROOT/lib/cm_lib/src/cm_lib.x .
+cp $CMROOT/lib/cm_lib/src/cm_lib.c .
+cp $CMROOT/lib/cm_hash/src/cm_hash.h .
+cp $CMROOT/lib/cm_hash/src/cm_hash.x .
+cp $CMROOT/lib/cm_hash/src/cm_hash.c .
+cp $CMROOT/lib/cm_inet/src/cm_inet.c .
+cp $CMROOT/lib/cm_inet/src/cm_inet.x .
+cp $CMROOT/lib/cm_inet/src/cm_inet.h .
+cp $CMROOT/lib/timer/src/cm_bdy5.c .
+cp $CMROOT/lib/mem/src/cm_mblk.c .
+cp $CMROOT/lib/mem/src/cm_mblk.h .
+cp $CMROOT/lib/mem/src/cm_mblk.x .
+cp $CMROOT/lib/cm_llist/src/cm_llist.h .
+cp $CMROOT/lib/cm_llist/src/cm_llist.x .
+cp $CMROOT/lib/cm_llist/src/cm_llist.c .
+cp $CMROOT/lib/mem/src/cm_mem.h .
+cp $CMROOT/lib/mem/src/cm_mem.x .
+cp $CMROOT/lib/mem/src/cm_mem.c .
+cp $CMROOT/lib/per/src/cm_pint.h .
+cp $CMROOT/lib/per/src/cm_pint.x .
+cp $CMROOT/lib/per/src/cm_perr.h .
+cp $CMROOT/lib/per/src/cm_pasn.h .
+cp $CMROOT/lib/per/src/cm_pasn.x .
+cp $CMROOT/lib/per/src/cm_pasn1.c .
+cp $CMROOT/lib/per/src/cm_pasn2.c .
+cp $CMROOT/lib/per/src/cm_pasn3.c .
+cp $CMROOT/lib/per/src/cm_pasn4.c .
+cp $CMROOT/tech/cm_cm/src/cm_err.h .
+

@@ -1,0 +1,125 @@
+<html>
+<head>
+
+ <style>
+.nav3 {overflow: hidden; clear: both; float: left; width: 204px; min-height: 500px; margin: 0px; padding: 0px; color:White; font-size: 12px;}
+.nav3 ul {width: 204px; margin: 0px 0px 10px 0px; padding: 0px; }	
+
+.nav3 li
+{
+    font-size:13;font-style:inherit;font-family:Tahoma,Verdana
+}
+.nav3 li.title {margin: 0px 0px 0px 0px; color:White; text-transform:none; font-weight: bold; font-size: 14;border-top: solid 1px rgb(200,200,200);padding: 10px 7px 0px 5px;font-style:inherit;font-family:Tahoma,Verdana}
+.nav3 li a {display: block; min-height: 1.7em; height: auto !important; height: 1.7em; line-height: 1.7em; margin: 0px; padding: 0px 7px 0px 20px;  color:White; text-decoration: none; font-size: 100%;}
+
+
+
+
+
+
+        
+
+    </style>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script language="javascript" type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) {
+            alert("Due to security reasons,Right click not allowed.");
+            return false;
+        });
+
+
+        if (sessionID != null && sessionID != undefined) {
+            if (parent.source == "default") {
+                $("#general").attr("href", sessionID + "-general_details.htm");
+                if (parent.frames["Top"].colorchange != false)
+                    $("#general").css("color", "navy").css("font-weight", "bold");
+
+                else
+                    $("#general").css("color", "white").css("font-weight", "normal");
+            }
+            else if (parent.source == "top") {
+                parent.frames["MiddleRight"].document.location.href = sessionID + "-configuration_index.htm";
+            }
+            $("#general").attr("href", sessionID + "-general_details.htm");
+            $("#enbregistration").attr("href", sessionID + "-enbregistration_config.htm");
+            $("#enodeb").attr("href", sessionID + "-enodeb_config.htm");
+            $("#mme").attr("href", sessionID + "-mme_config.htm");
+            $("#cell").attr("href", sessionID + "-cell_config.htm");
+            $("#counter").attr("href", sessionID + "-counter_config.htm");
+            $("#sysinfo1").attr("href", sessionID + "-sysinfo1_config.htm");
+            $("#sysinfo2").attr("href", sessionID + "-sysinfo2_config.htm");            
+            $("#phy").attr("href", sessionID + "-phy_config.htm");
+            $("#scheduler").attr("href", sessionID + "-scheduler_config.htm");
+            $("#qos").attr("href", sessionID + "-qos_config.htm");
+            $("#radiohead").attr("href", sessionID + "-radiohead_config.htm");
+            $("#pm").attr("href", sessionID + "-pmcounterlog_config.htm");
+            $("#timers").attr("href", sessionID + "-timers_config.htm");
+            $("#log").attr("href", sessionID + "-log_config.htm");            
+            $("#msgtrace").attr("href", sessionID + "-msgtrace_config.htm");
+            $("#eventthresholds").attr("href", sessionID + "-eventthresholds_config.htm");
+            $("#eutrahoprofile").attr("href", sessionID + "-eutrahoprofile_config.htm");
+            $("#eutraneighcell").attr("href", sessionID + "-eutraneighcell_config.htm");
+            $("#enbaddresses").attr("href", sessionID + "-enbaddresses_config.htm");
+            $("#sysinfo3").attr("href", sessionID + "-sysinfo3_config.htm");
+            $("#srsConfigDedicated").attr("href", sessionID + "-srsdedicated_config.htm");
+            $("#security").attr("href", sessionID + "-security_config.htm");
+            $("#ueeventhistorylog").attr("href", sessionID + "-ueeventhistorylog_config.htm");
+        }
+
+        $("#general,#enbregistration,#enodeb,#mme,#cell,#sysinfo1,#sysinfo2,#sysinfo3,#security,#ueeventhistorylog,#phy,#scheduler,#pm,#eventthresholds,#timers,#log,#msgtrace,#radiohead,#qos,#eutrahoprofile,#eutraneighcell,#enbaddresses,#srsConfigDedicated,#counter").click(function() {
+        $("#general,#enbregistration,#enodeb,#mme,#cell,#sysinfo1,#sysinfo2,#sysinfo3,#security,#ueeventhistorylog,#phy,#scheduler,#pm,#eventthresholds,#timers,#log,#msgtrace,#radiohead,#qos,#eutrahoprofile,#eutraneighcell,#enbaddresses,#srsConfigDedicated,#counter").css("color", "white").css("font-weight", "normal");
+            $(this).css("color", "Navy").css("font-weight", "bold");
+            parent.frames["Top"].link = 1;
+        });
+    });
+</script>   
+       
+</head>
+<body bottommargin='0' topmargin='0' leftmargin='0' rightmargin='0' marginheight='0' marginwidth='0' style="background-color:#9B99CF" >
+<table cellpadding='0' cellspacing='0' width=205 style="border:1">
+<tr>
+<td >
+<div >
+
+<!-- Navigation Level 3 -->
+   <div class="nav3">
+      <ul>        
+        <li class="title">Configuration</li>
+            <li><a href="" id= "cell" target="MiddleRight">Cell</a></li> 
+            <!--li><a href="" id= "counter" target="MiddleRight">Counters</a></li-->       
+            <li><a href="" id= "enbaddresses" target="MiddleRight">EnodeB Addresses</a></li>
+            <li><a href="" id= "enbregistration" target="MiddleRight">EnodeB Registration</a></li>     
+            <li><a href="" id= "enodeb" target="MiddleRight">EnodeB</a></li>
+            <li><a href="" id= "eutrahoprofile" target="MiddleRight">EUTRA HO Profile</a></li>
+            <li><a href="" id= "eutraneighcell" target="MiddleRight">EUTRA Neighbour Cell</a></li>
+            <li><a href="" id= "eventthresholds" target="MiddleRight">Event Thresholds</a></li>
+            <li><a href=""  id= "general" target="MiddleRight">General</a></li>
+            <li><a href="" id= "log" target="MiddleRight">Module Logging</a></li>
+            <li><a href="" id= "mme" target="MiddleRight">MME</a></li>
+            <li><a href="" id= "msgtrace" target="MiddleRight">Message Tracing</a></li>      
+            <li><a href="" id= "phy" target="MiddleRight">Physical Layer</a></li>
+            <li><a href="" id= "pm" target="MiddleRight">Statistics</a></li>
+            <li><a href="" id= "qos" target="MiddleRight">QoS</a></li>
+            <li><a href="" id= "radiohead" target="MiddleRight">Radiohead</a></li>
+            <li><a href="" id= "scheduler" target="MiddleRight">Scheduler</a></li>
+            <li><a href="" id= "security" target="MiddleRight">Security</a></li>
+            <li><a href="" id= "ueeventhistorylog" target="MiddleRight">UE Event History Log</a></li>            
+            <li><a href="" id= "srsConfigDedicated" target="MiddleRight">SRS Dedicated</a></li>
+            <li><a href="" id= "sysinfo1" target="MiddleRight">SysInfo1</a></li>        
+            <li><a href="" id= "sysinfo2" target="MiddleRight">SysInfo2</a></li>
+            <li><a href="" id= "sysinfo3" target="MiddleRight">SysInfo3</a></li>   
+            <li><a href="" id= "timers" target="MiddleRight">Timers</a></li>                        
+        </ul>  
+    </div>
+</div>
+
+</td></tr>
+</table></body>
+</html>

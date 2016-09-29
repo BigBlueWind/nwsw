@@ -1,0 +1,184 @@
+<html>
+<head>
+<style type='text/css' lang='css'>
+     @import '../css/styles.css';
+</style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/mapping.js'></script>
+<script type='text/javascript'>
+    var sessionID = parent.sessionID;
+var interval = "";
+function addRowStatus(tableID, sno, data)
+{
+var table = parent.frames["MiddleRight"].document.getElementById(tableID);
+if (table != null)
+{
+var rowCount = table.rows.length;
+table.width = "100%"
+table.border = "0";
+table.cellpadding = "0";
+table.cellspacing = "0";
+table.overflow = "auto"
+var row = table.insertRow(rowCount);
+var cell1 = row.insertCell(0);
+if ( data.col[0].value == "" || data.col[0].value== null || data.col[0].value == "0" ){
+if( sno == 1){
+cell1.align = "center";
+cell1.width = "100%"
+cell1.innerHTML = "<span class='errormsg'>No Component Status Present.</span>";
+}
+}
+else{
+var cell2=row.insertCell(1);
+var cell3=row.insertCell(2);
+var cell4=row.insertCell(3);
+var cell5=row.insertCell(4);
+var cell6=row.insertCell(5);
+var cell7=row.insertCell(6);
+if (rowCount % 2 == 1) {
+row.className = 'conTblRowBg2';
+}
+else {
+row.className = 'conTblRowBg1';
+}
+cell1.align = "center";
+cell1.width = "7%";
+cell1.innerHTML = data.col[0].value
+cell2.align = "center";
+cell2.width = "17%";
+cell2.innerHTML = SetMultiRowMapping("componentStatus", data.col[1].param, data.col[1].value);
+cell3.align = "center";
+cell3.width = "10%";
+cell3.innerHTML = data.col[2].value
+cell4.align = "center";
+cell4.width = "10%";
+cell4.innerHTML = data.col[3].value
+cell5.align = "center";
+cell5.width = "10%";
+cell5.innerHTML = SetMultiRowMapping("componentStatus", data.col[4].param, data.col[4].value);
+cell6.align = "center";
+cell6.width = "23%";
+cell6.innerHTML = data.col[5].value
+cell7.align = "center";
+cell7.width = "23%";
+cell7.innerHTML = data.col[6].value
+}
+}
+}
+$(document).ready(function() {
+var fn = function(e) {
+return DisableRefresh(e);
+}
+document.onkeydown = fn;
+$(document).bind('contextmenu',             function(e) {              alert('Due to security reason, Right Click is not allowed.'); return false; });
+updateTable('componentStatus', 'componentStatusTable');
+var interval = '';
+$('#rfrshInt').change(function() {
+ if ($('#rfrshInt').val() != 'NONE') {
+if (interval != '')
+clearInterval(interval);
+interval = setInterval('updateTable("componentStatus", "componentStatusTable")', $('#rfrshInt').val() * 1000);
+}
+else
+clearInterval(interval);
+});
+$('#btnHelp').click(function() {
+window.open(sessionID + "-help.htm#componentStatus", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+});
+});
+</script>
+</head>
+<body>
+<table width='100%'>
+<tr>
+<td align='left' width='60%'>
+<span class='title'>Monitor &gt; Component Status</span>
+</td>
+<td align='right' width='40%'>
+<span class='cmdMsg' id='cmdMsg'></span>
+</td>
+</tr>
+</table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+<div style='margin-left: 10px; margin-top: 10px;'>
+<table cellspacing='0' cellpadding='2' border='0' width='1045px' style='margin-top: 10px'>
+<tbody>
+<tr>
+<td align='left' style='font-size:smaller;'>Automatic Refresh Interval (Seconds)&nbsp;&nbsp;
+:&nbsp;
+<select name='rfrshInt' id='rfrshInt'>
+<option value='NONE'>NONE</option>
+<option value='5'>5</option>
+<option value='10'>10</option>
+<option value='15'>15</option>
+<option value='30'>30</option>
+<option value='60'>60</option>
+</select></td>
+<td align='right' class='txtPageTitle'>
+<input type='button' value='Help' name='btnHelp' id='btnHelp' />
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style='margin-left: 10px; margin-top: 10px; width: 850px;'>
+<form name='componentStatus' id='componentStatus' action=''>
+<table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+<thead>
+<tr>
+<td width='7%' align='center' class='tblTitleBg'>
+S.No
+</td>
+<td width='17%' align='center' class='tblTitleBg'>
+Component Type</td>
+<td width='10%' align='center' class='tblTitleBg'>
+Version</td>
+<td width='10%' align='center' class='tblTitleBg'>
+Instance</td>
+<td width='10%' align='center' class='tblTitleBg'>
+State</td>
+<td width='23%' align='center' class='tblTitleBg'>
+Notes</td>
+<td width='23%' align='center' class='tblTitleBg'>
+Error</td>
+</tr><tr class="formheadingborder">
+<td colspan='7'>
+</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan='7' valign='top' align='center'>
+<div style='width: 100%;'>
+<table id='componentStatusTable' width='100%' border='0' cellpadding='0' cellspacing='0'>
+<thead>
+<tr>
+<th width='7%' align='center' nowrap='nowrap'>
+</th>
+<th width='17%' align='center' nowrap='nowrap'>
+</th>
+<th width='10%' align='center' nowrap='nowrap'>
+</th>
+<th width='10%' align='center' nowrap='nowrap'>
+</th>
+<th width='10%' align='center' nowrap='nowrap'>
+</th>
+<th width='23%' align='center' nowrap='nowrap'>
+</th>
+<th width='23%' align='center' nowrap='nowrap'>
+</th>
+</tr>
+</thead>
+</table>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</form>
+</div>
+</body>
+</html>

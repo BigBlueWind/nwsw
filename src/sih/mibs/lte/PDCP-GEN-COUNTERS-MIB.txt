@@ -1,0 +1,209 @@
+ -- @file    PDCP-GEN-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+PDCP-GEN-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+pdcpGenCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Statistics"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 109 }
+
+pdcpGenCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF PdcpGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Statistics
+            This is a SINGLE ROW Table"
+       ::= { pdcpGenCounters 1 }
+
+pdcpGenCountersEntry OBJECT-TYPE
+       SYNTAX      PdcpGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains PDCP counter objects."
+       INDEX  { index }
+       ::= { pdcpGenCountersTable 1 }
+
+PdcpGenCountersEntry ::= 
+   SEQUENCE {
+       index                    RowNumber,
+       rxPdus                   Counter32,
+       txPdus                   Counter32,
+       errorPdusRecv            Counter32,
+       numSdusDisc              Counter32,
+       numCmpFails              Counter32,
+       numDecmpFails            Counter32,
+       numIntgPrtFails          Counter32,
+       numIntgVrfFails          Counter32,
+       numCiphFails             Counter32,
+       numDeciphFails           Counter32,
+       numPdusDiscObdTmrExp     Counter32,
+       numSdusDiscObdTmrExp     Counter32,
+       numPktsFrwd              Counter32,
+       numPktsRcvd              Counter32,
+       lastCollectedAt          DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { pdcpGenCountersEntry 1 }
+
+rxPdus OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of PDUs received Layer from RLC]"
+       ::= { pdcpGenCountersEntry 2 }
+
+txPdus OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of PDUs sent to RLC]"
+       ::= { pdcpGenCountersEntry 3 }
+
+errorPdusRecv OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Format error pdus received from RLC]"
+       ::= { pdcpGenCountersEntry 4 }
+
+numSdusDisc OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of SDUs discarded due to PDCP discard timer expiry]"
+       ::= { pdcpGenCountersEntry 5 }
+
+numCmpFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Compression fails ]"
+       ::= { pdcpGenCountersEntry 6 }
+
+numDecmpFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Decompression fails ]"
+       ::= { pdcpGenCountersEntry 7 }
+
+numIntgPrtFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Integration Protection fails ]"
+       ::= { pdcpGenCountersEntry 8 }
+
+numIntgVrfFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Integration Verification fails ]"
+       ::= { pdcpGenCountersEntry 9 }
+
+numCiphFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Ciphering fails ]"
+       ::= { pdcpGenCountersEntry 10 }
+
+numDeciphFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Deciphering fails ]"
+       ::= { pdcpGenCountersEntry 11 }
+
+numPdusDiscObdTmrExp OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of PDUs discarded in ULdue to Off-board timer expiry]"
+       ::= { pdcpGenCountersEntry 12 }
+
+numSdusDiscObdTmrExp OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of SDUs discarded in DL due to Off-board timer expiry]"
+       ::= { pdcpGenCountersEntry 13 }
+
+numPktsFrwd OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Packets forwarded to X2 interface ]"
+       ::= { pdcpGenCountersEntry 14 }
+
+numPktsRcvd OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Packets received from X2 interface ]"
+       ::= { pdcpGenCountersEntry 15 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { pdcpGenCountersEntry 16 }
+
+END

@@ -1,0 +1,88 @@
+#
+# Makefile to build upper layer of PHY library (to be released as SRC)
+#
+# (c) 2010 Mindspeed Technologies
+#
+
+include T4KDev/LTERT/buildcfg
+
+LTEPHYRTBUILDDIR := $(LTEPHYRTDIR)/$(BUILDDIR)
+
+VPATH := $(LTEPHYCCODEDIR) $(LTEPHYRTDIR)
+
+INC := -I"$(OS4GMXINCDIR)" \
+      -I"$(OS4GMXARMINCDIR)" \
+      -I"$(SYSCOREFECDIR)" \
+      -I"$(SYSCOREDIR)" \
+      -I"$(SYSCOREDRIVERSDIR)" \
+      -I"$(SYSCORESERVICESDIR)" \
+      -I"$(COMMONDIR)" \
+      -I"$(LTEPHYINCDIR)" \
+      -I"$(LTEPHYRTDIR)" \
+      -I"$(SYSCORECPRIDIR)" \
+      -I"$(PHYCOMMONCCODEDIR)" \
+      -I"$(SYSCOREMAPDIR)"
+
+ifeq ($(RELEASEBUILD),1)
+INC += -I "PHY/LTE/Ceva/Prj/LteApp/EVM_Release"
+else
+INC += -I "PHY/LTE/Ceva/Prj/LteApp/EVM_Debug"
+endif
+
+CFLAGS := $(PHYBUILDCFG) $(INC)
+
+SRC := LteMsgMgr.c \
+ phy_bs_tx.c \
+ bs_tx_PhysicalSignals.c \
+ phy_bs_rx.c \
+ phy_bs_rx_ConfigFrame.c \
+ tcb_wrap.c \
+ tcb_tasks.c \
+ bs_rx_channel_coding.c \
+ LteCommonInit.c \
+ lte_entry.c
+
+OBJ := $(patsubst %.c, $(LTEPHYRTBUILDDIR)/%.o,$(notdir $(SRC)))
+
+.PHONY : $(MAIN_TARGET)
+$(MAIN_TARGET) : $(PCF) $(LTEPHYUPPERLIBRARY)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(LTEPHYRTBUILDDIR)/phyrtlib.dep
+CLEANDEP = clean_dep
+else
+-include $(LTEPHYRTBUILDDIR)/phyrtlib.dep
+endif
+
+$(LTEPHYUPPERLIBRARY): $(LTEPHYRTBUILDDIR) $(CLEANDEP) $(OBJ)
+	@echo Creating $(LTEPHYUPPERLIBRARY)
+	@$(AR) $(AR_FLAGS) $@ $(OBJ)
+
+.PHONY : $(PCF)                                                                             
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+$(LTEPHYRTBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) "$<" -o "$@"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(LTEPHYRTBUILDDIR) :
+	@echo ee
+	@$(MKDIR) $(LTEPHYRTBUILDDIR)
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean: 
+	@$(RM) $(OBJ)
+
+.PHONY : xclean
+xclean: clean
+	@$(RM) $(LTEPHYUPPERLIBRARY)
+

@@ -1,0 +1,31 @@
+# Config for RVDS 3.x / 4.x (RTXC Quadros OS)
+#
+# Copyright 2008,2009,2010 by Mindspeed Technologies
+# All rights reserved
+#
+
+ifeq ($(BOARD),C4KEVM)
+ARCH = cortex-a9
+else
+ARCH = mpcore
+endif
+#
+# Tool definitions
+#
+CC = armcc
+AS = armasm
+LD = armlink
+AR = armar -r
+
+#
+# Tool settings
+#
+DEF = -DUSE_$(OS) -D$(BOARD) -D$(MACTYPE)
+INC = -I. -I../Common -IOSAL/$(OS) -IBSP -IBSP/$(OS)
+OPT = --debug -O1
+DIAGS = --diag_style gnu --diag_suppress 826,2523
+CFLAGS = --cpu=ARM1136J-S --no_unaligned_access --gnu --fpu none --enum_is_int --remarks --asm --interleave $(OPT) $(DIAGS) $(DEFS) $(INC)
+ASFLAGS = --cpu=ARM1136J-S --pd "USE_$(OS) SETA 1" --pd "$(BOARD) SETA 1"
+LIBS = OSAL/$(OS)/rtxc.a BSP/$(OS)/libbsp.a OSAL/$(OS)/libosal.a PHYSTUB/$(MACTYPE)/libphystub.a $(FOURG)/$(MACTYPE)/libmac.a
+LDFLAGS = --entry ResetHandler --no_remove --map --symbols --xref --list $(APP).lst --symdefs $(APP).sym --scatter BSP/$(OS)/turner.scat
+ARFLAGS = --diag_style gnu

@@ -1,0 +1,100 @@
+debug.log-request-handling = "enable"
+debug.log-request-header = "enable"
+debug.log-response-header = "enable"
+debug.log-condition-handling = "enable"
+server.document-root = "/tmp/web"
+
+## 64 Mbyte ... nice limit
+server.max-request-size = 65000
+
+## bind to port (default: 80)
+server.port = 8080
+
+## bind to localhost (default: all interfaces)
+#server.bind                = "xxx.xxx.xxx.xxx" # For specific Interface
+server.errorlog            = "/tmp/lighttpd/logs/lighttpd.error.log"
+server.breakagelog         = "/tmp/lighttpd/logs/lighttpd.breakage.log"
+
+server.modules              = (
+                                "mod_access",
+                                "mod_auth",
+#                               "mod_rewrite",
+#                               "mod_redirect",
+                                "mod_setenv",
+                                "mod_secdownload",
+#                               "mod_httptls",
+#                               "mod_status",
+                                "mod_expire",
+#                               "mod_simple_vhost",
+                                "mod_evhost",
+#                               "mod_localizer",
+                                "mod_fastcgi",
+#                               "mod_cgi",
+                                "mod_compress",
+#                               "mod_userdir",
+#                               "mod_ssi",
+                                "mod_accesslog" )
+
+server.indexfiles           = ( "/droot/lte_login.htm" )
+#server.indexfiles           = ( "/droot/index.html" )
+
+mimetype.assign             = ( ".png"  => "image/png",
+                                ".jpg"  => "image/jpeg",
+                                ".jpeg" => "image/jpeg",
+                                ".gif"  => "image/gif",
+                                ".html" => "text/html",
+                                ".htm"  => "text/html",
+                                ".pdf"  => "application/pdf",
+                                ".swf"  => "application/x-shockwave-flash",
+                                ".spl"  => "application/futuresplash",
+                                ".txt"  => "text/plain",
+                                ".tar.gz" =>   "application/x-tgz",
+                                ".tgz"  => "application/x-tgz",
+                                ".gz"   => "application/x-gzip",
+                                ".c"    => "text/plain",
+                                ".conf" => "text/plain" )
+
+### As per [http://redmine.lighttpd.net/wiki/lighttpd/Docs:ModFastCGI] ###
+
+fastcgi.debug               = 1
+
+fastcgi.map-extensions = ( ".cgi" => ".fcgi", ".html" => ".htm" )
+#fastcgi.map-extensions = ( ".html" => ".htm" )
+
+fastcgi.server              = ( 
+	".fcgi" => 
+    ( ( "host" => "127.0.0.1", 
+	"port" => 9000, 
+	"check-local" => "disable",
+#	"bin-path" => "/home/tmaji/l2+/nwsw/build/x86/wih.exe",
+#	"max-procs" => 1,
+	"broken-scriptfilename" => "enable", 
+	"allow-x-send-file" => "enable" 
+    ) ),
+	".htm" => 
+    ( ( "host" => "127.0.0.1", 
+	"port" => 9000, 
+	"check-local" => "disable",
+	"broken-scriptfilename" => "enable", 
+	"allow-x-send-file" => "enable" 
+    ) )
+)
+
+
+#$SERVER["socket"] == ":80" {
+#$SERVER["socket"] == ":3000" {
+#  $HTTP["host"] == "(.*)" {
+#    url.redirect = ( "^/(.*)" => "https://%1/$1" )
+#  }
+#}
+
+#ssl.engine                  = "enable"
+#ssl.pemfile                 = "/home/tmaji/cert/server.pem"
+
+#$SERVER["socket"] == ":443" {
+#ssl.engine                  = "enable"
+#ssl.use-sslv2		    = "disable"
+#ssl.pemfile                 = "/home/tmaji/cert/server.pem"
+#ssl.pemfile                 = "/home/tmaji/cert/ca.pem"
+#}
+

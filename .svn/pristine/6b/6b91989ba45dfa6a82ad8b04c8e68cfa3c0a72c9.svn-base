@@ -1,0 +1,7 @@
+skipfiles
+updall
+updcm
+ve.cmd
+create_compile_dir
+ve.mak.new
+makefile

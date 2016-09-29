@@ -1,0 +1,88 @@
+ -- @file    LED-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+LED-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI;
+
+ledStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "A table contains list of led status objects."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 136 }
+
+ledStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF LedStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "A table contains list of led status objects.
+            This is a MULTI ROW Table"
+       ::= { ledStatus 1 }
+
+ledStatusEntry OBJECT-TYPE
+       SYNTAX      LedStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry of led status objects."
+       INDEX  { index }
+       ::= { ledStatusTable 1 }
+
+LedStatusEntry ::= 
+   SEQUENCE {
+       index        RowNumber,
+       ledId        INTEGER,
+       ledColor     INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { ledStatusEntry 1 }
+
+ledId OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   bbPower(1),
+                   gps(2),
+                   emsRegistration(3),
+                   enbOperational(4)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             LED identifier]"
+       ::= { ledStatusEntry 2 }
+
+ledColor OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   amber(1),
+                   red(2),
+                   green(3)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Present color of LED ]"
+       ::= { ledStatusEntry 3 }
+
+END

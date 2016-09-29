@@ -1,0 +1,329 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';        
+    </style>
+
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>    
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/validate.js'></script>   
+    <script type="text/javascript">
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+
+            $(document).bind("contextmenu", function(e) { alert("Due to security reason, Right Click is not allowed !!!"); return false; });
+            var sessionID = parent.sessionID;
+
+            $(':text, :password, select').each(function() {
+                $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+            });
+
+            LteGet("enodebConfig", null, ChkLock);
+
+            if (sessionID != "undefined" && sessionID != null) {
+                $("#activeCellId").attr("href", sessionID + "-cell_config.htm");
+            }
+
+            $("#activeCellId").click(function() {
+                parent.frames["Top"].link++;
+            });
+
+            $("#btnApply").click(function() {
+                var msg = "";
+                var change = "false";
+
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+
+                if (change == 'true') {
+                    msg = "";
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);                                
+                            }
+                            else {
+                                if ($(this).is(':text, :password') == true)
+                                msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                            }
+                        }
+                    });
+                    if (msg != "") {
+                        $(':text, :password, select').each(function() {
+                            $(this).attr('disabled', false);
+                        });
+                        if (parent.frames["Top"].isLocked == "unlocked")
+                            LockAttributes();
+                        alert(msg);
+                    }
+                    else {
+                        if (parent.frames["Top"].isLocked == "unlocked")
+                            $("#enodebId, #enodebName,#useStaticIpAddress, #enodebStaticIpAddr, #enodebNetmaskAddr").attr("disabled", true).css("background-color", "#C0C0C0");
+                        else {
+                            if ($("#enodebStaticIpAddrChkb").is("checked") == false)
+                                $("#enodebStaticIpAddr").attr("readonly", true);
+                        }
+
+                        $(':checkbox').each(function() {
+                            $(this).attr('disabled', true);
+                        });
+
+                        LteSet('enodebConfig', $('#enodebConfig'), $('#btnApply'), ChkLock);
+                    }
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+
+            });
+
+            $('#enodebStaticIpAddrChkb').click(function() {
+                if (this.id == 'enodebStaticIpAddrChkb')
+                    EnableInput(this.id, 'enodebStaticIpAddr', '0.0.0.0', 'enodebStaticIpAddrHidden');
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#enodebConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+        
+        
+        
+        function ChkSpecialValues() 
+        {
+            $("#enodebId, #enodebName,#useStaticIpAddress, #enodebStaticIpAddr,#enodebNetmaskAddr").attr("disabled", false).attr("readonly", false).css("background-color", "white"); ;
+
+            $(':checkbox').each(function() {
+                $(this).attr('disabled', false);
+            });                    
+            
+            if ($("#enodebStaticIpAddr").val() == "0.0.0.0") 
+            {
+                $("#enodebStaticIpAddrChkb").attr("checked", false);
+                $("#enodebStaticIpAddr").attr("readonly", true).css("background-color", "#E6E6E6");                    
+            }
+            else 
+            {
+                $("#enodebStaticIpAddrChkb").attr("checked", true);
+                $("#enodebStaticIpAddr").css("background-color", "white");
+                $("#enodebStaticIpAddrHidden").val($("#enodebStaticIpAddr").val());
+            }
+        }
+        
+        
+        function LockAttributes() {
+            $("#enodebId, #enodebName, #enodebStaticIpAddr,#enodebNetmaskAddr").attr("readonly", true).attr("title", "Lock eNodeB to Modify").css("background-color", "#E6E6E6").simpletooltip();
+            $("#enodebStaticIpAddrChkb").attr("disabled", true);
+            FreezeList('#useStaticIpAddress');
+            $('#useStaticIpAddress').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+                if (parent.frames['Top'].isLocked == 'unlocked')
+                    FreezeList(this);
+            });
+        }
+        
+        function MapIdName(fieldName)
+        {
+            switch(fieldName)
+            {
+                case "enodebId": return "eNodeB Identifier";
+                case "enodebName": return "eNodeB Name";
+                case "enodebStaticIpAddr": return "eNodeB IP Address";
+                case "enodebNetmaskAddr": return "Netmask Address";
+            }
+        }
+                       
+    </script>
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > eNodeB </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1' /></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left: 10px; width: 500px; height: 615px">
+        <form name='enodebConfig' id='enodebConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp eNodeB Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; eNodeB Information
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                eNodeB Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input type="text" class="lteinput" id="enodebId" name="enodebId" validate="IntRangeChk" min ="0" max="1048575"/>&nbsp;(0 ~ 1048575)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                eNodeB Name
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input type="text" class="lteinput" id="enodebName" name="enodebName" validate="NameValidate" min="3" max="150"/>&nbsp;(3 ~ 150 Characters)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Use Static IP Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="useStaticIpAddress" id="useStaticIpAddress" class="lteinput">
+                                    <option value="0">FALSE</option>
+                                    <option value="1">TRUE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                eNodeB IP Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="enodebStaticIpAddr" name="enodebStaticIpAddr" type="text" class="lteinput" validate="IpValidate"/>&nbsp;
+                                <input id="enodebStaticIpAddrChkb" name="enodebStaticIpAddrChkb" type="checkbox" />
+                                Used                                
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Netmask Address
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="enodebNetmaskAddr" name="enodebNetmaskAddr" type="text" class="lteinput" validate="IpValidate"/>&nbsp;                                
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Registration Accepted by EMS
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="enodebRegistrationAccepted" id="enodebRegistrationAccepted" class="lteinput">
+                                    <option value="0">FALSE</option>
+                                    <option value="1">TRUE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                EMS Acknowledged Config Change
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="configChangeAckByEms" id="configChangeAckByEms" class="lteinput">
+                                    <option value="0">FALSE</option>
+                                    <option value="1">TRUE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                                     
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>          
+</body>
+</html>

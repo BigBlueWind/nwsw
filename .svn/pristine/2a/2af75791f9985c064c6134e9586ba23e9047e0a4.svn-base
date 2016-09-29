@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+    <style lang="css" type="text/css">
+        @import url( ../css/styles.css );
+        A.TopLinks
+        {
+            font-weight: bold;
+            font-size: 16px;
+            color: White;
+            text-decoration: none;
+        }
+        A:link
+        {
+            text-decoration: none;
+        }
+        a.over
+        {
+            font-weight: bold;
+            font-size: 16px;
+            color: Navy;
+            text-decoration: underline;
+        }        
+    </style>
+
+    <script type="text/javascript" src="../script/jquery.js"></script>
+    <script type="text/javascript" src="../script/lte_set_get.js"></script>
+    <script type="text/javascript" src="../script/mapping.js"></script>
+    <script type="text/javascript">
+
+        var sessionID = parent.sessionID;
+        var refreshId = "config";
+        var link = 1;
+        var colorchange = true;
+        var isLocked = "unlocked";
+        var browserClose = true;
+         
+        window.onbeforeunload = function(e) {
+            if (browserClose == false) {
+                return; //avoid user Logout / session expiration
+            }
+            else {                
+                $.post(sessionID + "-logout.fcgi");
+                
+            }
+        }
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).ready(function() {
+            $(document).bind("contextmenu", function(e) { alert("Due to security reason, Right Click is not allowed."); return false; });
+            if (sessionID != null || sessionID != "undefined") {
+                $("#config").attr("href", sessionID + "-config.htm").css("color", "navy");
+                $("#monitor").attr("href", sessionID + "-monitor.htm");
+                $("#commands").attr("href", sessionID + "-commands.htm");
+            }
+            else {
+                self.close();
+            }
+            $("#config").click(function() {
+                refreshId = "config";
+                colorchange = false;
+                $("#config").css("color", "navy");
+                $("#monitor,#commands").css("color", "white");
+                parent.source = "top";
+            });
+            $("#monitor").click(function() {
+                refreshId = "monitor";
+                $("#monitor").css("color", "navy");
+                $("#config,#commands").css("color", "white");
+
+            });
+            $("#commands").click(function() {
+                refreshId = "commands";
+                $("#config,#monitor").css("color", "white");
+                $("#commands").css("color", "navy");
+
+            });
+            $("#logout").click(function() {
+                if (confirm("You are about to logout and close this window,\n         Do you really want to LOGOUT?") == true) {
+                    $.post(sessionID + "-logout.fcgi", null,
+                    function(d) {
+                        if (d != null && d != "undefined") {
+                            if (d.result == "SUCCESS") {
+                                parent.window.close();
+                            }
+                            else {
+                                if (d.data == "User Logged out due to INACTIVITY.") {
+
+                                    alert("Session Expired Due To INACTIVITY!!!");
+                                    parent.window.location.replace("lte_login.htm");
+                                }
+                            }
+                        }
+                        else {
+                            alert("Invalid Response!!!");
+                            parent.window.location.replace("lte_login.htm");
+                        }
+                    },
+                    "json"
+                  );
+                }
+                else
+                    return false;
+            });
+
+
+
+            $("#refresh").click(function() {
+                if (refreshId == "config") {
+                    for (var i = 0; i < parent.frames["MiddleRight"].document.forms.length; i++) {
+                        if (parent.frames["MiddleRight"].document.forms[i].id == "enodebConfig")
+                            LteGet("enodebConfig", null, ChkLock, null );
+                        else if (parent.frames["MiddleRight"].document.forms[i].id == "enbStatus")
+                            LteGet("enbStatus", null, SetMapping);
+                        else if (parent.frames["MiddleRight"].document.forms[i].id == "swPackageStatus")
+                            LteGet("swPackageStatus", null, SetMapping, 1);
+                        else if (parent.frames["MiddleRight"].document.forms[i].id == "componentStatus")
+                            LteGet("componentStatus", null, SetMapping, 1);
+                        else if (parent.frames["MiddleRight"].document.forms[i].id == "timersConfig")
+                            parent.frames["MiddleRight"].GetTimer();
+                        else if (parent.frames["MiddleRight"].document.forms[i].id == "logConfig")
+                            parent.frames["MiddleRight"].GetTimer();
+                        else if (parent.frames["MiddleRight"].document.forms[i].id == "msgTrace")
+                            parent.frames["MiddleRight"].GetMsgTrace();
+                        else if (parent.frames["MiddleRight"].document.forms[i].id == "eutraNeighCellConfig")
+                            parent.frames["MiddleRight"].UpdateMultiColTable('eutraNeighCellConfig', 'eutraNeighCellConfigTable');
+                        else
+                            LteGet(parent.frames["MiddleRight"].document.forms[i].id, null, ChkLock);
+                    }
+                }
+                else
+                    if (refreshId == "monitor") {
+                    var page = parent.frames["MiddleRight"].location.href;
+                    parent.frames["MiddleRight"].location.href = page;
+                }
+                else
+                    if (refreshId == "commands") {
+                    alert(" Refresh operation not applicable for Command Pages !!!");
+                }
+            });
+
+            $("#saveconfig").click(function() {
+                if (confirm("You are about to save Complete EnodeB configuration,\n                   Do you really want to Save?") == true) {
+                    var strquery = "eNbCommand=4";
+                    LteSet("enbAdmin", strquery, null, null);
+                }
+            });
+
+
+        });
+    </script>
+
+</head>
+ <body style="background-color: rgb(155, 153, 207);border-bottom:1px;border-bottom-width:thin"> 
+    <table id="HeaderTable" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td width="16%">
+                    <center>
+                        <span style="font-weight: bold; font-size: 20px; left: 1px; color: rgb(255,255,255);
+                            position: absolute; top: 0px">
+                            <img height="43" src="../image/powerwave.jpg" width="203"></span>
+                    </center>
+                </td>
+                <td align="right" width="80%">
+                    <table border="0" width="100%">
+                        <tbody>
+                        <tr>
+                        
+                          <td  align="left" class="info" style="font-weight: normal; font-size: 18px; color: White;font-family: Times New Roman; top: 0px; height: 100%" nowrap="noWrap" align="left" height="100%">
+                                    <span class="">
+                                    <a class="TopLinks" id="config" name="config"   href="" target="MiddleLeft">Configuration</a>                                    
+                                    &nbsp; 
+                                    <a class="TopLinks" id="monitor" name="monitor"     href="" target="MiddleLeft">Monitor</a> 
+                                    &nbsp;
+                                     <a class="TopLinks" id="commands" name="commands"    href="" target="MiddleLeft">Commands</a>
+                                    </span>
+                                </td>
+                            
+                        
+                            <td width="60%" height="50%" nowrap="nowrap" align="left" style="font-weight: bold;
+                                font-family: Arial; font-size: 23px; color:white; height: 100%;
+                                top: 0px;">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LTE Base Station
+                            </td>
+                            <td style="font-weight: normal; font-size: 12px; font-family: Arial" nowrap="nowrap" align="right">
+                                <span id="saveconfig" style="cursor: pointer; color: White" onmouseover="this.style.color = 'Navy'" onmouseout="this.style.color = 'white'"><b>Save Configuration</b></span> | 
+                                <!--span id="access"><a style="color: White"><b>Ping</b></a></span-->
+                                <span id="refresh" style="cursor: pointer; color: White" onmouseover="this.style.color = 'Navy'" onmouseout="this.style.color = 'white'"><b>Refresh</b></span> | 
+                                <span id="logout" style="cursor: pointer; color: White" onmouseover="this.style.color = 'Navy'" onmouseout="this.style.color = 'white'"><b>Logout </b></span>
+                            </td>
+                        </tr>
+                           
+                           
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

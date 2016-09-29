@@ -1,0 +1,518 @@
+<html>
+<head>
+<style type='text/css' lang='css'>
+@import '../css/styles.css';
+</style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script> 
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+
+        var sessionID = parent.sessionID;
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        LteGet("phyConfig", null, ChkLock);
+
+        if (parent.frames["Top"].link == 1) {
+            $("#btnBack").hide();
+            $("#pageTitle").html("Configuration > Physical Layer")
+        }
+        else
+            if (parent.frames["Top"].link == 2) {
+            $("#pageTitle").html("Configuration > Cell > Physical Layer");
+        }
+        else
+            $("#pageTitle").html("Configuration > eNodeB > Cell > Physical Layer")
+
+        $("#btnBack").click(function() {
+            if (sessionID != null && sessionID != "undefined")
+                window.location.href = sessionID + "-cell_config.htm";
+            parent.frames["Top"].link--;
+        });
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";
+
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }
+                }
+            });
+
+            if (change == 'true') {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true)
+                                msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                        }
+                    }
+                });
+                if (msg != "") {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                    if (parent.frames["Top"].isLocked == "unlocked")
+                        LockAttributes();
+                    alert(msg);
+                }
+                else {
+                    if (parent.frames["Top"].isLocked == "unlocked") {
+                        $("#phichResource,#phichDuration,#prachFreqOffset,#referenceSignalPower,#cellPhyPb,#srsEnabled,#alpha,#poNominalPucch,#totalTxPower").attr("disabled", true).css("background-color", "#E6E6E6");
+                    }
+                    LteSet("phyConfig", $("#phyConfig"), $('#btnApply'), ChkLock);
+                }
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#phyConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });            
+function ChkSpecialValues() {
+    $("#phichResource,#phichDuration,#prachFreqOffset,#referenceSignalPower,#cellPhyPb,#srsEnabled,#alpha,#poNominalPucch,#totalTxPower").attr("disabled", false).css("background-color", "white"); ;    
+}
+function LockAttributes() {
+    $("#prachFreqOffset,#referenceSignalPower,#cellPhyPb,#poNominalPucch,#totalTxPower").attr("readonly", true).attr("title", "Lock eNodeB to Modify").css("background-color", "#E6E6E6").simpletooltip();
+    FreezeList($("#phichResource,#phichDuration,#srsEnabled,#alpha"));
+    $("#phichResource,#phichDuration,#srsEnabled,#alpha").attr("title", "Lock eNodeB to Modify").css("background-color", "#E6E6E6").simpletooltip().bind("keydown keypress keyup change", function() {
+        if (parent.frames["Top"].isLocked == "unlocked")
+            FreezeList(this);
+    });
+}
+
+
+function MapIdName(fieldName) {
+    switch (fieldName) {
+        case "phyProfileId":  return "PHY Profile Id";
+        case "prachFreqOffset": return  "PRACH Frequency Offset";
+        case "referenceSignalPower": return  "Reference Signal Power";
+        case "cellPhyPb": return "Cell PB";
+        case "poNominalPucch": return  "PUCCH PO Nominal";
+        case "betaOffsetAckIndex": return "Beta Offset-ACK-Index";
+        case "betaOffsetRiIndex": return "Beta Offset-RI-Index";
+        case "betaOffsetCqiIndex": return "Beta Offset-CQI-Index";
+        case "poUePusch": return  "UE Specific PO_PUSCH";
+        case "poUePucch": return "UE Specific PO_PUCCH";
+        case "pSrsOffset": return "SRS Power Offset";
+        case "totalTxPower": return "TX Tranasmit Power";	
+    }
+}
+
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title" id="pageTitle" ></span>
+            </td>
+            <td align="right" width="40%">
+                 <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnBack" name="btnBack" type="button" value="Back" />
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px; width:450px; height:615px">
+        <form name='phyConfig' id='phyConfig' action=''>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="tblBorder">
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp; Physical Layer Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                PHY Profile Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="phyProfileId" name="phyProfileId" type="text" class="lteinput" validate="IntRangeChk" min="0" max="0"/>&nbsp;(0 ~ 0)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+						<tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                TX Transmit Power
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="totalTxPower" name="totalTxPower" type="text" class="lteinput" validate="IntRangeChk" min="6" max="33"/>&nbsp;(6 ~ 33)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>						
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; PHICH Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                PHICH Resource
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="phichResource" id="phichResource" class="lteinput">
+                                    <option value="0" >ONE-SIXTH</option>
+                                    <option value="1">HALF</option>
+                                    <option value="2">ONE</option>
+                                    <option value="3">TWO</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                PHICH Duration
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="phichDuration" id="phichDuration" class="lteinput">
+                                    <option value="0" >NORMAL</option>
+                                    <option value="1">EXTENDED</option>                                    
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; PRACH Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                PRACH Frequency Offset
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="prachFreqOffset" name="prachFreqOffset" type="text" class="lteinput" validate="IntRangeChk" min="0" max="94"/>&nbsp;(0 ~ 94)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; PDSCH Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Reference Signal Power
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="referenceSignalPower" name="referenceSignalPower" type="text" class="lteinput" validate="IntRangeChk" min="-60" max="50"/>&nbsp;(-60 ~ 50)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                P<sub>A</sub>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="cellPhyPa" id="cellPhyPa" class="lteinput"">
+                                    <option value="0">dB_6</option>
+                                    <option value="1">dB_4dot77</option>
+                                    <option value="2">dB_3</option>
+                                    <option value="3">dB_1dot77</option>
+                                    <option value="4">dB0</option>
+                                    <option value="5">dB1</option>
+                                    <option value="6">dB2</option>
+                                    <option value="7">dB3</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                 P<sub>B</sub>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="cellPhyPb" name="cellPhyPb" type="text" class="lteinput" validate="IntRangeChk" min="0" max="3"/>&nbsp;(0 ~ 3)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; PUCCH Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SRS Enabled
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="srsEnabled" id="srsEnabled" class="lteinput">
+                                    <option value="1">TRUE</option>
+                                    <option value="0">FALSE</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; Uplink Power Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Alpha
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="alpha" id="alpha" class="lteinput">
+                                    <option value="0" >AL0</option>
+                                    <option value="1">AL04</option>
+                                    <option value="2">AL05</option>
+                                    <option value="3">AL06</option>
+                                    <option value="4">AL07</option>
+                                    <option value="5">AL08</option>
+                                    <option value="6">AL09</option>
+                                    <option value="7">AL1</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                UE Specific PO_PUSCH
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="poUePusch" name="poUePusch" type="text" class="lteinput" validate="IntRangeChk" min="-8" max="7"/>&nbsp;(-8 ~ 7)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                UE Specific PO_PUCCH
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="poUePucch" name="poUePucch" type="text" class="lteinput" validate="IntRangeChk" min="-8" max="7"/>&nbsp;(-8 ~ 7)
+                            </td>
+                            <td width='2%' nowrap='1'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                PUCCH PO Nominal
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="poNominalPucch" name="poNominalPucch" type="text" class="lteinput" validate="IntRangeChk" min="-127" max="-96"/>&nbsp;(-127 ~ -96)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SRS Power Offset
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="pSrsOffset" name="pSrsOffset" type="text" class="lteinput" validate="IntRangeChk" min="0" max="15"/>&nbsp;(0 ~ 15)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan='5' class='tblSubTitleBg'>
+                                &nbsp; PUSCH Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Beta Offset-ACK-Index
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="betaOffsetAckIndex" name="betaOffsetAckIndex" type="text" class="lteinput" validate="IntRangeChk" min="0" max="15"/>&nbsp;(0 ~ 15)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Beta Offset-RI-Index
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="betaOffsetRiIndex" name="betaOffsetRiIndex" type="text" class="lteinput" validate="IntRangeChk" min="0" max="15"/>&nbsp;(0 ~ 15)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Beta Offset-CQI-Index
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="betaOffsetCqiIndex" name="betaOffsetCqiIndex" type="text" class="lteinput" validate="IntRangeChk" min="0" max="15"/>&nbsp;(0 ~ 15)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

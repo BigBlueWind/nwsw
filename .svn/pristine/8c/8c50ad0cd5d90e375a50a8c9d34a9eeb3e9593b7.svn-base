@@ -1,0 +1,133 @@
+#!/bin/bash
+Usage()
+{
+  echo "Usage: $0 [-f <num>] -i <traceFile> [-o <outputFile>] [-v]"
+  echo ""
+  echo "-f <num>       :  (Optional) ID (number) to be filtered from the call trace file"
+  echo "                 ID is e.g. the CRNTI (UE) to be filtered"
+  echo "                 If ID is not provided, all calls are processed"
+  echo "-i <rraceFile> : (Mandatory) This specifies the call-tracefile to process."
+  echo "-o <outputFile>: (Optional) This specifies the output file"
+  echo "                 If outputFile is not provided, MSC source file is created as callTraceFile[.ID].msc"
+  echo "                 and MSC Image file is created as callTraceFile[.ID].png"
+  echo "-v             : (Optional) VIEW option, where the MSC picture is generated and opened with $IMGVIEWER."
+  echo "If -v is not given, then the log file is displayed in a user friendly test display"
+  echo " "
+  exit 1
+}
+
+# Image viewer application, gthumb is used by default.
+IMGVIEWER=gthumb
+
+# awk script name
+AWKSCRIPT=logconvert.awk
+
+if [ $# -lt 1 ] ; then
+  echo "ERROR: Insufficient arguments"
+  Usage
+  exit 1
+fi
+
+MSCGENDIR="`which mscgen`"
+if [ ! -n $MSCGENDIR ]; then
+  echo "ERROR: mscgen path not found, please ensure that mscgen is installed and its path is in PATH variable"
+fi
+
+SCRIPT=$(readlink -f $0)
+SCRIPTDIR=`dirname $SCRIPT`
+if [ "$SCRIPTDIR" = "" ] ; then
+  SCRIPTDIR="."
+fi
+
+# Initializations
+OUTPUTFILE="NULL"
+INPUTFILE="NULL"
+OUTPUTBASE="NULL"
+OUTPUTSPECIFIED="NO"
+EXTN="txt"
+ID="NULL"
+VIEW=0
+
+while getopts i:o:f:v opt
+do
+  case "$opt" in
+  i) INPUTFILE="$OPTARG";;
+  o) OUTPUTBASE="$OPTARG";OUTPUTSPECIFIED="YES";;
+  f) ID="$OPTARG";;
+  v) VIEW=1;;
+  /?) echo "ERROR: Invalid argument(s)";Usage;exit;;
+  esac
+done
+
+if [ `echo $ID | grep -c "-"` -gt 0 ] || [ `echo $INPUTFILE | grep -c "-"` -gt 0 ] || [ `echo $OUTPUTBASE | grep -c "-"` -gt 0 ]
+then
+  echo "ERROR: Please check the arguments"
+  Usage
+  exit 1
+fi
+  
+if [ "$INPUTFILE" = "NULL" ]; then
+  echo "ERROR: Input file not provided"
+  Usage
+fi
+
+echo "Processing log file..."
+
+# first create the output file name
+if [ $VIEW -eq 1 ]; then
+  EXTN="msc"
+fi
+
+if [ $OUTPUTBASE = "NULL" ]; then
+  OUTPUTBASE=$INPUTFILE
+fi
+if [ $ID = "NULL" ]; then
+  OUTPUTFILE=$OUTPUTBASE.$EXTN
+else
+  OUTPUTFILE=$OUTPUTBASE.$ID.$EXTN
+fi
+
+# Finally, if VIEW option is chosen, then generate the MSC Picture and open it
+if [ $VIEW -eq 1 ]; then
+  # Now, generate the MSC file
+  echo "Generating MSC source file..."
+  if [ "$ID" = "NULL" ]
+  then
+    echo "awk -f $SCRIPTDIR/$AWKSCRIPT $INPUTFILE > $OUTPUTFILE"
+    awk -f $SCRIPTDIR/$AWKSCRIPT $INPUTFILE > $OUTPUTFILE
+  else
+    echo "awk -v id=$ID -f $SCRIPTDIR/$AWKSCRIPT $INPUTFILE > $OUTPUTFILE"
+    awk -v id="$ID" -f $SCRIPTDIR/$AWKSCRIPT $INPUTFILE > $OUTPUTFILE
+  fi
+
+  echo "Generating MSC picture..."
+  if [ $OUTPUTFILE != "NULL" ]; then
+    mscgen -T png -i $OUTPUTFILE -o $OUTPUTFILE.png
+    echo "Opening GThumb to view the MSC picture..."
+    if [ `which gthumb|wc -w` -lt 1 ]; then
+      echo "NOTICE: gthumb not found, so cannot open the generated MSC picture."
+      echo "Set the variable IMGVIEWER to the application that is available in your environment"
+      echo "or, open the generated .png file manually"
+    else
+      $IMGVIEWER $OUTPUTFILE.png 2> /dev/null &
+    fi
+  fi
+else
+  # Just convert the log file into user firndly form and display in vim
+  echo "Generating user-friendly call trace file..."
+  if [ $OUTPUTSPECIFIED = "YES" ]; then
+    if [ "$ID" = "NULL" ]; then
+      awk -f $SCRIPTDIR/logconvertText.awk $INPUTFILE > $OUTPUTFILE
+      vim $OUTPUTFILE
+    else
+      awk -v id="$ID" -f $SCRIPTDIR/logconvertText.awk $INPUTFILE > $OUTPUTFILE
+      vim $OUTPUTFILE
+    fi
+  else
+    if [ "$ID" = "NULL" ]; then
+      awk -f $SCRIPTDIR/logconvertText.awk $INPUTFILE 
+    else
+      awk -v id="$ID" -f $SCRIPTDIR/logconvertText.awk $INPUTFILE 
+    fi
+  fi
+fi

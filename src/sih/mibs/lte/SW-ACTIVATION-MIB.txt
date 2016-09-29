@@ -1,0 +1,79 @@
+ -- @file    SW-ACTIVATION-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:47 PM
+ --
+
+SW-ACTIVATION-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, SwType, VersionString          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY                   FROM SNMPv2-SMI;
+
+swActivation MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to activate a SW image."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 4 }
+
+swActivationTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF SwActivationEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to activate a SW image.
+            This is a SINGLE ROW Table"
+       ::= { swActivation 1 }
+
+swActivationEntry OBJECT-TYPE
+       SYNTAX      SwActivationEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to an instance of SW Activation."
+       INDEX  { index }
+       ::= { swActivationTable 1 }
+
+SwActivationEntry ::= 
+   SEQUENCE {
+       index       RowNumber,
+       swType      SwType,
+       version     VersionString
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { swActivationEntry 1 }
+
+swType OBJECT-TYPE
+       SYNTAX      SwType
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Type of the software component to be activated/switched-to.]"
+       ::= { swActivationEntry 2 }
+
+version OBJECT-TYPE
+       SYNTAX      VersionString
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Switch to this version. The software version of the SW release is in release.revision.bugfix.vendor.svnversion format.]"
+       ::= { swActivationEntry 3 }
+
+END

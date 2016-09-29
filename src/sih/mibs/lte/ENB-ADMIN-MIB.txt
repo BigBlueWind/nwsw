@@ -1,0 +1,118 @@
+ -- @file    ENB-ADMIN-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 2/14/2013 11:40:14 AM
+ --
+
+ENB-ADMIN-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI;
+
+enbAdmin MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to stop, start enb"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 1 }
+
+enbAdminTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EnbAdminEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to stop, start enb
+            This is a SINGLE ROW Table"
+       ::= { enbAdmin 1 }
+
+enbAdminEntry OBJECT-TYPE
+       SYNTAX      EnbAdminEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Contents of one admin command"
+       INDEX  { index }
+       ::= { enbAdminTable 1 }
+
+EnbAdminEntry ::= 
+   SEQUENCE {
+       index          RowNumber,
+       eNbCommand     INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { enbAdminEntry 1 }
+
+eNbCommand OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   lockEnb(1),
+                   unlockEnb(2),
+                   restartEnb(3),
+                   saveConfig(4),
+                   rollbackConfig(5),
+                   resetRadioHead(6),
+                   resetGps(7),
+                   runBuiltInSelfTest(8),
+                   setLongPost(9),
+                   rebootEnb(10),
+                   resetCounters(11),
+                   startDiag(12),
+                   stopDiag(13),
+                   deleteAlarmHistory(14),
+                   deleteUeEventHistory(15),
+                   deleteRabHistory(16),
+                   deleteFileEventHistory(17),
+                   deleteSwInstallHistory(18),
+                   deleteTraceHistory(19),
+                   reservedForFutureUse1(20),
+                   reservedForFutureUse2(21),
+                   reservedForFutureUse3(22),
+                   reservedForFutureUse4(23),
+                   reservedForFutureUse5(24),
+                   reservedForFutureUse6(25),
+                   reservedForFutureUse7(26),
+                   reservedForFutureUse8(27),
+                   reservedForFutureUse9(28),
+                   reservedForFutureUse10(29)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             1:lockEnb: Take all cells out of use. All sessions will be terminated. Cell will disappear for Ues. OAM connectivity remains.
+             2:unlockEnb: Cells start transmitting RRC: System Information. Enb starts serving Ues.
+             3:restartEnb: service to UEs stops, application sw processes exit and come-up again. OS does not reboot. pre-condition for restartEnb: enb should be locked.
+             4:saveConfig: Save the currently running configuration to persistent memory. This configuration will persist across reboot.
+             5:rollbackConfig: reload and apply the configuration from persistent memory.pre-condition for rollbackConfig enb should be locked.
+             6:resetRadiohead: This command will reset Radiohead. 
+             7:resetGps: this command will reset GPS. 
+             8:runBuiltInSelfTest: This command will run BIST. 
+             9:setLongPost: This command will set Long POST on next reboot. 
+             10:rebootEnb: service to UEs stops, application sw processes exit and OS will reboot.
+             11:resetCounters: This command will reset all stack counters. pre-condition for resetCounters: enb should be locked.
+             12:startDiag: This command will start the diagnostic counters.
+             13:stopDiag: This command will stop the diagnostic counters.
+             14:deleteAlarmHistory: This command will delete AlarmHistory table.
+             15:deleteUeEventHistory: This command will delete UeEventHistory table.
+             16:deleteRabHistory: This command will delete RabHistory table.
+             17:deleteFileEventHistory: This command will delete FileEventHistory table.
+             18:deleteSwInstallHistory: This command will delete SwInstallHistory table. 
+             19:deleteTraceHistory: This command will delete Tracehistory table.
+             20 - 29: reservedForFutureUse.]"
+       ::= { enbAdminEntry 2 }
+
+END

@@ -1,0 +1,89 @@
+ -- @file    GPS-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+GPS-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp, Latitude, Longitude          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY                                   FROM SNMPv2-SMI;
+
+gpsStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Gps Status of ENB."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 137 }
+
+gpsStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF GpsStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Gps Status of ENB.
+            This is a SINGLE ROW Table"
+       ::= { gpsStatus 1 }
+
+gpsStatusEntry OBJECT-TYPE
+       SYNTAX      GpsStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Longitude and Latitude of the BS."
+       INDEX  { index }
+       ::= { gpsStatusTable 1 }
+
+GpsStatusEntry ::= 
+   SEQUENCE {
+       index              RowNumber,
+       gpsLatitude        Latitude,
+       gpsLongitude       Longitude,
+       gpsDateAndTime     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { gpsStatusEntry 1 }
+
+gpsLatitude OBJECT-TYPE
+       SYNTAX      Latitude
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Latitude received from GPS. Format is MMNN.PPPPPP(N/S). MM -> Degrees, NN -> Minutes, PPPPPP -> Decimal precision, North (N) or South (S).]"
+       ::= { gpsStatusEntry 2 }
+
+gpsLongitude OBJECT-TYPE
+       SYNTAX      Longitude
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Longitude received from GPS. Format is MMMNN.PPPPPP(E/W). MMM -> Degrees, NN -> Minutes, PPPPPP -> Decimal precision, East (E) or West (W).]"
+       ::= { gpsStatusEntry 3 }
+
+gpsDateAndTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Time received from GPS device in YYYYMMDDHHNNSSTTT format.]"
+       ::= { gpsStatusEntry 4 }
+
+END

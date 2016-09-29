@@ -1,0 +1,17 @@
+skipfiles
+updall
+updcm
+domt.mak.00
+domt.mak.01
+mt00.cfg
+mt01.cfg
+mt.cmd
+mt_acc.mak.00  
+mt_acc.mak.01
+pt_sol.c
+pt_ss.c
+pt_tst.c
+mt_acc.c
+mt_sol.c
+ss_mtsp.c
+gen_cre

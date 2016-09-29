@@ -1,0 +1,86 @@
+
+
+include T4KDev/LTERT/buildcfg
+
+NETBUILDDIR = $(SYSCORENETWORKDIR)/$(BUILDDIR)
+NETLIB := $(NETBUILDDIR)/network.a
+
+VPATH := $(SYSCORENETWORKDIR)
+
+# C sources
+C_SRCS += \
+network.c      \
+hw.c \
+net_list.c \
+inet_aton.c\
+udp.c \
+ip.c \
+ethernet.c \
+arp.c\
+utils.c\
+socket.c\
+raw.c\
+cycle_buffer.c\
+net_buff.c \
+
+# Object files
+C_OBJS = $(patsubst %.c,$(NETBUILDDIR)/%.o,$(notdir $(C_SRCS)))
+
+OBJS = $(C_OBJS) $(S_OBJS)
+
+INC := -I"$(SYSCORESERVICESDIR)" -I"$(OS4GMXINCDIR)" -I"$(OS4GMXARMINCDIR)" -I"$(SYSCOREDRIVERSDIR)"
+
+#COREBUILDCFG += --debug -O0 -D_MX_DEBUG -D_APP_ASSERT_HANDLER -DMX_CREATE_OBJ_LOG_ENABLED
+
+CFLAGS = $(COREBUILDCFG) $(INC)
+
+.PHONY : all
+all : $(PCF) $(NETLIB)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(NETBUILDDIR)/network.dep
+CLEANDEP = clean_dep
+else
+-include $(NETBUILDDIR)/network.dep
+endif
+
+$(NETLIB) : $(NETBUILDDIR) $(CLEANDEP) $(OBJS)
+	@echo Creating $(NETLIB)
+	@$(AR) $(AR_FLAGS) $(NETLIB) $(OBJS)
+
+$(NETBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) -o"$@" "$<"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(NETBUILDDIR)/%.o : %.s
+	@echo $<
+	@$(AS) $(AS_FLAGS) -o"$@" "$<"
+
+$(NETBUILDDIR):
+	@$(MKDIR) $(NETBUILDDIR)
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean:
+	@$(RM) $(OBJS)
+
+.PHONY : xclean
+xclean: clean
+	$(RM) $(NETLIB) 
+
+
+
+
+
+

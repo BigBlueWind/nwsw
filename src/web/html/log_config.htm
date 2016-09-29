@@ -1,0 +1,647 @@
+<html>
+<head>
+<meta http-equiv='content-type' content='text/html; charset=windows-1252'>
+<style type='text/css' lang='css'>
+@import '../css/styles.css';
+    </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/mapping.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type='text/javascript'>
+    var sessionID = parent.sessionID;
+    var startTime = '';
+    var endTime = '';
+    var query = '';
+    var rand = '';
+    var table = '';
+    var change = 0;
+    var numOfRows = 0;
+   
+    $(document).ready(function() {
+        table = document.getElementById('logConfigTable');
+        rand = (new Date()).valueOf();
+        query = 'key=logConfig&rand=' + rand;
+        $('#btnApply').click(function() {
+            change = 0;
+            SetTimer(table.rows.length);
+        });
+
+        startTime = new Date();
+        GetTimer();
+        $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#logConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+
+        $("#data").bind("scroll", function() {
+            $("#header").scrollLeft($("#data").scrollLeft());
+        });
+    });  
+    
+    
+    function GetTimer() {
+        $.post(sessionID + '-LTEWebGet.fcgi', query,
+           function(response) {
+               endTime = new Date();
+               if (response != null || response != undefined) {
+                   if (response.result == 'SUCCESS') {
+                       displayResult(response);                                        
+                       STATUS("GET", "logConfig", startTime, endTime, response.result, response.data);
+                   }
+                   else {
+                       STATUS("GET", "logConfig", startTime, endTime, response.result, response.data);
+                   }
+               }
+               else {
+                   parent.window.location.replace("lte_login.htm");
+               }
+           }
+            , "json");
+      }
+    
+    
+    function SetTimer( requestnum )   
+    {        
+        if( requestnum > 0)
+        {
+            var i = numOfRows - requestnum;
+            changePattern = 0;
+            if ($("#logError" + (i + 1)).val() == 1) {
+                changePattern = 1;
+            }
+            if ($("#logDebug" + (i + 1)).val() == 1) {
+                changePattern = changePattern |(1 << 1);
+            }
+            if ($("#logProcedure" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 2);
+            }
+            if ($("#logTransaction" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 3);
+            }
+            if ($("#logCounter" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 4);
+            }
+            if ($("#logState" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 5);
+            }
+            if ($("#logConfig" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 6);
+            }
+            if ($("#logOs" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 7);
+            }
+            if ($("#logTimer" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 8);
+            }
+            if ($("#logTimeout" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 9);
+            }
+            if ($("#logMsgIn01" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 10);
+            }
+            if ($("#logMsgIn02" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 11);
+            }
+            if ($("#logMsgIn03" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 12);
+            }
+            if ($("#logMsgOut01" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 13);
+            }
+            if ($("#logMsgOut02" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 14);
+            }
+            if ($("#logMsgOut03" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 15);
+            }
+            if ($("#logFunc" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 16);
+            }
+            if ($("#logProfile" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 17);
+            }
+            if ($("#logEventIn" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 18);
+            }
+            if ($("#logEventOut" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 19);
+            }
+            if ($("#logAPI" + (i + 1)).val() == 1) {
+                changePattern = changePattern | (1 << 20);
+            }
+            
+            if ( $("#logMask1" + (i + 1)).val() == changePattern ){
+                requestnum--;
+                SetTimer(requestnum);
+                if (change == 0 && requestnum == 0) {
+                    //$("#cmdMsg").html("No Fields Updated.......!").css("color", "red");
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+                return;
+            }
+            change++;
+            $("#cmdMsg").html("");
+            startTime = new Date();
+            request = 'key=logConfig&webGuiRow=' + (i + 1);
+            request = request + '&logMask1=' + changePattern; 
+            
+            $.post(sessionID + '-LTEWebSet.fcgi', request,
+                    function(response) {
+                        endTime = new Date();
+                        if (response != null && response != 'undefined') {
+                            if (response.result == 'SUCCESS') {
+                                displayResultSingleRow(response, i + 1);
+                                STATUS('SET', 'logConfig', startTime, endTime, response.result, response.data);
+                                requestnum--;
+                                SetTimer(requestnum);
+                            }
+                            else {
+                                STATUS('SET', 'logConfig', startTime, endTime, response.result, response.data);
+                                SetTimer(0);
+                            }
+                        }
+                        else {
+                            STATUS('SET', 'logConfig', startTime, endTime, 'FAIL', 'INVALID DATA');
+                            SetTimer(0);
+                        }
+                    }, 'json');
+           }
+    }
+    
+function displayResult( response )
+{
+   numOfRows = response.data.row.length;
+   var rowCount = table.rows.length;
+   for (var i = 0, j = 0; j < rowCount; j++) {
+       table.deleteRow(i);
+   }
+   rowCount = table.rows.length;                       
+   table.width = "3500px"
+   table.border = '0';
+   table.cellpadding = '0';
+   table.cellspacing = '0';
+   table.overflow = 'auto'
+   for (i = 0; i < response.data.row.length; i++) {
+       rowCount = table.rows.length;
+       var row = table.insertRow(rowCount);
+       var resultPattern  = 0;
+       var comparePattern = 1;
+       
+       resultPattern = response.data.row[i].col[1].value;
+
+       if (rowCount % 2 == 1) {
+           row.className = 'conTblRowBg2'
+       }
+       else {
+           row.className = 'conTblRowBg1'
+       }
+
+       var cell1 = row.insertCell(0);
+       cell1.align = 'center';
+       cell1.width = '3%';
+       cell1.id = 'moduleId' + (i + 1);
+       cell1.innerHTML = response.data.row[i].col[0].value;
+
+       resultPattern = response.data.row[i].col[1].value;
+       
+       if( $("#logMask1" + (i + 1)).length > 0 )
+       {
+         $('body').remove( $("logMask1" + (i + 1)));
+       } 
+       
+       $('body').append("<input type='hidden' id='logMask1" + (i + 1) + "' value='" + resultPattern + "' />");
+
+       var cell2 = row.insertCell(1);
+       cell2.align = 'center';
+       cell2.width = '3%';
+       var element2 = document.createElement('select');
+       element2.id = 'logError' + (i + 1);
+       addOption(element2, 'ENABLED', 1);
+       addOption(element2, 'DISABLED', 0);                          
+       element2.value = ( (comparePattern & resultPattern) ? 1 : 0 );
+       cell2.appendChild(element2);
+       
+
+       var cell3 = row.insertCell(2);
+       cell3.align = 'center';
+       cell3.width = '3%';
+       var element3 = document.createElement('select');
+       element3.id = 'logDebug' + (i + 1);
+       addOption(element3, 'ENABLED', 1);
+       addOption(element3, 'DISABLED', 0);
+       element3.value = ( ( ( comparePattern << 1 ) & resultPattern ) ? 1 : 0 );
+       cell3.appendChild(element3);
+       
+       
+       var cell4 = row.insertCell(3);
+       cell4.align = 'center';
+       cell4.width = '3%';
+       var element4 = document.createElement('select');
+       element4.id = 'logProcedure' + (i + 1);
+       addOption(element4, 'ENABLED', 1);
+       addOption(element4, 'DISABLED', 0);
+       element4.value = (((comparePattern << 2) & resultPattern) ? 1 : 0);
+       cell4.appendChild(element4);
+       
+       
+       var cell5 = row.insertCell(4);
+       cell5.align = 'center';
+       cell5.width = '4%';
+       var element5 = document.createElement('select');
+       element5.id = 'logTransaction' + (i + 1);
+       addOption(element5, 'ENABLED', 1);
+       addOption(element5, 'DISABLED', 0);
+       element5.value = (((comparePattern << 3) & resultPattern) ? 1 : 0);
+       cell5.appendChild(element5);
+       
+       
+       var cell6 = row.insertCell(5);
+       cell6.align = 'center';
+       cell6.width = '3%';
+       var element6 = document.createElement('select');
+       element6.id = 'logCounter' + (i + 1);
+       addOption(element6, 'ENABLED', 1);
+       addOption(element6, 'DISABLED', 0);
+       element6.value = (((comparePattern << 4) & resultPattern) ? 1 : 0);
+       cell6.appendChild(element6);
+       
+       
+       var cell7 = row.insertCell(6);
+       cell7.align = 'center';
+       cell7.width = '4%';
+       var element7 = document.createElement('select');
+       element7.id = 'logState' + (i + 1);
+       addOption(element7, 'ENABLED', 1);
+       addOption(element7, 'DISABLED', 0);
+       element7.value = (((comparePattern << 5) & resultPattern) ? 1 : 0);
+       cell7.appendChild(element7);
+       
+       
+       var cell8 = row.insertCell(7);
+       cell8.align = 'center';
+       cell8.width = '4%';
+       var element8 = document.createElement('select');
+       element8.id = 'logConfig' + (i + 1);
+       addOption(element8, 'ENABLED', 1);
+       addOption(element8, 'DISABLED', 0);
+       element8.value = (((comparePattern << 6) & resultPattern) ? 1 : 0);
+       cell8.appendChild(element8);
+
+       var cell9 = row.insertCell(8);
+       cell9.align = 'center';
+       cell9.width = '3%';
+       var element9 = document.createElement('select');
+       element9.id = 'logOs' + (i + 1);
+       addOption(element9, 'ENABLED', 1);
+       addOption(element9, 'DISABLED', 0);
+       element9.value = (((comparePattern << 7) & resultPattern) ? 1 : 0);
+       cell9.appendChild(element9);
+
+       var cell10 = row.insertCell(9);
+       cell10.align = 'center';
+       cell10.width = '3%';
+       var element10 = document.createElement('select');
+       element10.id = 'logTimer' + (i + 1);
+       addOption(element10, 'ENABLED', 1);
+       addOption(element10, 'DISABLED', 0);
+       element10.value = (((comparePattern << 8) & resultPattern) ? 1 : 0);
+       cell10.appendChild(element10);
+
+       var cell11 = row.insertCell(10);
+       cell11.align = 'center';
+       cell11.width = '3%';
+       var element11 = document.createElement('select');
+       element11.id = 'logTimeout' + (i + 1);
+       addOption(element11, 'ENABLED', 1);
+       addOption(element11, 'DISABLED', 0);
+       element11.value = (((comparePattern << 9) & resultPattern) ? 1 : 0);
+       cell11.appendChild(element11);
+
+       var cell12 = row.insertCell(11);
+       cell12.align = 'center';
+       cell12.width = '7%';
+       var element12 = document.createElement('select');
+       element12.id = 'logMsgIn01' + (i + 1);
+       addOption(element12, 'ENABLED', 1);
+       addOption(element12, 'DISABLED', 0);
+       element12.value = (((comparePattern << 10) & resultPattern) ? 1 : 0);
+       cell12.appendChild(element12);
+
+       var cell13 = row.insertCell(12);
+       cell13.align = 'center';
+       cell13.width = '8%';
+       var element13 = document.createElement('select');
+       element13.id = 'logMsgIn02' + (i + 1);
+       addOption(element13, 'ENABLED', 1);
+       addOption(element13, 'DISABLED', 0);
+       element13.value = (((comparePattern << 11) & resultPattern) ? 1 : 0);
+       cell13.appendChild(element13);
+
+       var cell14 = row.insertCell(13);
+       cell14.align = 'center';
+       cell14.width = '10%';
+       var element14 = document.createElement('select');
+       element14.id = 'logMsgIn03' + (i + 1);
+       addOption(element14, 'ENABLED', 1);
+       addOption(element14, 'DISABLED', 0);
+       element14.value = (((comparePattern << 12) & resultPattern) ? 1 : 0);
+       cell14.appendChild(element14);
+
+       var cell15 = row.insertCell(14);
+       cell15.align = 'center';
+       cell15.width = '7%';
+       var element15 = document.createElement('select');
+       element15.id = 'logMsgOut01' + (i + 1);
+       addOption(element15, 'ENABLED', 1);
+       addOption(element15, 'DISABLED', 0);
+       element15.value = (((comparePattern << 13) & resultPattern) ? 1 : 0);
+       cell15.appendChild(element15);
+
+       var cell16 = row.insertCell(15);
+       cell16.align = 'center';
+       cell16.width = '8%';
+       var element16 = document.createElement('select');
+       element16.id = 'logMsgOut02' + (i + 1);
+       addOption(element16, 'ENABLED', 1);
+       addOption(element16, 'DISABLED', 0);
+       element16.value = (((comparePattern << 14) & resultPattern) ? 1 : 0);
+       cell16.appendChild(element16);
+
+       var cell17 = row.insertCell(16);
+       cell17.align = 'center';
+       cell17.width = '10%';
+       var element17 = document.createElement('select');
+       element17.id = 'logMsgOut03' + (i + 1);
+       addOption(element17, 'ENABLED', 1);
+       addOption(element17, 'DISABLED', 0);
+       element17.value = (((comparePattern << 15) & resultPattern) ? 1 : 0);
+       cell17.appendChild(element17);
+
+       var cell18 = row.insertCell(17);
+       cell18.align = 'center';
+       cell18.width = '4%';
+       var element18 = document.createElement('select');
+       element18.id = 'logFunc' + (i + 1);
+       addOption(element18, 'ENABLED', 1);
+       addOption(element18, 'DISABLED', 0);
+       element18.value = (((comparePattern << 16) & resultPattern) ? 1 : 0);
+       cell18.appendChild(element18);
+
+       var cell19 = row.insertCell(18);
+       cell19.align = 'center';
+       cell19.width = '3%';
+       var element19 = document.createElement('select');
+       element19.id = 'logProfile' + (i + 1);
+       addOption(element19, 'ENABLED', 1);
+       addOption(element19, 'DISABLED', 0);
+       element19.value = (((comparePattern << 17) & resultPattern) ? 1 : 0);
+       cell19.appendChild(element19);
+
+       var cell20 = row.insertCell(19);
+       cell20.align = 'center';
+       cell20.width = '2%';
+       var element20 = document.createElement('select');
+       element20.id = 'logEventIn' + (i + 1);
+       addOption(element20, 'ENABLED', 1);
+       addOption(element20, 'DISABLED', 0);
+       element20.value = (((comparePattern << 18) & resultPattern) ? 1 : 0);
+       cell20.appendChild(element20);
+
+       var cell21 = row.insertCell(20);
+       cell21.align = 'center';
+       cell21.width = '2%';
+       var element21 = document.createElement('select');
+       element21.id = 'logEventOut' + (i + 1);
+       addOption(element21, 'ENABLED', 1);
+       addOption(element21, 'DISABLED', 0);
+       element21.value = (((comparePattern << 19) & resultPattern) ? 1 : 0);
+       cell21.appendChild(element21);
+
+       var cell22 = row.insertCell(21);
+       cell22.align = 'center';
+       cell22.width = '3%';
+       var element22 = document.createElement('select');
+       element22.id = 'logAPI' + (i + 1);
+       addOption(element22, 'ENABLED', 1);
+       addOption(element22, 'DISABLED', 0);
+       element22.value = (((comparePattern << 20) & resultPattern) ? 1 : 0);
+       cell22.appendChild(element22);            
+    }
+}
+
+function displayResultSingleRow( response, row ) {
+    var temp;
+    var resultPattern = 0;
+    var comparePattern = 1;        
+    for (i = 0; i < response.data.row.length; i++) {         
+        temp = 0;        
+        resultPattern = response.data.row[i].col[0].value;
+        $("#logMask1" + row).val(resultPattern);
+        
+        temp = ((comparePattern & resultPattern) ? 1 : 0);
+        $('#logError' + row ).val(temp);
+        temp = (((comparePattern << 1) & resultPattern) ? 1 : 0);
+        $('#logDebug' + row ).val(temp);
+        temp = (((comparePattern << 2) & resultPattern) ? 1 : 0);
+        $('#logProcedure' + row ).val(temp);
+        temp = (((comparePattern << 3) & resultPattern) ? 1 : 0);
+        $('#logTransaction' + row ).val(temp);
+        temp = (((comparePattern << 4) & resultPattern) ? 1 : 0);
+        $('#logCounter' + row ).val(temp);
+        temp = (((comparePattern << 5) & resultPattern) ? 1 : 0);
+        $('#logState' + row ).val(temp);
+        temp = (((comparePattern << 6) & resultPattern) ? 1 : 0);
+        $('#logConfig' + row ).val(temp);
+        temp = (((comparePattern << 7) & resultPattern) ? 1 : 0);
+        $('#logOs' + row ).val(temp);
+        temp = (((comparePattern << 8) & resultPattern) ? 1 : 0);
+        $('#logTimer' + row ).val(temp);
+        temp = (((comparePattern << 9) & resultPattern) ? 1 : 0);
+        $('#logTimeout' + row ).val(temp);
+        temp = (((comparePattern << 10) & resultPattern) ? 1 : 0);
+        $('#logMsgIn01' + row).val(temp);
+        temp = (((comparePattern << 11) & resultPattern) ? 1 : 0);
+        $('#logMsgIn02' + row ).val(temp);
+        temp = (((comparePattern << 12) & resultPattern) ? 1 : 0);
+        $('#logMsgIn03' + row ).val(temp);
+        temp = (((comparePattern << 13) & resultPattern) ? 1 : 0);
+        $('#logMsgOut01' + row ).val(temp);
+        temp = (((comparePattern << 14) & resultPattern) ? 1 : 0);
+        $('#logMsgOut02' + row ).val(temp);
+        temp = (((comparePattern << 15) & resultPattern) ? 1 : 0);
+        $('#logMsgOut03' + row ).val(temp);
+        temp = (((comparePattern << 16) & resultPattern) ? 1 : 0);
+        $('#logFunc' + row ).val(temp);
+        temp = (((comparePattern << 17) & resultPattern) ? 1 : 0);
+        $('#logProfile' + row ).val(temp);
+        temp = (((comparePattern << 18) & resultPattern) ? 1 : 0);
+        $('#logEventIn' + row ).val(temp);
+        temp = (((comparePattern << 19) & resultPattern) ? 1 : 0);
+        $('#logEventOut' + row).val(temp);
+        temp = (((comparePattern << 20) & resultPattern) ? 1 : 0);
+        $('#logAPI' + row).val(temp);
+    }
+}    
+
+</script>
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Configuration > Module Logging </span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'/></td></tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>    
+    <div style='margin-left: 10px; width: 1040px; border: 1px; border-style: solid; border-color: silver'>        
+        <div id="header" style='width: 1040px; overflow: hidden'>
+            <table width='3500px' cellspacing='0' cellpadding='0'>
+                <thead>
+                    <tr>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Module ID
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log Error
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log Debug
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log Procedure
+                        </td>
+                        <td align='center' width='4%' class='tblTitleBg'>
+                            Log Transaction
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log Counter
+                        </td>
+                        <td align='center' width='4%' class='tblTitleBg'>
+                            Log State
+                        </td>
+                        <td align='center' width='4%' class='tblTitleBg'>
+                            Log Configuration
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log OS
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log Timer
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log Timeout
+                        </td>
+                        <td align='center' width='7%' class='tblTitleBg'>
+                            Log Incoming Message Header
+                        </td>
+                        <td align='center' width='8%' class='tblTitleBg'>
+                            Log Incoming Message Header and IE
+                        </td>
+                        <td align='center' width='10%' class='tblTitleBg'>
+                            Log Incoming Message Header and Selective IE
+                        </td>
+                        <td align='center' width='7%' class='tblTitleBg'>
+                            Log Outgoing Message Header
+                        </td>
+                        <td align='center' width='8%' class='tblTitleBg'>
+                            Log Outgoing Message Header and IE
+                        </td>
+                        <td align='center' width='10%' class='tblTitleBg'>
+                            Log Outgoing Message Header and Selective IE
+                        </td>
+                        <td align='center' width='4%' class='tblTitleBg'>
+                            Log Function
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log Profile
+                        </td>
+                        <td align='center' width='2%' class='tblTitleBg'>
+                            Log Event In
+                        </td>
+                        <td align='center' width='2%' class='tblTitleBg'>
+                            Log Event Out
+                        </td>
+                        <td align='center' width='3%' class='tblTitleBg'>
+                            Log API
+                        </td>
+                    </tr>
+                    <tr class="formheadingborder">
+                        <td colspan='21'>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id='data' style='width: 1040px; height: 600px; overflow-x: scroll; 
+            scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black;'>
+            <form name='logConfig' id='logConfig' action=''>
+            <table id='logConfigTable' width='3500px' border='0' cellpadding='0' cellspacing='1'>
+                <tr>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='4%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='4%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='4%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='7%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='8%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='10%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='7%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='8%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='10%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='4%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='2%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='2%' nowrap='nowrap'>
+                    </th>
+                    <th align='center' width='3%' nowrap='nowrap'>
+                    </th>
+                </tr>
+            </table>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

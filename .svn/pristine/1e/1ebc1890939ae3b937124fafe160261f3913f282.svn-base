@@ -1,0 +1,1324 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+        .style1
+        {
+            height: 25px;
+        }
+        .style2
+        {
+            height: 29px;
+        }
+    </style>
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script> 
+    <script type='text/javascript' src='../script/validate.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason,Right Click is not allowed.'); return false; });
+            var sessionID = parent.sessionID;
+            $(':text, :password, select').each(function() {
+                $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+            });
+            LteGet('sysInfo2Config', null, ChkLock);
+
+            if (parent.frames['Top'].link == 1) {
+                $('#btnBack').hide();
+                $('#pageTitle').html('Configuration > SysInfo2');
+            }
+            else
+                if (parent.frames['Top'].link == 2) {
+                $('#pageTitle').html('Configuration > Cell > SysInfo2');
+            }
+            else
+                $('#pageTitle').html('Configuration > eNodeB > Cell > SysInfo2')
+
+
+            $('#btnBack').click(function() {
+                if (sessionID != null && sessionID != 'undefined')
+                    window.location.href = sessionID + '-cell_config.htm';
+                parent.frames['Top'].link--;
+            });
+
+
+            $('#btnApply').click(function() {
+                var msg = '';
+                var change = 'false';
+
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+
+                if (change == 'true') {
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                            else {
+                                if ($(this).is(':text, :password') == true)
+                                    msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                            }
+                        }
+                    });
+                    if (msg != "") {
+                        $(':text, :password, select').each(function() {
+                            $(this).attr('disabled', false);
+                        });
+                        if (parent.frames["Top"].isLocked == "unlocked")
+                            LockAttributes();
+                        alert(msg);
+                    }
+                    else {
+                        if (parent.frames["Top"].isLocked == "unlocked") {
+                            $('#sysInfo2ProfileId,#numRaPreambles,#sizeRAPreamblesGroupA,#messageSizeGroupA,#messagePowerOffsetGroupB,\
+                            #powerRampingStep,#preambleInitRcvdTgtPower,#preambleTransMax,#raRspWindowSize,#macContResolutionTimer,#maxHarqMsg3Tx,\
+                            #modificationPeriodCoeff,#rootSequenceIndex,#prachConfigIndex,#highSpeedFlag,#zeroCorrelationZoneConfig,\
+                            #puschFreqHoppingSubBands,#puschFreqHoppingMode,#puschFreqHoppingOffset,#ulRsGroupHoppingEnabled,#ulRsGroupPusch,\
+                            #ulRsSeqHoppingEnabled,#ulRsCyclicShiftPusch,#deltaPucchShift,#enable64QAM,#n1PucchAn,#nRbCqi,#nCsAn,#srsBandwidthConfig,#srsSubfrmConfig,\
+                            #srsSimultaneousAnSrsTx,#poNominalPusch,#deltaFPucchFormat1,#deltaFPucchFormat1b,#deltaFPucchFormat2,#deltaFPucchFormat2a,\
+                            #deltaFPucchFormat2b,#deltaPreambleMsg3,#additionalSpectrumEmission,#timeAlignmentTimer').attr('disabled', true).css('background-color', '#E6E6E6');
+                        }
+                        $(':checkbox').each(function() {
+                            $(this).attr('disabled', true);
+                        });
+                        LteSet('sysInfo2Config', $('#sysInfo2Config'), $('#btnApply'), ChkLock);
+                    }
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#sysInfo2Config", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+        
+        
+function ChkSpecialValues() {
+    $('#sysInfo2ProfileId,#numRaPreambles,#sizeRAPreamblesGroupA,#messageSizeGroupA,#messagePowerOffsetGroupB,\
+                    #powerRampingStep,#preambleInitRcvdTgtPower,#preambleTransMax,#raRspWindowSize,#macContResolutionTimer,#maxHarqMsg3Tx,\
+                    #modificationPeriodCoeff,#rootSequenceIndex,#prachConfigIndex,#highSpeedFlag,#zeroCorrelationZoneConfig,\
+                    #puschFreqHoppingSubBands,#puschFreqHoppingMode,#puschFreqHoppingOffset,#ulRsGroupHoppingEnabled,#ulRsGroupPusch,\
+                    #ulRsSeqHoppingEnabled,#ulRsCyclicShiftPusch,#deltaPucchShift,#enable64QAM,#n1PucchAn,#nCsAn,#nRbCqi,#srsBandwidthConfig,#srsSubfrmConfig,\
+                    #srsSimultaneousAnSrsTx,#poNominalPusch,#deltaFPucchFormat1,#deltaFPucchFormat1b,#deltaFPucchFormat2,#deltaFPucchFormat2a,\
+                    #deltaFPucchFormat2b,#deltaPreambleMsg3,#additionalSpectrumEmission,#timeAlignmentTimer').attr('disabled', false);                  
+}
+
+function LockAttributes() {
+    $('#sysInfo2ProfileId,#maxHarqMsg3Tx,#rootSequenceIndex,#prachConfigIndex,#zeroCorrelationZoneConfig,#puschFreqHoppingSubBands,#puschFreqHoppingOffset,,#ulRsGroupPusch,\
+    #ulRsSeqHoppingEnabled,#ulRsCyclicShiftPusch,,#n1PucchAn,#nCsAn,#nRbCqi,#poNominalPusch,#deltaPreambleMsg3,#additionalSpectrumEmission,#timeAlignmentTimer').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').attr('readonly', true).simpletooltip();
+    var chosen = '';
+    FreezeList($('#numRaPreambles,#sizeRAPreamblesGroupA,#messageSizeGroupA,#messagePowerOffsetGroupB,#powerRampingStep,#preambleInitRcvdTgtPower,#preambleTransMax,\
+    #raRspWindowSize,#macContResolutionTimer,#modificationPeriodCoeff,#puschFreqHoppingMode,#deltaPucchShift,#enable64QAM,#highSpeedFlag,#ulRsGroupHoppingEnabled,\
+    #srsBandwidthConfig,#srsSubfrmConfig,#srsSimultaneousAnSrsTx,#deltaFPucchFormat1,#deltaFPucchFormat1b,#deltaFPucchFormat2,#deltaFPucchFormat2a,\
+    #deltaFPucchFormat2b'));
+    $('#numRaPreambles,#sizeRAPreamblesGroupA,#messageSizeGroupA,#messagePowerOffsetGroupB,#powerRampingStep,#preambleInitRcvdTgtPower,#preambleTransMax,\
+    #raRspWindowSize,#macContResolutionTimer,#modificationPeriodCoeff,#puschFreqHoppingMode,#deltaPucchShift,#enable64QAM,#highSpeedFlag,#ulRsGroupHoppingEnabled,\
+    #srsBandwidthConfig,#srsSubfrmConfig,#srsSimultaneousAnSrsTx,#deltaFPucchFormat1,#deltaFPucchFormat1b,#deltaFPucchFormat2,#deltaFPucchFormat2a,\
+    #deltaFPucchFormat2b').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+        if (parent.frames['Top'].isLocked == 'unlocked')
+            FreezeList(this);
+    });
+}
+
+
+function MapIdName(fieldName) {
+    switch (fieldName) {
+        case 'sysInfo2ProfileId': return 'SIB2 Profile Identifier';
+        case 'maxHarqMsg3Tx': return 'Msg3 Max HARQ Transmissions';
+        case 'rootSequenceIndex': return 'PRACH Root Sequence Index';
+        case 'prachConfigIndex': return 'PRACH Configuration Index';
+        case 'zeroCorrelationZoneConfig': return 'PRACH Preamble Cyclic Shift';
+        case 'puschFreqHoppingSubBands': return 'PUSCH Frequency Hopping Sub-bands';
+        case 'puschFreqHoppingOffset': return 'PUSCH Frequency Hopping Offset';
+        case 'ulRsGroupPusch': return 'PUSCH RS Group Assignment';
+        case 'ulRsCyclicShiftPusch': return 'PUSCH RS Cyclic shift';
+        case 'n1PucchAn': return 'PUCCH ACK/NACK Resource Offset';
+        case 'nCsAn': return 'nCsAn';            
+        case 'nRbCqi': return 'NRB CQI';            
+        case 'poNominalPusch': return 'PUSCH PO Nominal';
+        case 'deltaPreambleMsg3': return 'Msg3 Delta';
+        case 'additionalSpectrumEmission': return 'Additional Spectrum Emision'; 
+    }
+}   
+        
+    </script>
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title' id='pageTitle'></span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Back' name='btnBack' id='btnBack'/>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply'/>
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+       </table>
+    </div> 
+    <div style='margin-left:10px; width:575px; height:615px'>  
+        <form name='sysInfo2Config' id='sysInfo2Config' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp SysInfo2 Configuration
+                </td>
+            </tr>
+            <tr style='height:2px;background-color:#D2CEBC' >
+            <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <div style='overflow-x: hidden; overflow-y: scroll; height: 615px; width: 575px;
+                        border-bottom: 1px; scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black'>
+                        <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; RACH Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SIB2 Profile Identifier
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='sysInfo2ProfileId' name='sysInfo2ProfileId' type='text' class='lteinput' validate="IntRangeChk" min="0" max="0"/>&nbsp;(0 ~ 0)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Number of RA Preambles
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='numRaPreambles' name='numRaPreambles' class='lteinput'>
+                                        <option value='0'>n4</option>
+                                        <option value='1'>n8</option>
+                                        <option value='2'>n12</option>
+                                        <option value='3'>n16</option>
+                                        <option value='4'>n20</option>
+                                        <option value='5'>n24</option>
+                                        <option value='6'>n28</option>
+                                        <option value='7'>n32</option>
+                                        <option value='8'>n36</option>
+                                        <option value='9'>n40</option>
+                                        <option value='10'>n44</option>
+                                        <option value='11'>n48</option>
+                                        <option value='12'>n52</option>
+                                        <option value='13'>n56</option>
+                                        <option value='14'>n60</option>
+                                        <option value='15'>n64</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RA Preamble Group-A Size
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='sizeRAPreamblesGroupA' name='sizeRAPreamblesGroupA' class='lteinput'>
+                                        <option value='0'>n4</option>
+                                        <option value='1'>n8</option>
+                                        <option value='2'>n12</option>
+                                        <option value='3'>n16</option>
+                                        <option value='4'>n20</option>
+                                        <option value='5'>n24</option>
+                                        <option value='6'>n28</option>
+                                        <option value='7'>n32</option>
+                                        <option value='8'>n36</option>
+                                        <option value='9'>n40</option>
+                                        <option value='10'>n44</option>
+                                        <option value='11'>n48</option>
+                                        <option value='12'>n52</option>
+                                        <option value='13'>n56</option>
+                                        <option value='14'>n60</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RA Preamble Group-A Threshold
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='messageSizeGroupA' name='messageSizeGroupA' class='lteinput'>
+                                        <option value='0'>b56</option>
+                                        <option value='1'>b144</option>
+                                        <option value='2'>b208</option>
+                                        <option value='3'>b256</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RA Preamble Selection Threshold
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='messagePowerOffsetGroupB' name='messagePowerOffsetGroupB' class='lteinput'>
+                                        <option value='0'>-ve infinity</option>
+                                        <option value='1'>dB0</option>
+                                        <option value='2'>dB5</option>
+                                        <option value='3'>dB8</option>
+                                        <option value='4'>dB10</option>
+                                        <option value='5'>dB12</option>
+                                        <option value='6'>dB15</option>
+                                        <option value='7'>dB18</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RA Power Ramping Step
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='powerRampingStep' id='powerRampingStep' class='lteinput'>
+                                        <option value='0' >dB0</option>
+                                        <option value='1'>dB2</option>
+                                        <option value='2'>dB4</option>
+                                        <option value='3'>dB6</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Initial Minimum Preamble Power
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='preambleInitRcvdTgtPower' name='preambleInitRcvdTgtPower' class='lteinput'>
+                                        <option value='0'>-120dBm</option>
+                                        <option value='1'>-118dBm</option>
+                                        <option value='2'>-116dBm</option>
+                                        <option value='3'>-114dBm</option>
+                                        <option value='4'>-112dBm</option>
+                                        <option value='5'>-110dBm</option>
+                                        <option value='6'>-108dBm</option>
+                                        <option value='7'>-106dBm</option>
+                                        <option value='8'>-104dBm</option>
+                                        <option value='9'>-102dBm</option>
+                                        <option value='10'>-100dBm</option>
+                                        <option value='11'>-98dBm</option>
+                                        <option value='12'>-96dBm</option>
+                                        <option value='13'>-94dBm</option>
+                                        <option value='14'>-92dBm</option>
+                                        <option value='15'>-90dBm</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Maximum Preamble Transmissions
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='preambleTransMax' name='preambleTransMax' class='lteinput'>
+                                        <option value='0'>n3</option>
+                                        <option value='1'>n4</option>
+                                        <option value='2'>n5</option>
+                                        <option value='3'>n6</option>
+                                        <option value='4'>n7</option>
+                                        <option value='5'>n8</option>
+                                        <option value='7'>n10</option>
+                                        <option value='8'>n20</option>
+                                        <option value='9'>n50</option>
+                                        <option value='10'>n100</option>
+                                        <option value='11'>n200</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RA Response Window Size
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='raRspWindowSize' name='raRspWindowSize' class='lteinput'>
+                                        <option value='0'>sf2</option>
+                                        <option value='1'>sf3</option>
+                                        <option value='2'>sf4</option>
+                                        <option value='3'>sf5</option>
+                                        <option value='4'>sf6</option>
+                                        <option value='5'>sf7</option>
+                                        <option value='6'>sf8</option>
+                                        <option value='7'>sf10</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    MAC Contention Resolution Timer
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='macContResolutionTimer' name='macContResolutionTimer' class='lteinput'>
+                                        <option value='0'>sf8</option>
+                                        <option value='1'>sf16</option>
+                                        <option value='2'>sf24</option>
+                                        <option value='3'>sf32</option>
+                                        <option value='4'>sf40</option>
+                                        <option value='5'>sf48</option>
+                                        <option value='6'>sf56</option>
+                                        <option value='7'>sf64</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Msg3 Maximum HARQ Transmissions
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='maxHarqMsg3Tx' name='maxHarqMsg3Tx' type='text' class='lteinput' validate="IntRangeChk" min="1" max="8"/>&nbsp;(1 ~ 8)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; BCCH Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    BCCH Modification Period
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='modificationPeriodCoeff' name='modificationPeriodCoeff' class='lteinput'>
+                                        <option value='0'>n2</option>
+                                        <option value='1'>n4</option>
+                                        <option value='2'>n6</option>
+                                        <option value='3'>n8</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; PCCH Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Default Paging Cycle
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='defaultPagCycle' id='defaultPagCycle' class='lteinput'>
+                                        <option value='0'>rf32</option>
+                                        <option value='1'>rf64</option>
+                                        <option value='2'>rf128</option>
+                                        <option value='3'>rf256</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    nB
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='nB' id='nB' class='lteinput'>
+                                        <option value='0'>FOUR</option>
+                                        <option value='1'>TWO</option>
+                                        <option value='2'>ONE</option>
+                                        <option value='3'>HALF</option>
+                                        <option value='4'>QUARTER</option>
+                                        <option value='5'>ONE-EIGHT</option>
+                                        <option value='6'>ONE-SIXTEENTH</option>
+                                        <option value='7'>ONE-THIRTYSECONDS</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; PRACH Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PRACH Root Sequence Index
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='rootSequenceIndex' name='rootSequenceIndex' type='text' class='lteinput' validate="IntRangeChk" min="0" max="837"/>&nbsp;(0 ~ 837)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PRACH Configuration Index
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='prachConfigIndex' name='prachConfigIndex' type='text' class='lteinput' validate="IntRangeChk" min="0" max="63"/>&nbsp;(0 ~ 63)
+                                    </td>
+                                    <td nowrap='nowrap' class='rowcell'>
+                                        &nbsp;
+                                    </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PRACH High Speed Flag
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='highSpeedFlag' id='highSpeedFlag' class='lteinput'>
+                                        <option value='1' >TRUE</option>
+                                        <option value='0'>FALSE</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PRACH Preamble Cyclic Shift
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='zeroCorrelationZoneConfig' name='zeroCorrelationZoneConfig' type='text' class='lteinput' validate="IntRangeChk" min="0" max="15"/>&nbsp;(0 ~ 15)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; PUSCH Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUSCH Frequency Hopping Sub-bands
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='puschFreqHoppingSubBands' name='puschFreqHoppingSubBands' type='text' validate="IntRangeChk" min="1" max="4" class='lteinput' />&nbsp;(1 ~ 4)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUSCH Frequency Hopping Mode
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='puschFreqHoppingMode' id='puschFreqHoppingMode' class='lteinput'>
+                                        <option value='0'>Inter-SubFrame</option>
+                                        <option value='1'>Intra&Inter-SubFrame</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUSCH Frequency Hopping Offset
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='puschFreqHoppingOffset' name='puschFreqHoppingOffset' type='text' class='lteinput' validate="IntRangeChk" min="0" max="98"/>&nbsp;(0 ~ 98)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>                           
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUSCH Group Hopping Enabled
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='ulRsGroupHoppingEnabled' name='ulRsGroupHoppingEnabled' class='lteinput'>
+                                        <option value='1'>TRUE</option>
+                                        <option value='0'>FALSE</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUSCH RS Group Assignment&nbsp;
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='ulRsGroupPusch' name='ulRsGroupPusch' type='text' class='lteinput' validate="IntRangeChk" min="0" max="29"/>&nbsp;(0 ~ 29)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUSCH Sequence Hopping Enabled&nbsp;
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='ulRsSeqHoppingEnabled' id='ulRsSeqHoppingEnabled' class='lteinput'>
+                                        <option value='1' >TRUE</option>
+                                        <option value='0'>FALSE</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUSCH RS Cyclic shift
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='ulRsCyclicShiftPusch' name='ulRsCyclicShiftPusch' type='text' class='lteinput' validate="IntRangeChk" min="0" max="7"/>&nbsp;(0 ~ 7)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; PUCCH Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH Delta Shift
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='deltaPucchShift' id='deltaPucchShift' class='lteinput'>
+                                        <option value='0'>ds1</option>
+                                        <option value='1'>ds2</option>
+                                        <option value='2'>ds3</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH ACK/NACK Resource Offset
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='n1PucchAn' name='n1PucchAn' type='text' class='lteinput' validate="IntRangeChk" min="0" max="2047"/>&nbsp;(0 ~ 2047)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    NRB CQI
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='nRbCqi' name='nRbCqi' type='text' class='lteinput' validate="IntRangeChk" min="0" max="98"/>&nbsp;(0 ~ 98)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Enable 64-QAM
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='enable64QAM' id='enable64QAM' class='lteinput'>
+                                        <option value='0'>ds1</option>
+                                        <option value='1'>ds2</option>
+                                        <option value='2'>ds3</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    nCsAn
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='nCsAn' name='nCsAn' type='text' class='lteinput' validate="IntRangeChk" min="0" max="7"/>&nbsp;(0 ~ 7)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; SRS Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SRS Bandwidth Configuration
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='srsBandwidthConfig' id='srsBandwidthConfig' class='lteinput'>
+                                        <option value='0'>bw0</option>
+                                        <option value='1'>bw1</option>
+                                        <option value='2'>bw2</option>
+                                        <option value='3'>bw3</option>
+                                        <option value='4'>bw4</option>
+                                        <option value='5'>bw5</option>
+                                        <option value='6'>bw6</option>
+                                        <option value='7'>bw7</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SRS Simultaneous ACK/NACK Transmission
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='srsSimultaneousAnSrsTx' name='srsSimultaneousAnSrsTx' class='lteinput'>
+                                        <option value='1'>TRUE</option>
+                                        <option value='0'>FALSE</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SRS Sub-Frame Configuration
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='srsSubfrmConfig' id='srsSubfrmConfig' class='lteinput'>
+                                        <option value='0'>sc0</option>
+                                        <option value='1'>sc1</option>
+                                        <option value='2'>sc2</option>
+                                        <option value='3'>sc3</option>
+                                        <option value='4'>sc4</option>
+                                        <option value='5'>sc5</option>
+                                        <option value='6'>sc6</option>
+                                        <option value='7'>sc7</option>
+                                        <option value='8'>sc8</option>
+                                        <option value='9'>sc9</option>
+                                        <option value='10'>sc10</option>
+                                        <option value='11'>sc11</option>
+                                        <option value='12'>sc12</option>
+                                        <option value='13'>sc13</option>
+                                        <option value='14'>sc14</option>
+                                        <option value='15'>sc15</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; Uplink Power Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH PO Nominal
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='poNominalPusch' name='poNominalPusch' type='text' class='lteinput' validate="IntRangeChk" min="-126" max="24"/>&nbsp;(-126 ~ 24)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH Format 1 Delta
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='deltaFPucchFormat1' name='deltaFPucchFormat1' class='lteinput'>
+                                        <option  value='0'>-2dB</option>
+                                        <option value='1'>0dB</option>
+                                        <option value='2'>+2dB</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH Format 1b Delta
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='deltaFPucchFormat1b' name='deltaFPucchFormat1b' class='lteinput'>
+                                        <option value='0'>1dB</option>
+                                        <option value='1'>3dB</option>
+                                        <option value='2'>5dB</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH Format 2 Delta
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='deltaFPucchFormat2' name='deltaFPucchFormat2' class='lteinput'>
+                                        <option value='0'>-2dB</option>
+                                        <option value='1'>0dB</option>
+                                        <option value='2'>1dB</option>
+                                        <option value='3'>2dB</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH Format 2a Delta
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='deltaFPucchFormat2a' name='deltaFPucchFormat2a' class='lteinput'>
+                                        <option  value='0'>-2dB</option>
+                                        <option value='1'>0dB</option>
+                                        <option value='2'>+2dB</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH Format 2b Delta
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='deltaFPucchFormat2b' name='deltaFPucchFormat2b' class='lteinput'>
+                                        <option value='0'>-2dB</option>
+                                        <option value='1'>0dB</option>
+                                        <option value='2'>+2dB</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Msg3 Delta
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='deltaPreambleMsg3' name='deltaPreambleMsg3' type='text' class='lteinput' validate="IntRangeChk" min="-1" max="6"/>&nbsp;(-1 ~ 6)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; UE Timer Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RRC Connection Request Timer
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='t300' name='t300' class='lteinput'>
+                                        <option value='0'>ms100</option>
+                                        <option value='1'>ms200</option>
+                                        <option value='2'>ms300</option>
+                                        <option value='3'>ms400</option>
+                                        <option value='4'>ms600</option>
+                                        <option value='5'>ms1000</option>
+                                        <option value='6'>ms1500</option>
+                                        <option value='7'>ms2000</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RRC Connection Re-establishment Request Timer
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='t301' name='t301' class='lteinput'>
+                                        <option value='0'>ms100</option>
+                                        <option value='1'>ms200</option>
+                                        <option value='2'>ms300</option>
+                                        <option value='3'>ms400</option>
+                                        <option value='4'>ms600</option>
+                                        <option value='5'>ms1000</option>
+                                        <option value='6'>ms1500</option>
+                                        <option value='7'>ms2000</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Out-Of-Sync Indication Timer
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='t310' name='t310' class='lteinput'>
+                                        <option value='0'>ms0</option>
+                                        <option value='1'>ms50</option>
+                                        <option value='2'>ms100</option>
+                                        <option value='3'>ms200</option>
+                                        <option value='4'>ms500</option>
+                                        <option value='5'>ms1000</option>
+                                        <option value='6'>ms2000</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Maximum Out-Of-Sync Indications
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='n310' name='n310' class='lteinput'>
+                                        <option value='0'>N1</option>
+                                        <option value='1'>N2</option>
+                                        <option value='2'>N3</option>
+                                        <option value='3'>N4</option>
+                                        <option value='4'>N6</option>
+                                        <option value='5'>N8</option>
+                                        <option value='6'>N10</option>
+                                        <option value='7'>N20</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RRC Connection Re-establishment Timer
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='t311' name='t311' class='lteinput'>
+                                        <option value='0'>MS1000</option>
+                                        <option value='1'>MS3000</option>
+                                        <option value='2'>MS5000</option>
+                                        <option value='3'>MS10000</option>
+                                        <option value='4'>MS15000</option>
+                                        <option value='5'>MS20000</option>
+                                        <option value='6'>MS30000</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Maximum In-Sync Indications
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='n311' name='n311' class='lteinput'>
+                                        <option value='0'>N1</option>
+                                        <option value='1'>N2</option>
+                                        <option value='2'>N3</option>
+                                        <option value='3'>N4</option>
+                                        <option value='4'>N5</option>
+                                        <option value='5'>N6</option>
+                                        <option value='6'>N8</option>
+                                        <option value='7'>N10</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; Cell Information
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Additional Spectrum Emmision
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input type='text' name='additionalSpectrumEmission' id='additionalSpectrumEmission' class='lteinput' validate="IntRangeChk" min="1" max="32"/>&nbsp;(1 ~ 32)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Time Alignment Timer
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='timeAlignmentTimer' name='timeAlignmentTimer' class='lteinput'>
+                                        <option value='0'>SF500</option>
+                                        <option value='1'>SF750</option>
+                                        <option value='2'>SF1280</option>
+                                        <option value='3'>SF1920</option>
+                                        <option value='4'>SF2560</option>
+                                        <option value='5'>SF5120</option>
+                                        <option value='6'>SF10240</option>
+                                        <option value='7'>Infinity</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>            
+                    </div>
+                </td>
+            </tr>
+        </table>        
+    </div>          
+</body>
+</html>

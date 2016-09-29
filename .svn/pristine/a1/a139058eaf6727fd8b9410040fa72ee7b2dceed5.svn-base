@@ -1,0 +1,21 @@
+POWERWAVE-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+     MODULE-IDENTITY, enterprises                FROM SNMPv2-SMI;   
+
+powerwave MODULE-IDENTITY
+   LAST-UPDATED "200710182306Z"
+   ORGANIZATION "Powerwave"
+   CONTACT-INFO
+          "Ray Mansell
+           Powerwave Technologies Inc.
+           pwregistry@pwav.com"
+   DESCRIPTION
+          "The MIB module to describe Powerwave objects."
+   REVISION "200710182306Z"
+   DESCRIPTION
+          "Initial revision."
+   ::= { enterprises 9344 }
+
+END
+

@@ -1,0 +1,14 @@
+# Max number of Regions
+1
+# Number of Buckets and Pools
+2 2
+# Bucket Idx and Block Size
+0 128
+1 4096
+# Region Idx
+0
+# Bucket Idx  and Number of blocks
+0   3500
+1   3000 
+# Heap size
+4194304U

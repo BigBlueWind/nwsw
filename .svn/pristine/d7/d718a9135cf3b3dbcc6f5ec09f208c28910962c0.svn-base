@@ -1,0 +1,253 @@
+ -- @file    ENB-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+ENB-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, VersionString, DateAndTimeStamp, String32, EnodebId          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, IpAddress                          FROM SNMPv2-SMI;
+
+enbStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to see the admin and operational state of ENB"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 106 }
+
+enbStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EnbStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to see the admin and operational state of ENB
+            This is a SINGLE ROW Table"
+       ::= { enbStatus 1 }
+
+enbStatusEntry OBJECT-TYPE
+       SYNTAX      EnbStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry of enb status object."
+       INDEX  { enodebId }
+       ::= { enbStatusTable 1 }
+
+EnbStatusEntry ::= 
+   SEQUENCE {
+       index                         RowNumber,
+       enodebId                      EnodebId,
+       vendorName                    String32,
+       enodebIpAddress               IpAddress,
+       connectedToMME                INTEGER,
+       adminState                    INTEGER,
+       operationalState              INTEGER,
+       numOfUesConnected             Unsigned32,
+       aggregateDLThroughputKbps     Unsigned32,
+       aggregateULThroughputKbps     Unsigned32,
+       loadState                     INTEGER,
+       numActiveCriticalAlarms       Unsigned32,
+       numActiveMajorAlarms          Unsigned32,
+       uptime                        Unsigned32,
+       localTime                     DateAndTimeStamp,
+       localTimeOffsetFromUTC        OCTET STRING,
+       mibVersion                    VersionString,
+       dateAndTimeSource             INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { enbStatusEntry 1 }
+
+enodebId OBJECT-TYPE
+       SYNTAX      EnodebId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of the ENB for the Pico EMS
+             0 indicates that no value is set]"
+       ::= { enbStatusEntry 2 }
+
+vendorName OBJECT-TYPE
+       SYNTAX      String32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The name of the ENB manufacturer]"
+       ::= { enbStatusEntry 3 }
+
+enodebIpAddress OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IP Address used by ENB for communication at back-haul port towards MME, EMS, etc.]"
+       ::= { enbStatusEntry 4 }
+
+connectedToMME OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   notConnected(1),
+                   connected(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MME connection status]"
+       ::= { enbStatusEntry 5 }
+
+adminState OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   locked(1),
+                   unlocked(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Administration state showing whether eNB is configured to start service or not]"
+       ::= { enbStatusEntry 6 }
+
+operationalState OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   disabled(1),
+                   enabled(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Operational state showing whether eNB is currently being able to provide service or not]"
+       ::= { enbStatusEntry 7 }
+
+numOfUesConnected OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 1000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of connected UE(s) to which ENB is providing service]"
+       ::= { enbStatusEntry 8 }
+
+aggregateDLThroughputKbps OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 200000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total DL throughput at MAC-Layer in KiloBitsPerSecond over last 5 secs (ueThroughtputTimerInSecs)]"
+       ::= { enbStatusEntry 9 }
+
+aggregateULThroughputKbps OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 100000 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total UL throughput at GTP in Kilo Bits Per Second over last 5 secs (ueThroughtputTimerInSecs)]"
+       ::= { enbStatusEntry 10 }
+
+loadState OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   lowLoad(1),
+                   normalLoad(2),
+                   overloaded(3)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Load condition experienced by the ENB at present.
+             lowLoad indicates that traffic handled by ENB is between (0 .. enbLoadNormalMbps)
+             normalLoad indicates that traffic handled by ENB is between (enbLoadNormalMbps .. enbLoadHighMbps).
+             overload means ENB has crossed the enbLoadHighMbps. High number of errors are likely to result, QoS is not guaranteed.]"
+       ::= { enbStatusEntry 11 }
+
+numActiveCriticalAlarms OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 100 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The total number of CRITICAL alarms that are  currently active at the ENB]"
+       ::= { enbStatusEntry 12 }
+
+numActiveMajorAlarms OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 100 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The total number of MAJOR alarms that are  currently active at the ENB]"
+       ::= { enbStatusEntry 13 }
+
+uptime OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Gives the time since ENB has been running in seconds]"
+       ::= { enbStatusEntry 14 }
+
+localTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Current local time at ENB (YYYYMMDDHHNNSSTTT format)]"
+       ::= { enbStatusEntry 15 }
+
+localTimeOffsetFromUTC OBJECT-TYPE
+       SYNTAX      OCTET STRING
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ENB time offset from UTC. Format: +_hh:mm
+             Example: '+05:30'. This refers to a location that is 5 hours and 30 minutes ahead of UTC]"
+       ::= { enbStatusEntry 16 }
+
+mibVersion OBJECT-TYPE
+       SYNTAX      VersionString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Identifies the currently supported MIB version at the ENB]"
+       ::= { enbStatusEntry 17 }
+
+dateAndTimeSource OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   noSourceAvailable(1),
+                   gps(2),
+                   ntp(3),
+                   configured(4),
+                   other(5)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Identifies the source from which ENB has obtained its time information]"
+       ::= { enbStatusEntry 18 }
+
+END

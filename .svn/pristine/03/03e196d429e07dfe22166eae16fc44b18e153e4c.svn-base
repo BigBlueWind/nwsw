@@ -1,0 +1,129 @@
+ -- @file    MAC-UPLANE-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+MAC-UPLANE-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+macUplaneCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the statistics of MAC UPLANE counters."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 133 }
+
+macUplaneCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF MacUplaneCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the statistics of MAC UPLANE counters.
+            This is a SINGLE ROW Table"
+       ::= { macUplaneCounters 1 }
+
+macUplaneCountersEntry OBJECT-TYPE
+       SYNTAX      MacUplaneCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains MAC UPLANE counter objects."
+       INDEX  { index }
+       ::= { macUplaneCountersTable 1 }
+
+MacUplaneCountersEntry ::= 
+   SEQUENCE {
+       index                  RowNumber,
+       numOfSDUTxRlcMacIf     Counter32,
+       numOfSDURxRlcMacIf     Counter32,
+       numSDUDropRlcMacIf     Counter32,
+       numOfPduTxL2L1If       Counter32,
+       numOfPduRxL2L1If       Counter32,
+       numPduDropL2L1If       Counter32,
+       lastCollectedAt        DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { macUplaneCountersEntry 1 }
+
+numOfSDUTxRlcMacIf OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Num Of PDUs transmitted to RLC]"
+       ::= { macUplaneCountersEntry 2 }
+
+numOfSDURxRlcMacIf OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Num Of SDUs received to MAC from RLC ]"
+       ::= { macUplaneCountersEntry 3 }
+
+numSDUDropRlcMacIf OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Num of SDU received from RLC and dropped by MAC]"
+       ::= { macUplaneCountersEntry 4 }
+
+numOfPduTxL2L1If OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Num Of TBs transmitted to L2L1If]"
+       ::= { macUplaneCountersEntry 5 }
+
+numOfPduRxL2L1If OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Num Of TBs received from L2L1If ]"
+       ::= { macUplaneCountersEntry 6 }
+
+numPduDropL2L1If OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Num of PDU dropped at MAC after receiving from PHY]"
+       ::= { macUplaneCountersEntry 7 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { macUplaneCountersEntry 8 }
+
+END

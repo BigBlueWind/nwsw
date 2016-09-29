@@ -1,0 +1,251 @@
+ -- @file    EUTRA-NEIGH-CELL-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+EUTRA-NEIGH-CELL-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, Mcc, Mnc                          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI
+       TruthValue                                        FROM SNMPv2-TC;
+
+eutraNeighCellConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Neighbor EUTRA cell information"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 61 }
+
+eutraNeighCellConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EutraNeighCellConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Neighbor EUTRA cell information
+            This is a MULTI ROW Table"
+       ::= { eutraNeighCellConfig 1 }
+
+eutraNeighCellConfigEntry OBJECT-TYPE
+       SYNTAX      EutraNeighCellConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to eutraNeighCellConfig"
+       INDEX  { neibourIndex }
+       ::= { eutraNeighCellConfigTable 1 }
+
+EutraNeighCellConfigEntry ::= 
+   SEQUENCE {
+       neibourIndex                      RowNumber,
+       isUsed                            TruthValue,
+       neighEutraEnbId                   Unsigned32,
+       neighEutraCellId                  Unsigned32,
+       neighEutraPhyCellId               Unsigned32,
+       neighEutraPlmnMcc                 Mcc,
+       neighEutraPlmnMnc                 Mnc,
+       neighEutraTac                     Unsigned32,
+       neighCellMeasBandwidth            INTEGER,
+       cellIndividualOffset              INTEGER,
+       intraFreqNeighCellQOffsetCell     INTEGER
+   }
+
+neibourIndex OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { eutraNeighCellConfigEntry 1 }
+
+isUsed OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates if the this row of the table is used/valid or not. It this is set to FALSE, the neighbor cell is treated as non existing.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { false }
+       ::= { eutraNeighCellConfigEntry 2 }
+
+neighEutraEnbId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 1048575 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Identity of eNB controlling the neighboring cell. It is 20 bit quantity. The 28-bit Global Cell Identity used in HO preparation message is created from neighEutraEnbId + neighEutraCellId.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { eutraNeighCellConfigEntry 3 }
+
+neighEutraCellId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 255 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Cell Identity of the neighboring cell. It is a 8 bit qusntity. The 28-bit Global Cell Identity used in HO preparation message is created from neighEutraEnbId + neighEutraCellId.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { eutraNeighCellConfigEntry 4 }
+
+neighEutraPhyCellId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 503 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Physical Cell-Identity of neighbor cell. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { eutraNeighCellConfigEntry 5 }
+
+neighEutraPlmnMcc OBJECT-TYPE
+       SYNTAX      Mcc
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Mobile country code (3 digits)  of the Primary PLMN in the neighbor cell]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "000" }
+       ::= { eutraNeighCellConfigEntry 6 }
+
+neighEutraPlmnMnc OBJECT-TYPE
+       SYNTAX      Mnc
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Mobile network code of the Primary PLMN in the neighbor cell. It is 2 or 3 digits]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "00" }
+       ::= { eutraNeighCellConfigEntry 7 }
+
+neighEutraTac OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Tracking Area Code of the Neighbor cell]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { eutraNeighCellConfigEntry 8 }
+
+neighCellMeasBandwidth OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-5MHz(0),
+                   e-10MHz(1),
+                   e-20MHz(2),
+                   sameAsOwnCell(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum allowed measurement bandwidth ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { sameAsOwnCell }
+       ::= { eutraNeighCellConfigEntry 9 }
+
+cellIndividualOffset OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   dBminus24(0),
+                   dBminus22(1),
+                   dBminus20(2),
+                   dBminus18(3),
+                   dBminus16(4),
+                   dBminus14(5),
+                   dBminus12(6),
+                   dBminus10(7),
+                   dBminus8(8),
+                   dBminus6(9),
+                   dBminus5(10),
+                   dBminus4(11),
+                   dBminus3(12),
+                   dBminus2(13),
+                   dBminus1(14),
+                   dB0(15),
+                   dB1(16),
+                   dB2(17),
+                   dB3(18),
+                   dB4(19),
+                   dB5(20),
+                   dB6(21),
+                   dB8(22),
+                   dB10(23),
+                   dB12(24),
+                   dB14(25),
+                   dB16(26),
+                   dB18(27),
+                   dB20(28),
+                   dB22(29),
+                   dB24(30)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter indicates a cell specific offset to be applied when evaluating candidates when evaluating triggering conditions for measurement reporting. The value in dB. Value dBminus24 corresponds to -24 dB, dBminus22 corresponds to -22 dB and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { dB0 }
+       ::= { eutraNeighCellConfigEntry 10 }
+
+intraFreqNeighCellQOffsetCell OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   dBminus24(0),
+                   dBminus22(1),
+                   dBminus20(2),
+                   dBminus18(3),
+                   dBminus16(4),
+                   dBminus14(5),
+                   dBminus12(6),
+                   dBminus10(7),
+                   dBminus8(8),
+                   dBminus6(9),
+                   dBminus5(10),
+                   dBminus4(11),
+                   dBminus3(12),
+                   dBminus2(13),
+                   dBminus1(14),
+                   dB0(15),
+                   dB1(16),
+                   dB2(17),
+                   dB3(18),
+                   dB4(19),
+                   dB5(20),
+                   dB6(21),
+                   dB8(22),
+                   dB10(23),
+                   dB12(24),
+                   dB14(25),
+                   dB16(26),
+                   dB18(27),
+                   dB20(28),
+                   dB22(29),
+                   dB24(30)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The parameter is used to indicate a cell specific offset to be applied when evaluating candidates for cell re-selection. The value in dB. Value dBminus24 corresponds to -24 dB, dBminus22 corresponds to -22 dB and so on]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { dB0 }
+       ::= { eutraNeighCellConfigEntry 11 }
+
+END

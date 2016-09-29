@@ -1,0 +1,109 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+       
+       
+    </style>
+   <script type='text/javascript' src='../script/lte_set_get.js'></script>
+   <script type='text/javascript' src='../script/jquery.js'></script>
+     <script language="javascript" type="text/javascript">
+         $(document).ready(function() {
+         var fn = function(e) {
+             return DisableRefresh(e);
+         }
+         document.onkeydown = fn;
+             $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+         });
+       </script>     
+</head>
+<body>
+<div style="margin-left:10px;margin-top:20px" >
+    <table width='850px'>
+        <tr>
+            <td style="color: Navy" valign="middle">
+                <h3>Monitor (Status/Performance)</h3>
+            </td>
+        </tr>
+    </table>
+       <table width='850px' class='tblBorder'; style="height:500px;background-color: #FAF9F3;margin-top:15px" cellspacing='0' cellpadding='2' border='0'>
+            <tr>
+               <td align="left" valign="top" height='440px'>
+                   <br />
+                   <img src='../image/monitor.gif' style="margin-left: 10px;" />
+               </td>
+               <td width="100%" valign="top" style="font-size: smaller; font-family: Arial; font-style: normal;
+                   font-variant: inherit; font-variant: normal; height: 440px">
+                   <p style="margin-left: 20px; margin-right: 20px; margin-top: 20px; margin-bottom: 20px;
+                       text-align: justify;">
+                       Monitoring is primarily responsible for retrieving the present status of various
+                       resources of eNodeB or of the entire eNodeB system. Performance counters are also
+                       part of the monitoring objects which can be fetched from eNodeB at periodic intervals
+                       as set by the operator. Various eNodeB resources (e.g. processes, alarms, etc.)
+                       or commands (e.g. Download, Upload, etc.) can be queried for their present status.<br />
+                       <br />
+                       After the operator sets up the periodic refresh rate, the data is pulled from eNodeB
+                       for the status or counter data till the monitoring resource web page is open. Alarm
+                       severity level can be specified as filtering criteria for alarm monitoring. Facility
+                       is provided for the operator to save the data on the PC as flat files for future
+                       analysis.
+                       <br />
+                       <br />
+                       <br />
+                       <br />
+                       Monitoring of following is supported.
+                   </p>
+                   <table width="100%">
+                       <tr>
+                           <td style="font-size: smaller; font-family: Arial; font-style: normal; font-variant: inherit;
+                               font-variant: normal;vertical-align:text-top">
+                               <p style="margin-left: 20px; text-align: justify;">
+                                   - Status of eNodeB<br />
+                                   - Status of eNodeB Modules<br />
+                                   - Status of File Download/Upload<br />
+                                   - Status of Software Activation<br />
+                                   - Status of Currently Installed Software<br />
+                                   - Status of eNodeB Hardware<br />
+                                   - Status of Radio Head<br />
+                                   - Status of Trace<br />
+                                   - History of File Events<br />
+                                   - Status of Active UEs<br />
+                                   - History of UE Events<br />
+                                   - Status of Active RAB<br />
+                                   - History of RAB - Status of Performance Log File<br />
+                                   - Status of GPS<br />
+                                   - Status of eNodeB Device LEDs<br />
+                                   <br />
+                               </p>
+                           </td>
+                           <td style="font-size: smaller; font-family: Arial; font-style: normal; font-variant: inherit;
+                               font-variant: normal;vertical-align:text-top">
+                               <p style="margin-left: 20px; text-align: justify;">
+                                   - Status of Module Log File<br />
+                                   - Status of Active Alarms<br />
+                                   - History of Alarms<br />
+                                   - Status of Location<br />
+                                   - MAC General/User Plane Counters<br />
+                                   - RLC General Counters<br />
+                                   - PDCP General/User Plane Counters<br />
+                                   - GTP General Counters<br />
+                                   - SCTP General Counters<br />
+                                   - RRC General/Cell Counters<br />
+                                   - RRM General Counters<br />
+                                   - S1AP General/Peer Node Counters<br />                                   
+                                   - ETHERNET Counters<br />                                   
+                                   - IP Counters<br />   
+                                   - Cell Status<br />                                   
+                                   - L2 Counters<br />
+                                   - Counter Collection Status<br />                                  
+                               </p>
+                           </td>
+                       </tr>
+                   </table>
+               </td>
+           </tr>
+    </table>
+</div>
+   
+</body>
+</html>

@@ -1,0 +1,457 @@
+ -- @file    QOS-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:51 PM
+ --
+
+QOS-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, String16, ProfileId                          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI
+       TruthValue                                        FROM SNMPv2-TC;
+
+qosConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "QoS Profile Configuration"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 59 }
+
+qosConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF QosConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "QoS Profile Configuration
+            This is a SINGLE ROW Table"
+       ::= { qosConfig 1 }
+
+qosConfigEntry OBJECT-TYPE
+       SYNTAX      QosConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains list of qos config profile objects."
+       INDEX  { qosProfileName }
+       ::= { qosConfigTable 1 }
+
+QosConfigEntry ::= 
+   SEQUENCE {
+       qosProfileId              ProfileId,
+       qosProfileName            String16,
+       qci                       Unsigned32,
+       rlcMode                   INTEGER,
+       amRlcTPollRetransmit      INTEGER,
+       amRlcPollPDU              INTEGER,
+       amRlcPollByte             INTEGER,
+       amRlcMaxRetxThreshold     INTEGER,
+       amRlcTReordering          INTEGER,
+       amRlcTStatusProhibit      INTEGER,
+       discardTimer              INTEGER,
+       statusReportRequired      TruthValue,
+       drbPriority               Unsigned32,
+       drbPrioritisedBitRate     INTEGER,
+       drbBucketSizeDuration     INTEGER,
+       logicalChannelGroup       Unsigned32
+   }
+
+qosProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { qosConfigEntry 1 }
+
+qosProfileName OBJECT-TYPE
+       SYNTAX      String16
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             QoS Profile name]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "Default" }
+       ::= { qosConfigEntry 2 }
+
+qci OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 5 .. 9 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Quality Of Server Class Identifier as given in 23.203 Table 6.1.7: Standardized QCI characteristics]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 5 }
+       ::= { qosConfigEntry 3 }
+
+rlcMode OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   am(0),
+                   um(1)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RLC Ack or UnAck mode.
+             The rest of the parameters are applicable for rlcAm only.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { um }
+       ::= { qosConfigEntry 4 }
+
+amRlcTPollRetransmit OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms5(0),
+                   ms10(1),
+                   ms15(2),
+                   ms20(3),
+                   ms25(4),
+                   ms30(5),
+                   ms35(6),
+                   ms40(7),
+                   ms45(8),
+                   ms50(9),
+                   ms55(10),
+                   ms60(11),
+                   ms65(12),
+                   ms70(13),
+                   ms75(14),
+                   ms80(15),
+                   ms85(16),
+                   ms90(17),
+                   ms95(18),
+                   ms100(19),
+                   ms105(20),
+                   ms110(21),
+                   ms115(22),
+                   ms120(23),
+                   ms125(24),
+                   ms130(25),
+                   ms135(26),
+                   ms140(27),
+                   ms145(28),
+                   ms150(29),
+                   ms155(30),
+                   ms160(31),
+                   ms165(32),
+                   ms170(33),
+                   ms175(34),
+                   ms180(35),
+                   ms185(36),
+                   ms190(37),
+                   ms195(38),
+                   ms200(39),
+                   ms205(40),
+                   ms210(41),
+                   ms215(42),
+                   ms220(43),
+                   ms225(44),
+                   ms230(45),
+                   ms235(46),
+                   ms240(47),
+                   ms245(48),
+                   ms250(49),
+                   ms300(50),
+                   ms350(51),
+                   ms400(52),
+                   ms450(53),
+                   ms500(54)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Poll retransmit timer for RLC AM in in milliseconds. Value ms5 means 5ms, ms10 means 10ms and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms80 }
+       ::= { qosConfigEntry 5 }
+
+amRlcPollPDU OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   p4(0),
+                   p8(1),
+                   p16(2),
+                   p32(3),
+                   p64(4),
+                   p128(5),
+                   p256(6),
+                   pInfinity(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter is used by the transmitting side of AM RLC entity to trigger a poll for every pollPDU PDUs . Value p4 corresponds to 4 PDUs, p8 to 8 PDUs and so on. pInfinity corresponds to an infinite number of PDUs.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { p4 }
+       ::= { qosConfigEntry 6 }
+
+amRlcPollByte OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   kB25(0),
+                   kB50(1),
+                   kB75(2),
+                   kB100(3),
+                   kB125(4),
+                   kB250(5),
+                   kB375(6),
+                   kB500(7),
+                   kB750(8),
+                   kB1000(9),
+                   kB1250(10),
+                   kB1500(11),
+                   kB2000(12),
+                   kB3000(13),
+                   kBinfinity(14)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter is used by the transmitting side of each AM RLC entity to trigger a poll for every pollByte bytes. Value kB25 corresponds to 25 kBytes, kB50 to 50 kBytes and so on. kBInfinity corresponds to an infinite amount of kBytes]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { kB125 }
+       ::= { qosConfigEntry 7 }
+
+amRlcMaxRetxThreshold OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   t1(0),
+                   t2(1),
+                   t3(2),
+                   t4(3),
+                   t6(4),
+                   t8(5),
+                   t16(6),
+                   t32(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter is used by the transmitting side of each AM RLC entity to limit the number of retransmissions of an AMD PDU. Value t1 corresponds to 1 retransmission, t2 to 2 retransmissions and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { t4 }
+       ::= { qosConfigEntry 8 }
+
+amRlcTReordering OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms0(0),
+                   ms5(1),
+                   ms10(2),
+                   ms15(3),
+                   ms20(4),
+                   ms25(5),
+                   ms30(6),
+                   ms35(7),
+                   ms40(8),
+                   ms45(9),
+                   ms50(10),
+                   ms55(11),
+                   ms60(12),
+                   ms65(13),
+                   ms70(14),
+                   ms75(15),
+                   ms80(16),
+                   ms85(17),
+                   ms90(18),
+                   ms95(19),
+                   ms100(20),
+                   ms110(21),
+                   ms120(22),
+                   ms130(23),
+                   ms140(24),
+                   ms150(25),
+                   ms160(26),
+                   ms170(27),
+                   ms180(28),
+                   ms190(29),
+                   ms200(30)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This timer is used by the receiving side of an AM RLC entity in order to detect loss of RLC PDUs at lower layer. Value ms0 means 0ms, ms5 means 5ms and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms80 }
+       ::= { qosConfigEntry 9 }
+
+amRlcTStatusProhibit OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms0(0),
+                   ms5(1),
+                   ms10(2),
+                   ms15(3),
+                   ms20(4),
+                   ms25(5),
+                   ms30(6),
+                   ms35(7),
+                   ms40(8),
+                   ms45(9),
+                   ms50(10),
+                   ms55(11),
+                   ms60(12),
+                   ms65(13),
+                   ms70(14),
+                   ms75(15),
+                   ms80(16),
+                   ms85(17),
+                   ms90(18),
+                   ms95(19),
+                   ms100(20),
+                   ms105(21),
+                   ms110(22),
+                   ms115(23),
+                   ms120(24),
+                   ms125(25),
+                   ms130(26),
+                   ms135(27),
+                   ms140(28),
+                   ms145(29),
+                   ms150(30),
+                   ms155(31),
+                   ms160(32),
+                   ms165(33),
+                   ms170(34),
+                   ms175(35),
+                   ms180(36),
+                   ms185(37),
+                   ms190(38),
+                   ms195(39),
+                   ms200(40),
+                   ms205(41),
+                   ms210(42),
+                   ms215(43),
+                   ms220(44),
+                   ms225(45),
+                   ms230(46),
+                   ms235(47),
+                   ms240(48),
+                   ms245(49),
+                   ms250(50),
+                   ms300(51),
+                   ms350(52),
+                   ms400(53),
+                   ms450(54),
+                   ms500(55)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This timer is used by the receiving side of an AM RLC entity in order to prohibit transmission of a STATUS PDU. Value in milliseconds. Value ms0 means 0ms, ms5 means 5ms and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms60 }
+       ::= { qosConfigEntry 10 }
+
+discardTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms50(0),
+                   ms100(1),
+                   ms150(2),
+                   ms300(3),
+                   ms500(4),
+                   ms750(5),
+                   ms1500(6),
+                   infinity(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PDCP Discard Timer in millisecons. When the discardTimer expires for a PDCP SDU, the UE discards the PDCP SDU along with the corresponding PDCP PDU. Value ms50 means 50 ms, ms100 means 100 ms and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { infinity }
+       ::= { qosConfigEntry 11 }
+
+statusReportRequired OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates whether or not the UE shall send a PDCP Status Report upon re-establishment of the PDCP entity ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { true }
+       ::= { qosConfigEntry 12 }
+
+drbPriority OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 16 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Logical Channel Priority of the DRB.
+             RRC: LogicalChannelConfig.
+             TODO: Test with value 3 ( Manu suggested ) 
+             Internally CCPU takes the value as ( 6-1 )]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 4 }
+       ::= { qosConfigEntry 13 }
+
+drbPrioritisedBitRate OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   kBps0(0),
+                   kBps8(1),
+                   kBps16(2),
+                   kBps32(3),
+                   kBps64(4),
+                   kBps128(5),
+                   kBps256(6),
+                   infinity(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PBR for DRB.
+             Value in kilobytes/second.
+             SRBs shall be set to infinity.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { kBps256 }
+       ::= { qosConfigEntry 14 }
+
+drbBucketSizeDuration OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms50(0),
+                   ms100(1),
+                   ms150(2),
+                   ms300(3),
+                   ms500(4),
+                   ms1000(5),
+                   spare2(6),
+                   spare1(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms1000 }
+       ::= { qosConfigEntry 15 }
+
+logicalChannelGroup OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 3 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Logical channel groupping need for Mapping of logical channel to logical channel group for BSR reporting.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { qosConfigEntry 16 }
+
+END

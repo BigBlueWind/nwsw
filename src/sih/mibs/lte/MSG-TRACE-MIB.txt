@@ -1,0 +1,92 @@
+ -- @file    MSG-TRACE-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:54 PM
+ --
+
+MSG-TRACE-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, MessageId                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI;
+
+msgTrace MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "A list of message trace pre-configuration objects."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 204 }
+
+msgTraceTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF MsgTraceEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "A list of message trace pre-configuration objects.
+            This is a MULTI ROW Table"
+       ::= { msgTrace 1 }
+
+msgTraceEntry OBJECT-TYPE
+       SYNTAX      MsgTraceEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to message trace            configuration."
+       INDEX  { msgId }
+       ::= { msgTraceTable 1 }
+
+MsgTraceEntry ::= 
+   SEQUENCE {
+       msgId                 MessageId,
+       msgTraceLevel         INTEGER,
+       msgTraceDirection     INTEGER
+   }
+
+msgId OBJECT-TYPE
+       SYNTAX      MessageId
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ]
+           [Change_Condition : RO ]"
+       ::= { msgTraceEntry 1 }
+
+msgTraceLevel OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   disable(1),
+                   msgIdOnly(2),
+                   msgWithParams(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ]
+           [Change_Condition : RW ]"
+       DEFVAL { disable }
+       ::= { msgTraceEntry 2 }
+
+msgTraceDirection OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   msgIn(1),
+                   msgOut(2),
+                   msgInBothDirec(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ]
+           [Change_Condition : RW ]"
+       DEFVAL { msgInBothDirec }
+       ::= { msgTraceEntry 3 }
+
+END

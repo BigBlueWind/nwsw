@@ -1,0 +1,24 @@
+#!/bin/csh
+#
+# update all files
+#
+set PRROOT=/clearcase/tds/core_prd/crnt/voip/tucl/src 
+set CMROOT=/clearcase/tds/core_prd/crnt/cm
+
+if($#argv == 1) then
+  if($1 == "-n") then
+    set CMROOT=/clearcase/tds/core_prd/next/cm
+    set PRROOT=/clearcase/tds/core_prd/next/voip/tucl/src
+  endif
+
+  if($1 == "-view") then
+    set CMROOT=/vobs/core_prd/cm
+    set PRROOT=/vobs/core_prd/voip/tucl/src
+  endif
+endif
+
+cp $PRROOT/acc/* . 
+cp $PRROOT/sample/* .
+cp $PRROOT/??/* . 
+cp $PRROOT/build/* . 
+chmod 755 *

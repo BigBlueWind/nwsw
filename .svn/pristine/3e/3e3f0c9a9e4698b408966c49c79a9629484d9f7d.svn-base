@@ -1,0 +1,28 @@
+# Config for CodeSourcery G++ Lite ARM-EABI (Linux OS)
+#
+# Copyright 2008,2009,2010 by Mindspeed Technologies
+# All rights reserved
+#
+
+#PREFIX=/root/Mindspeed/crosscompiler/ARM/arm-2010.09/bin/arm-none-linux-gnueabi-
+PREFIX=arm-none-linux-gnueabi-
+
+ARCH = cortex-a9
+
+#
+# Tool definitions
+#
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp -c
+LD = $(PREFIX)gcc
+AR = $(PREFIX)ar
+
+#
+# Tool settings
+#
+DEFS = -DLTE -DC4KEVM -DUSE_LINUX -DSTUB -DFDX_RT -DARM_OPTIMIZE
+OPT = -O3
+CFLAGS = -mcpu=$(ARCH) -Wall $(DEFS) $(OPT)
+ASFLAGS = $(DEFS) $(INC) -Wa,-mcpu=$(ARCH),-ac
+LDFLAGS = -Wl
+ARFLAGS = rcs

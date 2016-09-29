@@ -1,0 +1,93 @@
+
+
+include T4KDev/LTERT/buildcfg
+
+SCTPBUILDDIR = $(SYSCORESCTPDIR)/$(BUILDDIR)
+SCTPLIB := $(SCTPBUILDDIR)/sctp.a
+
+VPATH := $(SYSCORESCTPDIR)
+
+# C sources
+C_SRCS += \
+adaptation.c \
+auxiliary.c \
+chunkHandler.c \
+distribution.c \
+errorhandler.c \
+flowcontrol.c \
+globals.c \
+md5.c \
+pathmanagement.c \
+rbundling.c \
+recvctrl.c \
+reltransfer.c \
+sbundling.c \
+SCTP-control.c \
+streamengine.c \
+timer_list.c \
+garray.c \
+glist.c \
+gqsort.c \
+gmem.c \
+gtree.c
+
+# Object files
+C_OBJS = $(patsubst %.c,$(SCTPBUILDDIR)/%.o,$(notdir $(C_SRCS)))
+
+INC := -I"$(SYSCORESCTPDIR)" \
+       -I"$(SYSCORESERVICESDIR)" \
+	   -I"$(SYSCORENETWORKDIR)" \
+	   -I"$(SYSCOREDRIVERSDIR)" \
+ 	   -I"$(OS4GMXINCDIR)" \
+	   -I"$(OS4GMXARMINCDIR)"
+
+OBJS = $(C_OBJS) $(S_OBJS)
+
+CFLAGS = $(COREBUILDCFG) $(INC)
+
+.PHONY : all
+all : $(PCF) $(SCTPLIB)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(SCTPBUILDDIR)/sctp.dep
+CLEANDEP = clean_dep
+else
+-include $(SCTPBUILDDIR)/sctp.dep
+endif
+
+$(SCTPLIB) : $(SCTPBUILDDIR) $(CLEANDEP) $(OBJS)
+	@echo Creating $(SCTPLIB)
+	@$(AR) $(AR_FLAGS) $(SCTPLIB) $(OBJS)
+
+$(SCTPBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) -o"$@" "$<"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(SCTPBUILDDIR)/%.o : %.s
+	@echo $<
+	@$(AS) $(AS_FLAGS) -o"$@" "$<"
+
+$(SCTPBUILDDIR):
+	@$(MKDIR) $(SCTPBUILDDIR)
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean:
+	@@$(RM) $(OBJS)
+
+.PHONY : xclean
+xclean: clean
+	@$(RM) $(SCTPLIB)
+
+

@@ -1,0 +1,384 @@
+ -- @file    IP-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+IP-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, DateAndTimeStamp                                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Counter32          FROM SNMPv2-SMI
+       InetVersion                                                  FROM INET-ADDRESS-MIB;
+
+ipCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "The table containing system wide, IP version specific traffic statistics."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 135 }
+
+ipCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF IpCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "The table containing system wide, IP version specific traffic statistics.
+            This is a MULTI ROW Table"
+       ::= { ipCounters 1 }
+
+ipCountersEntry OBJECT-TYPE
+       SYNTAX      IpCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "A statistics entry containing system-wide objects for a particular IP version."
+       INDEX  { ipSystemStatsIPVersion }
+       ::= { ipCountersTable 1 }
+
+IpCountersEntry ::= 
+   SEQUENCE {
+       ipSystemStatsIPVersion             InetVersion,
+       ipSystemStatsInReceives            Counter32,
+       ipSystemStatsInOctets              Counter32,
+       ipSystemStatsInHdrErrors           Counter32,
+       ipSystemStatsInNoRoutes            Counter32,
+       ipSystemStatsInAddrErrors          Counter32,
+       ipSystemStatsInUnknownProtos       Counter32,
+       ipSystemStatsInTruncatedPkts       Counter32,
+       ipSystemStatsInForwDatagrams       Counter32,
+       ipSystemStatsReasmReqds            Counter32,
+       ipSystemStatsReasmOKs              Counter32,
+       ipSystemStatsReasmFails            Counter32,
+       ipSystemStatsInDiscards            Counter32,
+       ipSystemStatsInDelivers            Counter32,
+       ipSystemStatsOutRequests           Counter32,
+       ipSystemStatsOutNoRoutes           Counter32,
+       ipSystemStatsOutForwDatagrams      Counter32,
+       ipSystemStatsOutDiscards           Counter32,
+       ipSystemStatsOutFragReqds          Counter32,
+       ipSystemStatsOutFragOKs            Counter32,
+       ipSystemStatsOutFragFails          Counter32,
+       ipSystemStatsOutFragCreates        Counter32,
+       ipSystemStatsOutTransmits          Counter32,
+       ipSystemStatsOutOctets             Counter32,
+       ipSystemStatsInMcastPkts           Counter32,
+       ipSystemStatsInMcastOctets         Counter32,
+       ipSystemStatsOutMcastPkts          Counter32,
+       ipSystemStatsOutMcastOctets        Counter32,
+       ipSystemStatsInBcastPkts           Counter32,
+       ipSystemStatsOutBcastPkts          Counter32,
+       ipSystemStatsDiscontinuityTime     Unsigned32,
+       ipSystemStatsRefreshRate           Unsigned32,
+       lastCollectedAt                    DateAndTimeStamp
+   }
+
+ipSystemStatsIPVersion OBJECT-TYPE
+       SYNTAX      InetVersion
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The IP version of this row.]"
+       ::= { ipCountersEntry 1 }
+
+ipSystemStatsInReceives OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The total number of input IP datagrams received, including those received in error]"
+       ::= { ipCountersEntry 2 }
+
+ipSystemStatsInOctets OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The total number of octets received in input IP datagrams, including those received in error.]"
+       ::= { ipCountersEntry 3 }
+
+ipSystemStatsInHdrErrors OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of input IP datagrams discarded due to errors in their IP headers, including version number mismatch, other format errors, hop count exceeded, errors discovered in processing their IP options, etc.]"
+       ::= { ipCountersEntry 4 }
+
+ipSystemStatsInNoRoutes OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of input IP datagrams discarded because no route could be found to transmit them to their destination.]"
+       ::= { ipCountersEntry 5 }
+
+ipSystemStatsInAddrErrors OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of input IP datagrams discarded because the IP address in their IP header's destination field was not a valid address to be received at this entity. ]"
+       ::= { ipCountersEntry 6 }
+
+ipSystemStatsInUnknownProtos OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of locally-addressed IP datagrams received successfully but discarded because of an unknown or unsupported protocol.]"
+       ::= { ipCountersEntry 7 }
+
+ipSystemStatsInTruncatedPkts OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of input IP datagrams discarded because the datagram frame didn't carry enough data.]"
+       ::= { ipCountersEntry 8 }
+
+ipSystemStatsInForwDatagrams OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of input datagrams for which this entity was not their final IP destination and for which this entity attempted to find a route to forward them to that final destination.]"
+       ::= { ipCountersEntry 9 }
+
+ipSystemStatsReasmReqds OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of IP fragments received that needed to be reassembled at this interface.]"
+       ::= { ipCountersEntry 10 }
+
+ipSystemStatsReasmOKs OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of IP datagrams successfully reassembled.]"
+       ::= { ipCountersEntry 11 }
+
+ipSystemStatsReasmFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of failures detected by the IP re-assembly
+             algorithm.]"
+       ::= { ipCountersEntry 12 }
+
+ipSystemStatsInDiscards OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of input IP datagrams for which no problems were encountered to prevent their continued processing, but were discarded]"
+       ::= { ipCountersEntry 13 }
+
+ipSystemStatsInDelivers OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The total number of datagrams successfully delivered to IP user-protocols (including ICMP)]"
+       ::= { ipCountersEntry 14 }
+
+ipSystemStatsOutRequests OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The total number of IP datagrams that local IP user-
+             protocols (including ICMP) supplied to IP in requests for transmission.]"
+       ::= { ipCountersEntry 15 }
+
+ipSystemStatsOutNoRoutes OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of locally generated IP datagrams discarded because no route could be found to transmit them to their destination.]"
+       ::= { ipCountersEntry 16 }
+
+ipSystemStatsOutForwDatagrams OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of datagrams for which this entity was not their final IP destination and for which it was successful in finding a path to their final destination.]"
+       ::= { ipCountersEntry 17 }
+
+ipSystemStatsOutDiscards OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of output IP datagrams for which no problem was encountered to prevent their transmission to their destination, but were discarded (e.g., for lack of buffer space).]"
+       ::= { ipCountersEntry 18 }
+
+ipSystemStatsOutFragReqds OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of IP datagrams that would require fragmentation in order to be transmitted.]"
+       ::= { ipCountersEntry 19 }
+
+ipSystemStatsOutFragOKs OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of IP datagrams that have been successfully fragmented.]"
+       ::= { ipCountersEntry 20 }
+
+ipSystemStatsOutFragFails OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of IP datagrams that have been discarded because they needed to be fragmented but could not be.  This includes IPv4 packets that have the DF bit set and IPv6 packets that are being forwarded and exceed the outgoing link MTU.]"
+       ::= { ipCountersEntry 21 }
+
+ipSystemStatsOutFragCreates OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of output datagram fragments that have been generated as a result of IP fragmentation.]"
+       ::= { ipCountersEntry 22 }
+
+ipSystemStatsOutTransmits OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The total number of IP datagrams that this entity supplied to the lower layers for transmission. ]"
+       ::= { ipCountersEntry 23 }
+
+ipSystemStatsOutOctets OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The total number of octets in IP datagrams delivered to the lower layers for transmission.]"
+       ::= { ipCountersEntry 24 }
+
+ipSystemStatsInMcastPkts OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of IP multicast datagrams received.]"
+       ::= { ipCountersEntry 25 }
+
+ipSystemStatsInMcastOctets OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The total number of octets received in IP multicast
+             datagrams.]"
+       ::= { ipCountersEntry 26 }
+
+ipSystemStatsOutMcastPkts OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of IP multicast datagrams transmitted.]"
+       ::= { ipCountersEntry 27 }
+
+ipSystemStatsOutMcastOctets OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The total number of octets transmitted in IP multicast
+             datagrams.]"
+       ::= { ipCountersEntry 28 }
+
+ipSystemStatsInBcastPkts OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of IP broadcast datagrams received.]"
+       ::= { ipCountersEntry 29 }
+
+ipSystemStatsOutBcastPkts OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The number of IP broadcast datagrams transmitted.]"
+       ::= { ipCountersEntry 30 }
+
+ipSystemStatsDiscontinuityTime OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 4294967295 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The value of sysUpTime on the most recent occasion at which any one or more of this entry's counters suffered a discontinuity.]"
+       ::= { ipCountersEntry 31 }
+
+ipSystemStatsRefreshRate OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              The minimum reasonable polling interval for this entry.]"
+       ::= { ipCountersEntry 32 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { ipCountersEntry 33 }
+
+END

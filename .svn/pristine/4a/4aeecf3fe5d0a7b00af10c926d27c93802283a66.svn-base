@@ -1,0 +1,469 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';
+          
+          </style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        LteGet("eutraHoProfileConfig", null, ChkLock);
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }
+                }
+            });
+            if (change == 'true') {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true)
+                            msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                        }
+                    }
+                });
+                if (msg != "") {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                    alert(msg);
+                }
+                else {
+                    LteSet("eutraHoProfileConfig", $("#eutraHoProfileConfig"), $("#btnApply"), ChkLock);
+                }
+                $(':text, :password, select').each(function() {
+                    $(this).attr('disabled', false);
+                });
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#eutraHoProfileConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });
+
+
+function MapIdName(fieldName) {
+    switch (fieldName) {
+        case "hoProfileId": return "HO Profile ID";
+        case "a3Offset": return "HO Profile ID";
+        case "a5Threshold1": return "A5 Threshold1 RSRQ";
+        case "a5Threshold2": return "A5 Threshold2 RSRQ";
+        case "hysteresis": return "Hysteresis";
+        case "maxReportCells": return "Max Report Cells";
+    }
+}            
+         
+                
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > Handover Profile </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px;width:420px;height:615px">
+        <form name='eutraHoProfileConfig' id='eutraHoProfileConfig' action="">
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp Handover Profile Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class="conTblRowBg1">
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                HO Profile Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="hoProfileId" name="hoProfileId" type="text" class="lteinput" validate="IntRangeChk" min="1" max="1"/> (1 ~ 1)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               A3 Offset
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="a3Offset" name="a3Offset" type="text" class="lteinput" validate="IntRangeChk" min="-30" max="30"/> (-30 ~ 30)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>     
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Report on Leave
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select name="reportOnLeave" id="reportOnLeave" class="lteinput">
+                                    <option value="0">FALSE</option>
+                                    <option value="1">TRUE</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               A5 Threshold1 RSRQ
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="a5Threshold1" name="a5Threshold1" type="text" class="lteinput" validate="IntRangeChk" min="0" max="34"/> (0 ~ 34)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               A5 Threshold2 RSRQ
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="a5Threshold2" name="a5Threshold2" type="text" class="lteinput" validate="IntRangeChk" min="0" max="34"/> (0 ~ 34)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                          
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Hysteresis
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <input id="hysteresis" name="hysteresis" type="text" class="lteinput" validate="IntRangeChk" min="0" max="30"/> (0 ~ 30)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                        
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Time to Trigger
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap" >
+                                <select id="timeToTrigger" name="timeToTrigger" class="lteinput">
+                                <option value="0">ms0</option>
+                                <option value="1">ms40</option>
+                                <option value="2">ms64</option>
+                                <option value="3">ms80</option>
+                                <option value="4">ms100</option>
+                                <option value="5">ms128</option>
+                                <option value="6">ms160</option>
+                                <option value="7">ms256</option>
+                                <option value="8">ms320</option>
+                                <option value="9">ms480</option>
+                                <option value="10">ms512</option>
+                                <option value="11">ms640</option>
+                                <option value="12">ms1024</option>
+                                <option value="13">ms1280</option>
+                                <option value="14">ms2560</option>
+                                <option value="15">ms5120</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Trigger Quantity
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="triggerQuantity" name="triggerQuantity" class="lteinput">
+                                <option value="0">rsrp</option>
+                                <option value="1">rsrq</option>                                
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Report Quantity
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="reportQuantity" name="reportQuantity" class="lteinput">
+                                <option value="0">Same As Trigger Quantity</option>
+                                <option value="1">Both</option>                                
+                                </select>
+                            </td>                           
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Filter Coefficient RSRQ
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="filterCoefficientRsrq" name="filterCoefficientRsrq" class="lteinput">
+                                <option value="0">fc0</option>
+                                <option value="1">fc1</option>
+                                <option value="2">fc2</option>
+                                <option value="3">fc3</option>
+                                <option value="4">fc4</option>
+                                <option value="5">fc5</option>
+                                <option value="6">fc6</option>
+                                <option value="7">fc7</option>
+                                <option value="8">fc8</option>
+                                <option value="9">fc9</option>
+                                <option value="10">fc11</option>
+                                <option value="11">fc13</option> 
+                                <option value="12">fc15</option>
+                                <option value="13">fc17</option>
+                                <option value="14">fc19</option>                                                              
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                               Filter Coefficient RSRP
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="filterCoefficientRsrp" name="filterCoefficientRsrp" class="lteinput">
+                                <option value="0">fc0</option>
+                                <option value="1">fc1</option>
+                                <option value="2">fc2</option>
+                                <option value="3">fc3</option>
+                                <option value="4">fc4</option>
+                                <option value="5">fc5</option>
+                                <option value="6">fc6</option>
+                                <option value="7">fc7</option>
+                                <option value="8">fc8</option>
+                                <option value="9">fc9</option>
+                                <option value="10">fc11</option>
+                                <option value="11">fc13</option> 
+                                <option value="12">fc15</option>
+                                <option value="13">fc17</option>
+                                <option value="14">fc19</option>                                             
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Measurement Report Interval
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="reportInterval" name="reportInterval" class="lteinput">                                
+                                <option value="0">ms120</option>
+                                <option value="1">ms240</option>
+                                <option value="2">ms480</option>
+                                <option value="3">ms640</option>
+                                <option value="4">ms1024</option>
+                                <option value="5">ms2048</option>
+                                <option value="6">ms5120</option>
+                                <option value="7">ms10240</option>
+                                <option value="8">min1</option>
+                                <option value="9">min6</option>
+                                <option value="10">min12</option>
+                                <option value="11">min30</option> 
+                                <option value="12">min60</option>                                 
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Report Amount
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap" >
+                                <select id="reportAmount" name="reportAmount" class="lteinput">
+                                <option value="0">r1</option>
+                                <option value="1">r2</option>
+                                <option value="2">r4</option>
+                                <option value="3">r8</option> 
+                                <option value="4">r16</option>
+                                <option value="5">r32</option> 
+                                <option value="6">r64</option>
+                                <option value="7">Infinity</option>                                 
+                                </select>
+                            </td>                           
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Max Report Cells
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <input id="maxReportCells" name="maxReportCells" type="text" class="lteinput" validate="IntRangeChk" min="1" max="8"/> (1 ~ 8)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Supported Measurement Report Events
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>                            
+                            <td nowrap="nowrap">
+                            <select id="supportedEvents" name="supportedEvents" class="lteinput">
+                                <option value="0">A3</option>
+                                <option value="1">A5</option>
+                                <option value="2">A3A5</option>
+                            </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                                                     
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

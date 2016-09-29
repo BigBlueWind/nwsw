@@ -1,0 +1,100 @@
+# hi command file
+#
+# line syntax:
+#  name <text string>
+#  part <media part number> <text string>
+#  file<file name>
+#  options <options>
+#
+name TUCL
+options <NONE>
+part 1000158-02 Product Files (hi)
+file hi.mak
+file hi.h
+file hi.x
+file hi_bdy1.c
+file hi_bdy2.c
+file hi_bdy3.c
+file hi_err.h
+file hi_ex_ms.c
+file hi_ex_pt.c
+file hi_id.c
+file hi_ptmi.c
+file hi_ptui.c
+file hi_tst.c
+part 1000158-02 Common Files
+file envdep.h
+file envind.h
+file envopt.h
+file ssi.h
+file ssi.x
+file gen.h
+file gen.x
+file cm_gen.c
+file cm_gen.h
+file cm_gen.x
+file lhi.c
+file lhi.h
+file lhi.x
+file hit.c
+file hit.h
+file hit.x
+file sct.c
+file sct.h
+file sct.x
+file cm_tpt.c
+file cm_tpt.h
+file cm_tpt.x
+file cm_inet.c
+file cm_inet.h
+file cm_inet.x
+file cm_hash.c
+file cm_hash.h
+file cm_hash.x
+file cm_llist.c
+file cm_llist.h
+file cm_llist.x
+file cm5.h
+file cm5.x
+file cm_err.h
+file cm_bdy5.c
+file cm_lib.c
+file cm_lib.x
+file sht.c
+file sht.h
+file sht.x
+file ss_ptsp.c
+file sm_bdy1.c 
+file sm_ex_ms.c 
+part 1000158-02 Sample Files (acc)
+file hi_acc.c
+file hi_acc.h
+file hi_acc.x
+file hi_acc1.c
+file hi_acc2.c
+file hi_accen.h
+file l5_ex_ms.c
+file l5_ptli.c
+file layer5.c
+file hi_accsh.c
+file envopt.acc
+file client.cnf
+file server.cnf
+file serverCA.cnf
+file root.cnf
+part 1000158-02 Sample Files (sm)
+file smhi_err.h 
+file smhibdy1.c 
+file smhiexms.c 
+file smhiptmi.c 
+part 1000158-02 Documentation Files
+file 1225158.21
+file 1091158.21
+file 1092158.21
+file 1093158.21
+file 1094158.21
+file 1095158.21
+file 1100031.110
+file 1100036.16
+file 1111010.16
+file 1111001.17

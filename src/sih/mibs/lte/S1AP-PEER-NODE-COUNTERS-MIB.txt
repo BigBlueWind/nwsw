@@ -1,0 +1,849 @@
+ -- @file    S1AP-PEER-NODE-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+S1AP-PEER-NODE-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32, Integer32          FROM SNMPv2-SMI;
+
+s1apPeerNodeCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the statistics of S1AP-PEER-NODE counters."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 131 }
+
+s1apPeerNodeCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF S1apPeerNodeCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the statistics of S1AP-PEER-NODE counters.
+            This is a SINGLE ROW Table"
+       ::= { s1apPeerNodeCounters 1 }
+
+s1apPeerNodeCountersEntry OBJECT-TYPE
+       SYNTAX      S1apPeerNodeCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains S1AP-PEER-NODE counter objects."
+       INDEX  { index }
+       ::= { s1apPeerNodeCountersTable 1 }
+
+S1apPeerNodeCountersEntry ::= 
+   SEQUENCE {
+       index                 RowNumber,
+       peerId                Unsigned32,
+       nmbUnexpEvt           Integer32,
+       nmbTRafExp            Integer32,
+       eRABSetupReq          Integer32,
+       eRABSetupResp         Integer32,
+       eRABModifyRequest     Integer32,
+       eRABModResp           Integer32,
+       eRABRelCmd            Integer32,
+       eRABRelComp           Integer32,
+       eRABRelReq            Integer32,
+       initCxtSetup          Integer32,
+       initCxtSetupResp      Integer32,
+       initCxtSetupFail      Integer32,
+       ueCxtRelReq           Integer32,
+       ueCxtRelCmd           Integer32,
+       ueCxtRelComp          Integer32,
+       ueCxtModReq           Integer32,
+       ueCxtModResp          Integer32,
+       ueCxtModFail          Integer32,
+       initUEMsg             Integer32,
+       dwnNASTpt             Integer32,
+       upNASTpt              Integer32,
+       nonDelIndNAS          Integer32,
+       errIndtx              Integer32,
+       errIndrx              Integer32,
+       noDatatx              Integer32,
+       noDatarx              Integer32,
+       resettx               Integer32,
+       resetrx               Integer32,
+       resetAcktx            Integer32,
+       resetAckrx            Integer32,
+       setupReq              Integer32,
+       setupResp             Integer32,
+       setupFail             Integer32,
+       paging                Integer32,
+       handReqd              Integer32,
+       handCmd               Integer32,
+       handPrepFail          Integer32,
+       handReq               Integer32,
+       handReqAck            Integer32,
+       handFail              Integer32,
+       handNtfy              Integer32,
+       pathSwchReq           Integer32,
+       pathSwchReqAck        Integer32,
+       handCan               Integer32,
+       handCanAck            Integer32,
+       eNBStaTrans           Integer32,
+       mmeStaTrans           Integer32,
+       deactTrace            Integer32,
+       traceStart            Integer32,
+       traceFailInd          Integer32,
+       locReportCntrl        Integer32,
+       locReportFailInd      Integer32,
+       locReport             Integer32,
+       enbCfgUpd             Integer32,
+       enbCfgUpdAck          Integer32,
+       enbCfgUpdFail         Integer32,
+       mmeCfgUpd             Integer32,
+       mmeCfgUpdAck          Integer32,
+       mmeCfgUpdFail         Integer32,
+       upS1CDMA2000Tunn      Integer32,
+       dnS1CDMA2000Tunn      Integer32,
+       ueCapInfoInd          Integer32,
+       overloadStart         Integer32,
+       overloadStop          Integer32,
+       writeRepWarnReq       Integer32,
+       writeRepWarnRsp       Integer32,
+       enbDirInfoTrans       Integer32,
+       mmeDirInfoTrans       Integer32,
+       privMsgtx             Integer32,
+       privMsgrx             Integer32,
+       eNBConfigTfr          Integer32,
+       mmeConfigTfr          Integer32,
+       cellTrafficTrace      Integer32,
+       szDedProcStstx        Integer32,
+       szDedProcStsrx        Integer32,
+       szComProcStstx        Integer32,
+       szComProcStsrx        Integer32,
+       lastCollectedAt       DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { s1apPeerNodeCountersEntry 1 }
+
+peerId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Peer Identifier ]"
+       ::= { s1apPeerNodeCountersEntry 2 }
+
+nmbUnexpEvt OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of Unexpected events received]"
+       ::= { s1apPeerNodeCountersEntry 3 }
+
+nmbTRafExp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of Timer wait for reset ack expiry]"
+       ::= { s1apPeerNodeCountersEntry 4 }
+
+eRABSetupReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB setup request]"
+       ::= { s1apPeerNodeCountersEntry 5 }
+
+eRABSetupResp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB setup response]"
+       ::= { s1apPeerNodeCountersEntry 6 }
+
+eRABModifyRequest OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB modify request]"
+       ::= { s1apPeerNodeCountersEntry 7 }
+
+eRABModResp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB modify response]"
+       ::= { s1apPeerNodeCountersEntry 8 }
+
+eRABRelCmd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB release command]"
+       ::= { s1apPeerNodeCountersEntry 9 }
+
+eRABRelComp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB release complete]"
+       ::= { s1apPeerNodeCountersEntry 10 }
+
+eRABRelReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB release request]"
+       ::= { s1apPeerNodeCountersEntry 11 }
+
+initCxtSetup OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Initial Context setup request]"
+       ::= { s1apPeerNodeCountersEntry 12 }
+
+initCxtSetupResp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Initial Context setup response]"
+       ::= { s1apPeerNodeCountersEntry 13 }
+
+initCxtSetupFail OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Initial Context setup failure]"
+       ::= { s1apPeerNodeCountersEntry 14 }
+
+ueCxtRelReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Context release request]"
+       ::= { s1apPeerNodeCountersEntry 15 }
+
+ueCxtRelCmd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Context release command]"
+       ::= { s1apPeerNodeCountersEntry 16 }
+
+ueCxtRelComp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Context release complete]"
+       ::= { s1apPeerNodeCountersEntry 17 }
+
+ueCxtModReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Context Modification request]"
+       ::= { s1apPeerNodeCountersEntry 18 }
+
+ueCxtModResp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Context Modification response]"
+       ::= { s1apPeerNodeCountersEntry 19 }
+
+ueCxtModFail OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Context Modification failure]"
+       ::= { s1apPeerNodeCountersEntry 20 }
+
+initUEMsg OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Initial UE Message]"
+       ::= { s1apPeerNodeCountersEntry 21 }
+
+dwnNASTpt OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Downlink NAS transport]"
+       ::= { s1apPeerNodeCountersEntry 22 }
+
+upNASTpt OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Uplink NAS transport]"
+       ::= { s1apPeerNodeCountersEntry 23 }
+
+nonDelIndNAS OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              NAS non delivery indication]"
+       ::= { s1apPeerNodeCountersEntry 24 }
+
+errIndtx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX  Error Indication]"
+       ::= { s1apPeerNodeCountersEntry 25 }
+
+errIndrx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RX  Error Indication]"
+       ::= { s1apPeerNodeCountersEntry 26 }
+
+noDatatx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             No Data]"
+       ::= { s1apPeerNodeCountersEntry 27 }
+
+noDatarx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             No Data]"
+       ::= { s1apPeerNodeCountersEntry 28 }
+
+resettx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Reset ]"
+       ::= { s1apPeerNodeCountersEntry 29 }
+
+resetrx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RX Reset]"
+       ::= { s1apPeerNodeCountersEntry 30 }
+
+resetAcktx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Reset Acknowledge]"
+       ::= { s1apPeerNodeCountersEntry 31 }
+
+resetAckrx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RX Reset Acknowledge]"
+       ::= { s1apPeerNodeCountersEntry 32 }
+
+setupReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             S1 Setup request]"
+       ::= { s1apPeerNodeCountersEntry 33 }
+
+setupResp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             S1 Setup response]"
+       ::= { s1apPeerNodeCountersEntry 34 }
+
+setupFail OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             S1 Setup Failure]"
+       ::= { s1apPeerNodeCountersEntry 35 }
+
+paging OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Paging]"
+       ::= { s1apPeerNodeCountersEntry 36 }
+
+handReqd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover required]"
+       ::= { s1apPeerNodeCountersEntry 37 }
+
+handCmd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover command]"
+       ::= { s1apPeerNodeCountersEntry 38 }
+
+handPrepFail OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover preparation failure]"
+       ::= { s1apPeerNodeCountersEntry 39 }
+
+handReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover Request]"
+       ::= { s1apPeerNodeCountersEntry 40 }
+
+handReqAck OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover Request Acknowledge]"
+       ::= { s1apPeerNodeCountersEntry 41 }
+
+handFail OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover Failure]"
+       ::= { s1apPeerNodeCountersEntry 42 }
+
+handNtfy OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover notify]"
+       ::= { s1apPeerNodeCountersEntry 43 }
+
+pathSwchReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Path Switch request]"
+       ::= { s1apPeerNodeCountersEntry 44 }
+
+pathSwchReqAck OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Path Switch request acknowledge]"
+       ::= { s1apPeerNodeCountersEntry 45 }
+
+handCan OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover cancel]"
+       ::= { s1apPeerNodeCountersEntry 46 }
+
+handCanAck OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Handover cancel acknowledge]"
+       ::= { s1apPeerNodeCountersEntry 47 }
+
+eNBStaTrans OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNB status transfer]"
+       ::= { s1apPeerNodeCountersEntry 48 }
+
+mmeStaTrans OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MME status transfer]"
+       ::= { s1apPeerNodeCountersEntry 49 }
+
+deactTrace OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             De activate Trace]"
+       ::= { s1apPeerNodeCountersEntry 50 }
+
+traceStart OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Trace Start]"
+       ::= { s1apPeerNodeCountersEntry 51 }
+
+traceFailInd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Trace Failure Indication]"
+       ::= { s1apPeerNodeCountersEntry 52 }
+
+locReportCntrl OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Location Report Control]"
+       ::= { s1apPeerNodeCountersEntry 53 }
+
+locReportFailInd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Location Report Failure Indication]"
+       ::= { s1apPeerNodeCountersEntry 54 }
+
+locReport OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Location Report]"
+       ::= { s1apPeerNodeCountersEntry 55 }
+
+enbCfgUpd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ENB Configuration Update]"
+       ::= { s1apPeerNodeCountersEntry 56 }
+
+enbCfgUpdAck OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ENB Configuration Update Ack]"
+       ::= { s1apPeerNodeCountersEntry 57 }
+
+enbCfgUpdFail OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ENB Configuration Update Fail]"
+       ::= { s1apPeerNodeCountersEntry 58 }
+
+mmeCfgUpd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MME Configuration Update]"
+       ::= { s1apPeerNodeCountersEntry 59 }
+
+mmeCfgUpdAck OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MME Configuration Update Ack]"
+       ::= { s1apPeerNodeCountersEntry 60 }
+
+mmeCfgUpdFail OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MME Configuration Update Fail]"
+       ::= { s1apPeerNodeCountersEntry 61 }
+
+upS1CDMA2000Tunn OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Uplink S1 CDMA2000 Tunneling]"
+       ::= { s1apPeerNodeCountersEntry 62 }
+
+dnS1CDMA2000Tunn OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Downlink S1 CDMA2000 Tunneling]"
+       ::= { s1apPeerNodeCountersEntry 63 }
+
+ueCapInfoInd OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Capability Info Indication]"
+       ::= { s1apPeerNodeCountersEntry 64 }
+
+overloadStart OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Overload Start]"
+       ::= { s1apPeerNodeCountersEntry 65 }
+
+overloadStop OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Overload Stop]"
+       ::= { s1apPeerNodeCountersEntry 66 }
+
+writeRepWarnReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Write Replace Warning Request]"
+       ::= { s1apPeerNodeCountersEntry 67 }
+
+writeRepWarnRsp OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Write Replace Warning Response]"
+       ::= { s1apPeerNodeCountersEntry 68 }
+
+enbDirInfoTrans OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNB direct Information Transfer]"
+       ::= { s1apPeerNodeCountersEntry 69 }
+
+mmeDirInfoTrans OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             mme Direct Information Transfer]"
+       ::= { s1apPeerNodeCountersEntry 70 }
+
+privMsgtx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX  Private Message]"
+       ::= { s1apPeerNodeCountersEntry 71 }
+
+privMsgrx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RX Private Message]"
+       ::= { s1apPeerNodeCountersEntry 72 }
+
+eNBConfigTfr OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ENB Configuration Transfer]"
+       ::= { s1apPeerNodeCountersEntry 73 }
+
+mmeConfigTfr OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              MME Configuration Transfer]"
+       ::= { s1apPeerNodeCountersEntry 74 }
+
+cellTrafficTrace OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Cell Traffic Trace]"
+       ::= { s1apPeerNodeCountersEntry 75 }
+
+szDedProcStstx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Number of messages exchanged for dedicated procedure]"
+       ::= { s1apPeerNodeCountersEntry 76 }
+
+szDedProcStsrx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RX Number of messages exchanged for dedicated procedure]"
+       ::= { s1apPeerNodeCountersEntry 77 }
+
+szComProcStstx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             TX Number of messages exchanged for common procedure]"
+       ::= { s1apPeerNodeCountersEntry 78 }
+
+szComProcStsrx OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RX Number of messages exchanged for common procedure]"
+       ::= { s1apPeerNodeCountersEntry 79 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { s1apPeerNodeCountersEntry 80 }
+
+END

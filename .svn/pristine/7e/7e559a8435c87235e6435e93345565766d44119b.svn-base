@@ -1,0 +1,229 @@
+ -- @file    ACTIVE-UE-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+ACTIVE-UE-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                  FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+activeUeStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the Ues served by enb, the bearers allocated."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 116 }
+
+activeUeStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF ActiveUeStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the Ues served by enb, the bearers allocated.
+            This is a MULTI ROW Table"
+       ::= { activeUeStatus 1 }
+
+activeUeStatusEntry OBJECT-TYPE
+       SYNTAX      ActiveUeStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains active UE status objects."
+       INDEX  { index }
+       ::= { activeUeStatusTable 1 }
+
+ActiveUeStatusEntry ::= 
+   SEQUENCE {
+       index                      RowNumber,
+       internalUeIdentity         Unsigned32,
+       mmec                       Unsigned32,
+       mTmsi                      Unsigned32,
+       cRnti                      Unsigned32,
+       s1apEnbUeId                Unsigned32,
+       s1apMmeUeId                Unsigned32,
+       entryTime                  DateAndTimeStamp,
+       dlAmbr                     Unsigned32,
+       ulAmbr                     Unsigned32,
+       ueCategory                 INTEGER,
+       ueAccessStratumRelease     INTEGER,
+       activeIntProtAlgo          INTEGER,
+       activeCiphAlgo             INTEGER,
+       numERabs                   Unsigned32
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { activeUeStatusEntry 1 }
+
+internalUeIdentity OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             An identifier of UE inside ENB]"
+       ::= { activeUeStatusEntry 2 }
+
+mmec OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             MMEC value of S-TMSI field]"
+       ::= { activeUeStatusEntry 3 }
+
+mTmsi OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             M-TMSI value of S-TMSI field]"
+       ::= { activeUeStatusEntry 4 }
+
+cRnti OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             C-RNTI of the UE]"
+       ::= { activeUeStatusEntry 5 }
+
+s1apEnbUeId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UEID allocated by ENB, used vy S1AP]"
+       ::= { activeUeStatusEntry 6 }
+
+s1apMmeUeId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UEID allocated by MME, used by S1AP]"
+       ::= { activeUeStatusEntry 7 }
+
+entryTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Timestamp of end of RRC Connection Setup in this eNB in YYYYMMDDHHNNSSTTT format.]"
+       ::= { activeUeStatusEntry 8 }
+
+dlAmbr OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 9765625 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Aggregate Maximum Bitrate (from EPC) in kbps.
+             This is updated when Initial Context Setup is done.]"
+       ::= { activeUeStatusEntry 9 }
+
+ulAmbr OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 9765625 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Aggregate Maximum Bitrate (from EPC) in kbps.
+             This is updated when Initial Context Setup is done. ]"
+       ::= { activeUeStatusEntry 10 }
+
+ueCategory OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   cat1(1),
+                   cat2(2),
+                   cat3(3),
+                   cat4(4),
+                   cat5(5),
+                   unknown(6)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Category
+             This is updated when UE Capability Information is available]"
+       ::= { activeUeStatusEntry 11 }
+
+ueAccessStratumRelease OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   rel8(0),
+                   spare7(1),
+                   spare6(2),
+                   spare5(3),
+                   spare4(4),
+                   spare3(5),
+                   spare2(6),
+                   spare1(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UE Access Stratum Release
+             This is updated when UE Capability Information is available]"
+       ::= { activeUeStatusEntry 12 }
+
+activeIntProtAlgo OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-128EIA1(0),
+                   e-128EIA2(1),
+                   disable(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Active Access Stratum Integrity Protection Algorithm
+             This is updated when SMC is done]"
+       ::= { activeUeStatusEntry 13 }
+
+activeCiphAlgo OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   eEA0(0),
+                   e-128EEA1(1),
+                   e-128EEA2(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Active Access Stratum Ciphering Algorithm
+             This is updated when SMC is done]"
+       ::= { activeUeStatusEntry 14 }
+
+numERabs OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of E-RABS allocated to UE. The actual rabs and their status is provided in activeRabStatusTable.]"
+       ::= { activeUeStatusEntry 15 }
+
+END

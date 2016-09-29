@@ -1,0 +1,48 @@
+# Config for RVDS 4.x (Linux)
+#
+# Copyright 2008,2009,2010 by Mindspeed Technologies
+# All rights reserved
+#
+
+ARM_LINUX_CONFIG_FILE=$(CURDIR)/config-linux-rvds.xml
+
+CC = armcc --arm_linux --arm_linux_paths --arm_linux_config_file=$(ARM_LINUX_CONFIG_FILE) --translate_gcc
+AS = armasm
+LD = armcc --arm_linux --arm_linux_paths --arm_linux_config_file=$(ARM_LINUX_CONFIG_FILE) --translate_gcc
+AR = armar -r
+
+ifeq ($(BOARD),C4KEVM)
+ARCH = Cortex-A9.no_neon.no_vfp
+else
+ARCH = MPCore
+endif
+
+# LTE-RCT cannot be #defined, replace with LTE
+ifeq ($(FOURG),LTE-RCT)
+FOURGDEF = LTE
+else
+FOURGDEF = $(call uppercase,$(FOURG))
+endif
+
+DEF = -DUSE_$(OS) -D$(BOARD) -D$(MACTYPE) -D$(FOURGDEF)
+OPT = --debug -O1
+
+#
+# Include files
+#
+INC = -I. -I../T4KDev/SYSCORE/SERVICES -I../Common -I../../common -IOSAL/$(OS) -IBSP -IBSP/$(OS) -I../LteTestMac -I../PHY/LTE/C-Code
+
+#
+# Libraries
+#
+LIBS = -lpthread -lrt -lmac -lm -lbsp -losal -lsctp -lphystub -lpcap
+
+#
+# Paths to user libraries
+#
+LIBPATH = -LOSAL/$(OS) -LBSP/$(OS) -LBSP/$(OS)/libsctp -L$(FOURG)/$(MACTYPE) -LPHYSTUB/$(MACTYPE)
+
+CFLAGS = --cpu=$(ARCH) --diag_style=gnu $(INC) $(DEFS) $(OPT)
+LDFLAGS = --cpu=$(ARCH) --diag_style=gnu $(LIBPATH)
+ASFLAGS = --apcs=/interwork --no_hide_all --pd "USE_$(OS) SETA 1" --pd "$(BOARD) SETA 1"
+ARFLAGS =

@@ -1,0 +1,223 @@
+ -- @file    ENB-REGISTRATION-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:50 PM
+ --
+
+ENB-REGISTRATION-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, DateAndTimeStamp, String64, Latitude, Longitude          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, IpAddress           FROM SNMPv2-SMI;
+
+enbRegistrationConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to configure parameters for registration with EMS."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 51 }
+
+enbRegistrationConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF EnbRegistrationConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to configure parameters for registration with EMS.
+            This is a SINGLE ROW Table"
+       ::= { enbRegistrationConfig 1 }
+
+enbRegistrationConfigEntry OBJECT-TYPE
+       SYNTAX      EnbRegistrationConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "One set of registration parameters."
+       INDEX  { bsId }
+       ::= { enbRegistrationConfigTable 1 }
+
+EnbRegistrationConfigEntry ::= 
+   SEQUENCE {
+       bsId                              Unsigned32,
+       publicDNSServer1                  IpAddress,
+       publicDNSServer2                  IpAddress,
+       privateDNSServer1                 IpAddress,
+       privateDNSServer2                 IpAddress,
+       securityGW1                       IpAddress,
+       securityGW2                       IpAddress,
+       emsAddr                           IpAddress,
+       configuredLatitude                Latitude,
+       configuredLongitude               Longitude,
+       snmpCommunityString               String64,
+       timeAndLocationSourceToUse        INTEGER,
+       initialLocalTime                  DateAndTimeStamp,
+       initialLocalTimeOffsetFromUTC     OCTET STRING
+   }
+
+bsId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 1048575 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Base Station Identifier. Used for identifying the BS before EMS registration. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { enbRegistrationConfigEntry 1 }
+
+publicDNSServer1 OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IPv4 address of the primary public DNS Server]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "0.0.0.0" }
+       ::= { enbRegistrationConfigEntry 2 }
+
+publicDNSServer2 OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IPv4 address of the secondary public DNS Server]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "0.0.0.0" }
+       ::= { enbRegistrationConfigEntry 3 }
+
+privateDNSServer1 OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IPv4 address of the primary private DNS Server]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "0.0.0.0" }
+       ::= { enbRegistrationConfigEntry 4 }
+
+privateDNSServer2 OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IPv4 address of the secondary private DNS Server]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "0.0.0.0" }
+       ::= { enbRegistrationConfigEntry 5 }
+
+securityGW1 OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IPv4 address of the primary security GW the Pico eNB attempts to establish connection with.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "0.0.0.0" }
+       ::= { enbRegistrationConfigEntry 6 }
+
+securityGW2 OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IPv4 address of the secondary security GW the Pico eNB attempts to establish connection with.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "0.0.0.0" }
+       ::= { enbRegistrationConfigEntry 7 }
+
+emsAddr OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IPv4 address of EMS.
+             NOTE: Change of this parameter is Supported only If PWAV-EMS used]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "127.0.0.1" }
+       ::= { enbRegistrationConfigEntry 8 }
+
+configuredLatitude OBJECT-TYPE
+       SYNTAX      Latitude
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Latitude configured into ENB. Format is MMNN.PPPPPP(N/S). MM -> Degrees, NN -> Minutes, PPPPPP -> Decimal precision, North (N) or South (S).]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "0000.000000N" }
+       ::= { enbRegistrationConfigEntry 9 }
+
+configuredLongitude OBJECT-TYPE
+       SYNTAX      Longitude
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Longitude configured into ENB. Format is MMMNN.PPPPPP(E/W). MMM -> Degrees, NN -> Minutes, PPPPPP -> Decimal precision, East (E) or West (W).
+             NOTE: Change of this parameter is required only if timeAndLocationSourceToUse is set to 'operConfigured' or when not available from GPS.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "00000.000000E" }
+       ::= { enbRegistrationConfigEntry 10 }
+
+snmpCommunityString OBJECT-TYPE
+       SYNTAX      String64
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The community string the ENB should accept in SNMP PDUs.Other packets will be dropped. ENB will use the same in outgoing PDUs.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "aussie" }
+       ::= { enbRegistrationConfigEntry 11 }
+
+timeAndLocationSourceToUse OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   gps(1),
+                   operConfigured(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The time and location source configured to be used by ENB: gps : Use GPS based time (and location) for setting ENB clock operConfigured : Use operator configured time (and location) for setting ENB clock]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { operConfigured }
+       ::= { enbRegistrationConfigEntry 12 }
+
+initialLocalTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             It is a MANDATORY field, since this can be used as a fallback while GPS fails to lock/respond. If configured by Operator and ENB is configured to use this for date and time setting, ENB will use this for setting date and time of the ENB at initialization. Otherwise ENB will try to use other source GPS. YYYYMMDDHHNNSSTTT format.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "20120101000000000" }
+       ::= { enbRegistrationConfigEntry 13 }
+
+initialLocalTimeOffsetFromUTC OBJECT-TYPE
+       SYNTAX      OCTET STRING
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             It is a MANDATORY field, since this can be used as a fallback while GPS fails to lock/respond. Operator shall configure it and while ENB is configured to use the configured date and time this value shall be used to set the UTC based offset.
+             (+/-)HHNN format.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "+05:30" }
+       ::= { enbRegistrationConfigEntry 14 }
+
+END

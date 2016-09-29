@@ -1,0 +1,155 @@
+#
+# Makefile to build lower layer of PHY library (to be released as OBJ)
+#
+# (c) 2010 - 2012 Mindspeed Technologies
+#
+
+include T4KDev/LTERT/buildcfg
+
+LTEPHYRTLOWBUILDDIR := $(LTEPHYRTDIR)/$(BUILDDIR)
+
+VPATH := $(LTEPHYRTDIR) $(PHYCOMMONCCODEDIR) $(LTEPHYCCODEDIR) $(PHYCOMMONCCODEDIR)/fftcg16t24d
+
+INC = -I"$(OS4GMXINCDIR)" \
+      -I"$(OS4GMXARMINCDIR)" \
+      -I"$(SYSCOREFECDIR)" \
+      -I"$(SYSCOREDIR)" \
+      -I"$(SYSCOREDRIVERSDIR)" \
+      -I"$(SYSCORESERVICESDIR)" \
+      -I"$(COMMONDIR)" \
+      -I"$(LTEPHYINCDIR)" \
+      -I"$(LTEPHYRTDIR)" \
+      -I"$(SYSCORECPRIDIR)" \
+      -I"$(PHYCOMMONCCODEDIR)" \
+      -I"$(SYSCOREMAPDIR)"
+
+
+ifeq ($(RELEASEBUILD),1)
+INC += -I "PHY/LTE/Ceva/Prj/LteApp/EVM_Release"
+else
+INC += -I "PHY/LTE/Ceva/Prj/LteApp/EVM_Debug"
+endif
+
+
+CFLAGS = $(PHYBUILDCFG) $(INC)
+
+SRC = LteBsPhyInit.c \
+ LteBsRxvectorproc.c \
+ LteBsTxvectorproc.c \
+ gputil_fx.c \
+ phy_constants.c \
+ phy_globals.c \
+ lte_util.c \
+ basic_op.c \
+ math_ext32.c \
+ bs_tx_OFDM_Modulator.c \
+ bs_tx_LayerMapper.c \
+ ResourceElementMapperAssignment.c \
+ LteBsPhyDLCommonInit.c \
+ LteBsPhyDLControlProc.c \
+ bs_tx_Precoder.c \
+ lte_FEC_utils.c \
+ PseudoRandomSeqGen.c \
+ tx_mod.c \
+ dl_Pilot.c \
+ dft_table16.c \
+ bs_rx_ChEstimator.c \
+ bs_rx_DemuxFDMAPhysChan.c \
+ ul_Pilot.c \
+ bs_rx_SCFDMA_Demodulator.c \
+ rx_mrcom_c.c \
+ rx_Demapper.c \
+ RxCoder_util.c \
+ bs_rx_feq.c \
+ ul_ConfigFrame.c \
+ TxCoder_util.c \
+ bs_tx_ChannelCoder.c \
+ bs_rx_ChEstimator_pucch.c \
+ ul_Pilot_pucch.c \
+ lteCommonControl.c \
+ bs_tx_STC.c	\
+ bs_tx_MultiChannels.c \
+ bs_rx_MultiChannels.c \
+ bs_rx_ChEstimator_srs.c \
+ ul_Pilot_srs.c \
+ bs_rx_Pilot_srs.c \
+ ul_SrsResourceElementAllocation.c \
+ SRSReceiverProcessing.c \
+ bs_rx_prach.c \
+ bs_rx_prach_table.c \
+ LteBsTxThread.c \
+ LteBsRxThread.c \
+ LteBsRxPrachThread.c \
+ LteBsRxSrsThread.c \
+ LteBsTxDataSdu.c \
+ LteBsRxSduPreproc.c \
+ LteBsRxDataSdu.c \
+ LteBsApiThread.c \
+ LteBsRxConfig.c \
+ apiplayer.c \
+ dbghelp.c \
+ LteBsPhyStats.c \
+ LteBsApiErrorCheck.c \
+ phydi.c \
+ lte_bs_phy_nmm_fdd.c \
+ lte_bs_phy_nmm_fdd_lib.c \
+ lte_bs_phy_nmm_radio_itf.c \
+ lte_bs_phy_nmm_tcb.c \
+ lte_bs_phy_nmm_tables.c \
+ lte_bs_phy_nmm_thread.c\
+ UMTSNwlCrc.c \
+ UMTSNwlMsgPro.c\
+ UMTSNwlCellSearchCtrl.c\
+ UMTSNwlCellSearchArm.c\
+ UMTSNwlBchDecod.c
+
+CMNSRC = tx_Mapper.c tx_Mapper_c.c
+
+OBJ := $(patsubst %.c, $(LTEPHYRTLOWBUILDDIR)/%.o,$(notdir $(SRC)))
+CMNOBJ := $(patsubst %.c, $(LTEPHYRTLOWBUILDDIR)/%.o,$(notdir $(CMNSRC)))
+
+.PHONY : $(MAIN_TARGET)
+$(MAIN_TARGET) : $(PCF) $(LTEPHYLOWERLIBRARY)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(LTEPHYRTLOWBUILDDIR)/phyrtlow.dep
+CLEANDEP = clean_dep
+else
+-include $(LTEPHYRTLOWBUILDDIR)/phyrtlow.dep
+endif
+
+$(LTEPHYLOWERLIBRARY): $(LTEPHYRTLOWBUILDDIR) $(CMNLIBRARY) $(OBJ)
+	@echo Creating $(LTEPHYLOWERLIBRARY) 
+	@$(AR) $(AR_FLAGS) $@ $(OBJ) $(CMNOBJ)
+
+$(CMNLIBRARY): $(LTEPHYRTLOWBUILDDIR) $(CLEANDEP) $(CMNOBJ)
+	@echo Creating $(CMNLIBRARY) 
+	@$(AR) $(AR_FLAGS) $(CMNLIBRARY) $(CMNOBJ)
+
+$(LTEPHYRTLOWBUILDDIR) :
+	@$(MKDIR) $(LTEPHYRTLOWBUILDDIR)
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+	
+$(LTEPHYRTLOWBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) $< -o "$@"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean:
+	@$(RM) $(OBJ) $(CMNOBJ)
+
+.PHONY : xclean
+xclean : clean
+	@$(RM) $(LTEPHYLOWERLIBRARY)
+	@$(RM) $(CMNLIBRARY)

@@ -1,0 +1,429 @@
+ -- @file    RRM-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 2/14/2013 11:40:17 AM
+ --
+
+RRM-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+rrmCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists Statistics counters for RRM."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 128 }
+
+rrmCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF RrmCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists Statistics counters for RRM.
+            This is a SINGLE ROW Table"
+       ::= { rrmCounters 1 }
+
+rrmCountersEntry OBJECT-TYPE
+       SYNTAX      RrmCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains Statistics counter objects for RRM."
+       INDEX  { index }
+       ::= { rrmCountersTable 1 }
+
+RrmCountersEntry ::= 
+   SEQUENCE {
+       index                       RowNumber,
+       numRlFailures               Counter32,
+       nS1SetupReq                 Counter32,
+       numIncomingHoSuccessful     Counter32,
+       numIncomingHoFailed         Counter32,
+       numIncomingHoRejected       Counter32,
+       numS1apRejected             Counter32,
+       nRrcConnReq                 Counter32,
+       nRrcConnSetup               Counter32,
+       nRrcConnSetupCmpl           Counter32,
+       nRrcConnRel                 Counter32,
+       nDlInfoTrf                  Counter32,
+       nUlInfoTrf                  Counter32,
+       nUlNasTrfMsg                Counter32,
+       nDlNasTrfMsg                Counter32,
+       nInitCtxtSetReq             Counter32,
+       nInitCtxtSetRsp             Counter32,
+       nInitCtxtSetFail            Counter32,
+       nRrcReconfReq               Counter32,
+       nRrcReconfCmpl              Counter32,
+       nRrcReestReq                Counter32,
+       nUeCapEnq                   Counter32,
+       nUeCapInfo                  Counter32,
+       nUeCapInfoInd               Counter32,
+       nSecModeCmd                 Counter32,
+       nSecModeCmpl                Counter32,
+       nSecModeFail                Counter32,
+       nUeCtxtRelCmpl              Counter32,
+       nUeCtxtRelCmd               Counter32,
+       nUeCtxtRelReq               Counter32,
+       nUeCtxtModResp              Counter32,
+       nS1SetupFail                Counter32,
+       nPaging                     Counter32,
+       nRrcConnRej                 Counter32,
+       nS1SetupRsp                 Counter32,
+       nS1ResetTx                  Counter32,
+       nS1ResetRx                  Counter32,
+       lastCollectedAt             DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { rrmCountersEntry 1 }
+
+numRlFailures OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Radio Link Failures]"
+       ::= { rrmCountersEntry 2 }
+
+nS1SetupReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of S1 Setup Req sent to MME]"
+       ::= { rrmCountersEntry 3 }
+
+numIncomingHoSuccessful OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Incoming Handover Successful]"
+       ::= { rrmCountersEntry 4 }
+
+numIncomingHoFailed OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Handover Requests Failed]"
+       ::= { rrmCountersEntry 5 }
+
+numIncomingHoRejected OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Handover Requests Rejected]"
+       ::= { rrmCountersEntry 6 }
+
+numS1apRejected OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of S1AP Requests Rejected]"
+       ::= { rrmCountersEntry 7 }
+
+nRrcConnReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC Connection Requested]"
+       ::= { rrmCountersEntry 8 }
+
+nRrcConnSetup OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC Connection Requested]"
+       ::= { rrmCountersEntry 9 }
+
+nRrcConnSetupCmpl OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC Connection Completed]"
+       ::= { rrmCountersEntry 10 }
+
+nRrcConnRel OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC Connection Released]"
+       ::= { rrmCountersEntry 11 }
+
+nDlInfoTrf OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of DL Information Transformed]"
+       ::= { rrmCountersEntry 12 }
+
+nUlInfoTrf OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UL Information Transformed]"
+       ::= { rrmCountersEntry 13 }
+
+nUlNasTrfMsg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UL  NAS Information Transformed]"
+       ::= { rrmCountersEntry 14 }
+
+nDlNasTrfMsg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of DL  NAS Information Transformed]"
+       ::= { rrmCountersEntry 15 }
+
+nInitCtxtSetReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Intial Context Setup Request]"
+       ::= { rrmCountersEntry 16 }
+
+nInitCtxtSetRsp OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Intial Context Setup Response]"
+       ::= { rrmCountersEntry 17 }
+
+nInitCtxtSetFail OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Intial Context Setup Failed]"
+       ::= { rrmCountersEntry 18 }
+
+nRrcReconfReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC Reconfigure Request]"
+       ::= { rrmCountersEntry 19 }
+
+nRrcReconfCmpl OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC REconfigure Completed]"
+       ::= { rrmCountersEntry 20 }
+
+nRrcReestReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC Reset Request]"
+       ::= { rrmCountersEntry 21 }
+
+nUeCapEnq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UE Capability Enquiry]"
+       ::= { rrmCountersEntry 22 }
+
+nUeCapInfo OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UE Capability Information]"
+       ::= { rrmCountersEntry 23 }
+
+nUeCapInfoInd OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UE Capability Information Indication]"
+       ::= { rrmCountersEntry 24 }
+
+nSecModeCmd OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Security Mode Command]"
+       ::= { rrmCountersEntry 25 }
+
+nSecModeCmpl OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Numboer of Security Mode Complete]"
+       ::= { rrmCountersEntry 26 }
+
+nSecModeFail OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Security Mode Failed]"
+       ::= { rrmCountersEntry 27 }
+
+nUeCtxtRelCmpl OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UE Context Release Completed]"
+       ::= { rrmCountersEntry 28 }
+
+nUeCtxtRelCmd OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UE Context Release Command]"
+       ::= { rrmCountersEntry 29 }
+
+nUeCtxtRelReq OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UE Context Release Req]"
+       ::= { rrmCountersEntry 30 }
+
+nUeCtxtModResp OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of UE Context Modification Response]"
+       ::= { rrmCountersEntry 31 }
+
+nS1SetupFail OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of S1ap Setup  Fail]"
+       ::= { rrmCountersEntry 32 }
+
+nPaging OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of paging request happen]"
+       ::= { rrmCountersEntry 33 }
+
+nRrcConnRej OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RRC Connection Rejected]"
+       ::= { rrmCountersEntry 34 }
+
+nS1SetupRsp OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of S1 setup responses]"
+       ::= { rrmCountersEntry 35 }
+
+nS1ResetTx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of S1 reset transmissions]"
+       ::= { rrmCountersEntry 36 }
+
+nS1ResetRx OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of S1 reset receptions]"
+       ::= { rrmCountersEntry 37 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { rrmCountersEntry 38 }
+
+END

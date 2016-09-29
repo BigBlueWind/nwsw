@@ -1,0 +1,133 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';        
+    </style>
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript' src='../script/validate.js'></script>
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+            ChkLock();
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason, Right Click is not allowed.'); return false; });
+            $('#btnApply').click(function() {
+                var msg = '';
+                msg = msg + StrLengthValidate('version', 'Version', 2, 256);
+                if (msg != '') {
+                    alert(msg);
+                }
+                else {
+                    var where_to = confirm('Do you really want to ACTIVATE this version?');
+                    if (where_to == true) {
+                        LteSet('swActivation', $('#swActivation'), $('#btnApply'), ChkLock);
+                    }
+                }
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#swActivation", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+        function LockAttributes(){
+            $('#btnApply').attr('disabled', 'true');
+            $('#version').attr('readonly', true).attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip();
+            FreezeList('#swType');
+            $('#swType').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+                if (parent.frames['Top'].isLocked == 'unlocked')
+                    FreezeList(this);
+            });
+        }
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Commands > Software Activation </span>
+            </td>
+             <td align='right' width='40%'>
+                 <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+   <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+   </table>
+    <div style=' margin-left: 10px;margin-top:10px'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1045px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />                    
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 370px; height: 615px;'>
+        <form name='swActivation' id='swActivation' action=''>
+        <table width='100%' border='0' cellpadding='0' cellspacing='0' class='tblBorder'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp; Software Activation
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Software Type
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input type='hidden' id='index' />
+                                <select id='swType' name='swType' class='lteinput'>
+                                <option value='1'>ENB L2/L3 S/W</option>                                
+                                <option value='2'>RH S/W</option>                                
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                Version
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input id='version' name='version' type='text' class='lteinput'/>&nbsp;(2 ~ 256 Characters)
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>            
+</body>
+</html>

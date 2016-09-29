@@ -1,0 +1,275 @@
+<html>
+<head><style type='text/css' lang='css'>
+@import '../css/styles.css';
+</style>
+          
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script>  
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        LteGet("radioHeadConfig", null, ChkLock);
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";
+
+
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }
+                }
+            });
+
+            if (change == 'true') {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true)
+                                msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                        }
+                    }
+                });
+                if (msg != "") {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                    if (parent.frames["Top"].isLocked == "unlocked") {
+                        LockAttributes();
+                    }
+                    alert(msg);
+                }
+                else {
+                    LteSet("radioHeadConfig", $("#radioHeadConfig"), $("#btnApply"), ChkLock);
+                }
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#radioHeadConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });            
+    function ChkSpecialValues() {
+        $("#radioHeadProfileId").attr("disabled", false);
+        $("#radioHeadProfileId").attr("disabled", false).attr("readonly", false).css("background-color", "white");        
+    }   
+    function LockAttributes() {
+        $("#radioHeadProfileId").attr("readonly", true).attr("title", "Lock eNodeB to Modify").css("background-color", "#E6E6E6").simpletooltip();
+    }
+    
+    function MapIdName(fieldName) {
+        switch (fieldName) {
+            case "radioHeadProfileId": return "Radiohead Id";
+            case "txAttenPathA": return "Tx Attenuation Path A";
+            case "txAttenPathB": return "Tx Attenuation Path B";            
+            case "txDelay": return "Tx Delay";
+            case "rxDelay": return "Rx Delay";
+            case "vswrShutdownAlarmThreshold": return "VSWR Shutdown Alarm Threshold";
+            case "overpowerAlarmThreshold": return "Over Power Alarm Threshold";
+            case "lowpowerAlarmThreshold": return "Low Power Alarm Threshold";
+        }
+    }         
+</script>
+
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration > Radiohead </span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+<table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px;width:500px;height:615px">
+        <form name='radioHeadConfig' id='radioHeadConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>            
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp; Radiohead Configuration
+                </td>
+            </tr>
+            <tr class="formheadingborder">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Radiohead Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="radioHeadProfileId" name="radioHeadProfileId" type="text" validate="IntRangeChk" value="0" min="1" max="1" class='lteinput'/>&nbsp;(1 ~ 1)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Tx Attenuation Path A
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="txAttenPathA" name="txAttenPathA" type="text" validate="IntRangeChk" value="0" min="0" max="270" class='lteinput'/>&nbsp;(0 ~ 270)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Tx Attenuation Path B
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="txAttenPathB" name="txAttenPathB" type="text" validate="IntRangeChk" value="0" min="0" max="270" class='lteinput'/>&nbsp;(0 ~ 270)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Tx Delay
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="txDelay" name="txDelay" type="text" validate="IntRangeChk" value="0" min="0" max="300000" class='lteinput'/>&nbsp;(0 ~ 300000)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Rx Delay
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="rxDelay" name="rxDelay" type="text" validate="IntRangeChk" value="0" min="0" max="300000" class='lteinput'/>&nbsp;(0 ~ 300000)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                VSWR Shutdown Alarm Threshold
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="vswrShutdownAlarmThreshold" name="vswrShutdownAlarmThreshold" type="text" validate="IntRangeChk" value="0" min="30" max="100" class='lteinput'/>&nbsp;(30 ~ 100)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Over Power Alarm Threshold
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="overpowerAlarmThreshold" name="overpowerAlarmThreshold" type="text" validate="IntRangeChk" value="0" min="0" max="540000000" class='lteinput'/>&nbsp;(0 ~ 540000000)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Low Power Alarm Threshold
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="lowpowerAlarmThreshold" name="lowpowerAlarmThreshold" type="text" validate="IntRangeChk" value="0" min="0" max="540000000" class='lteinput'/>&nbsp;(0 ~ 540000000)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

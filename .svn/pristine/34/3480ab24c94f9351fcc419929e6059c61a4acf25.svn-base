@@ -1,0 +1,933 @@
+ # Generated on : 13-02-2013 17:44:03
+ # version : 0.0.0.0.0
+enbRegistrationConfig :
+{
+ bsId                              = 1;
+ publicDNSServer1                  = "0.0.0.0";
+ publicDNSServer2                  = "0.0.0.0";
+ privateDNSServer1                 = "0.0.0.0";
+ privateDNSServer2                 = "0.0.0.0";
+ securityGW1                       = "0.0.0.0";
+ securityGW2                       = "0.0.0.0";
+ emsAddr                           = "127.0.0.1";
+ configuredLatitude                = "0000.000000N";
+ configuredLongitude               = "00000.000000E";
+ snmpCommunityString               = "aussie";
+ timeAndLocationSourceToUse        = 2;          #operConfigured
+ initialLocalTime                  = "20120101000000000";
+ initialLocalTimeOffsetFromUTC     = "+05:30";
+};
+enodebConfig :
+{
+ enodebId                          = 0;
+ enodebName                        = "pwav-pico";
+ useStaticIpAddress                = 0;          # FALSE 
+ enodebStaticIpAddr                = "172.17.5.8";
+ enodebNetmaskAddr                 = "255.255.255.0";
+ enodebRegistrationAccepted        = 0;          # FALSE 
+ configChangeAckByEms              = 1;          # TRUE 
+};
+cellConfig :
+{
+ cellId                            = 1;
+ cellType                          = 0;          #Verysmall
+ plmnMCC                           = "000";
+ plmnMNC                           = "00";
+ tac                               = 100;
+ freqBandInd                       = 13;
+ dlBandwidth                       = 3;          #10MHz
+ dlEarfcn                          = 5230;
+ ulBandwidth                       = 6;          #NotDefined
+ ulEarfcn                          = 23230;
+ cellReservedForOperatorUse        = 1;          #NotReserved
+ maxConnectedUes                   = 20;
+ acBarringEmergency                = 0;          # FALSE 
+ acBarrMoSigEnabled                = 0;          # FALSE 
+ acBarrMoSigFactor                 = 15;         #p95
+ acBarrMoSigTime                   = 0;          #s4
+ acBarrMoSigSpecialAC              = "00000";
+ acBarrMoDataEnabled               = 0;          # FALSE 
+ acBarrMoDataFactor                = 15;         #p95
+ acBarrMoDataTime                  = 0;          #s4
+ acBarrMoDataSpecialAC             = "00000";
+ startRnti                         = 104;
+ rsrpFilterCoefficient             = 4;          #fc3
+ schedulerProfileId                = 0;
+ phyProfileId                      = 0;
+ phyLayerId                        = 0;
+ phyCellIdentityGroup              = 0;
+ pMax                              = 23;
+ ueResponseTimer                   = 6;          #ms5000
+ rrcConnRejWaitTime                = 2;
+ ueInactivityCheckIntervalSecs     = 0;
+ sysInfo1ProfileId                 = 0;
+ sysInfo2ProfileId                 = 0;
+ sysInfo3ProfileId                 = 0;
+ siReTxCnt                         = 1;
+ antInfoTxMode                     = 2;          #tm3
+ initialUlCqi                      = 3;
+ pucchResourceSize                 = 1;
+ cqiPeriodicityIdx                 = 4;          #CP_40
+ sriPeriodicityIdx                 = 2;          #SP_20
+ ueCqiBasedRlfDetectionTimer       = 0;          #ms0
+ ueCfgMacCollatedCqiCount          = 0;
+};
+sysInfo1Config :
+{
+ sysInfo1ProfileId                 = 0;
+ intraFreqReselection              = 1;          #NotAllowed
+ qRxLevMin                         = -65;
+ qRxLevMinOffset                   = 1;
+ sib2Periodicity                   = 1;          #160ms
+ sib3Periodicity                   = 7;          #Disabled
+ sib4Periodicity                   = 7;          #Disabled
+ siWindowLength                    = 5;          #20ms
+};
+sysInfo2Config :
+{
+ sysInfo2ProfileId                 = 0;
+ numRaPreambles                    = 12;         #n52
+ sizeRAPreamblesGroupA             = 1;          #n8
+ messageSizeGroupA                 = 1;          #b144
+ messagePowerOffsetGroupB          = 1;          #dB0
+ powerRampingStep                  = 1;          #dB2
+ preambleInitRcvdTgtPower          = 10;         #minus100dBm
+ preambleTransMax                  = 3;          #n6
+ raRspWindowSize                   = 4;          #sf6
+ macContResolutionTimer            = 7;          #sf64
+ maxHarqMsg3Tx                     = 4;
+ modificationPeriodCoeff           = 1;          #n4
+ defaultPagCycle                   = 0;          #rf32
+ nB                                = 2;          #oneT
+ rootSequenceIndex                 = 22;
+ prachConfigIndex                  = 12;
+ highSpeedFlag                     = 0;          # FALSE 
+ zeroCorrelationZoneConfig         = 8;
+ puschFreqHoppingSubBands          = 1;
+ puschFreqHoppingMode              = 0;          #interSubFrame
+ puschFreqHoppingOffset            = 0;
+ ulRsGroupHoppingEnabled           = 0;          # FALSE 
+ ulRsGroupPusch                    = 0;
+ ulRsSeqHoppingEnabled             = 0;          # FALSE 
+ ulRsCyclicShiftPusch              = 0;
+ deltaPucchShift                   = 1;          #ds2
+ n1PucchAn                         = 18;
+ srsBandwidthConfig                = 0;          #bw0
+ srsSubfrmConfig                   = 0;          #sc0
+ srsSimultaneousAnSrsTx            = 0;          # FALSE 
+ poNominalPusch                    = -65;
+ deltaFPucchFormat1                = 1;          #0dB
+ deltaFPucchFormat1b               = 1;          #3dB
+ deltaFPucchFormat2                = 1;          #0dB
+ deltaFPucchFormat2a               = 1;          #0dB
+ deltaFPucchFormat2b               = 1;          #0dB
+ deltaPreambleMsg3                 = 4;
+ t300                              = 5;          #ms1000
+ t301                              = 5;          #ms1000
+ t310                              = 5;          #ms1000
+ n310                              = 2;          #n3
+ t311                              = 3;          #ms10000
+ n311                              = 0;          #n1
+ additionalSpectrumEmission        = 1;
+ timeAlignmentTimer                = 7;          #Infinity
+ nRbCqi                            = 1;
+ enable64QAM                       = 0;          # FALSE 
+ nCsAn                             = 0;
+};
+schedulerConfig :
+{
+ schedulerProfileId                = 0;
+ schedulingAlgorithm               = 2;          #roundRobin
+ maxDlHarqTx                       = 4;
+ maxUlHarqTx                       = 3;          #n4
+ maxMsg4HarqTx                     = 4;
+ pcfichCfi                         = 2;
+ periodicPhrTimer                  = 6;          #sf1000
+ prohibitPhrTimer                  = 4;          #sf100
+ dlPathlossChange                  = 1;          #dB3
+ periodicBsrTimer                  = 1;          #sf10
+ retxBsrTimer                      = 3;          #sf2560
+};
+phyConfig :
+{
+ phyProfileId                      = 0;
+ phichResource                     = 0;          #oneSixth
+ prachFreqOffset                   = 2;
+ referenceSignalPower              = 5;
+ cellPhyPb                         = 0;
+ srsEnabled                        = 0;          # FALSE 
+ alpha                             = 3;          #al06
+ poNominalPucch                    = -100;
+ cellPhyPa                         = 4;          #dB0
+ betaOffsetAckIndex                = 9;
+ betaOffsetRiIndex                 = 6;
+ betaOffsetCqiIndex                = 6;
+ poUePusch                         = 6;
+ poUePucch                         = 6;
+ pSrsOffset                        = 7;
+ phichDuration                     = 0;          #Normal
+ totalTxPower                      = 33;
+};
+radioHeadConfig :
+{
+ radioHeadProfileId                = 1;
+ txAttenPathA                      = 0;
+ txAttenPathB                      = 0;
+ txDelay                           = 0;
+ rxDelay                           = 0;
+ vswrShutdownAlarmThreshold        = 60;
+ overpowerAlarmThreshold           = 18915;
+ lowpowerAlarmThreshold            = 1000;
+};
+qosConfig :
+{
+ qosProfileId                      = 1;
+ qosProfileName                    = "Default";
+ qci                               = 5;
+ rlcMode                           = 1;          #um
+ amRlcTPollRetransmit              = 15;         #ms80
+ amRlcPollPDU                      = 0;          #p4
+ amRlcPollByte                     = 4;          #kB125
+ amRlcMaxRetxThreshold             = 3;          #t4
+ amRlcTReordering                  = 7;          #ms35
+ amRlcTStatusProhibit              = 7;          #ms35
+ discardTimer                      = 7;          #infinity
+ statusReportRequired              = 1;          # TRUE 
+ drbPriority                       = 4;
+ drbPrioritisedBitRate             = 6;          #kBps256
+ drbBucketSizeDuration             = 5;          #ms1000
+ logicalChannelGroup               = 0;
+};
+eutraHoProfileConfig :
+{
+ hoProfileId                       = 1;
+ a3Offset                          = 3;
+ reportOnLeave                     = 1;          # TRUE 
+ a5Threshold1                      = 20;
+ a5Threshold2                      = 30;
+ hysteresis                        = 6;
+ timeToTrigger                     = 12;         #ms1024
+ triggerQuantity                   = 0;          #rsrp
+ reportQuantity                    = 0;          #sameAsTriggerQuantity
+ filterCoefficientRsrq             = 4;          #fc4
+ filterCoefficientRsrp             = 4;          #fc4
+ reportInterval                    = 4;          #ms1024
+ reportAmount                      = 7;          #infinity
+ maxReportCells                    = 3;
+ supportedEvents                   = 2;          #A3A5
+ sMeasure                          = 0;
+};
+eutraNeighCellConfig  = (
+{
+ neibourIndex = 1;
+ isUsed = 0;
+ neighEutraEnbId = 1;
+ neighEutraCellId = 2;
+ neighEutraPhyCellId = 0;
+ neighEutraPlmnMcc = "000";
+ neighEutraPlmnMnc = "00";
+ neighEutraTac = 0;
+ neighCellMeasBandwidth = 3;
+ cellIndividualOffset = 15;
+ intraFreqNeighCellQOffsetCell = 14;
+}, /* End Of eutraNeighCellConfig for row 1 */
+{
+ neibourIndex = 2;
+ isUsed = 0;
+ neighEutraEnbId = 1;
+ neighEutraCellId = 3;
+ neighEutraPhyCellId = 0;
+ neighEutraPlmnMcc = "000";
+ neighEutraPlmnMnc = "00";
+ neighEutraTac = 0;
+ neighCellMeasBandwidth = 3;
+ cellIndividualOffset = 15;
+ intraFreqNeighCellQOffsetCell = 14;
+} /* End Of eutraNeighCellConfig for row 2 */
+); /* End Of eutraNeighCellConfig Table */
+traceConfig :
+{
+ traceProfileId                    = 1;
+ traceRRC                          = 1;          # TRUE 
+ traceS1AP                         = 1;          # TRUE 
+ traceX2AP                         = 0;          # FALSE 
+ traceReserved1                    = 0;          # FALSE 
+ traceReserved2                    = 0;          # FALSE 
+ traceReserved3                    = 0;          # FALSE 
+ traceDestination                  = 1;          #collectToFile
+ traceDestUdpPort                  = 10000;
+ traceDestIPAddress                = "127.0.0.1";
+};
+pmCounterLogConfig :
+{
+ pmProfileId                       = 1;
+ sampleInterval                    = 3;          #10min
+ pmFileCreationInterval            = 2;          #2h
+ collectMacGenCounters             = 1;          # TRUE 
+ collectMacUplaneCounters          = 1;          # TRUE 
+ collectRlcGenCounters             = 1;          # TRUE 
+ collectPdcpGenCounters            = 1;          # TRUE 
+ collectPdcpUplaneCounters         = 1;          # TRUE 
+ collectGtpGenCounters             = 1;          # TRUE 
+ collectSctpGenCounters            = 1;          # TRUE 
+ collectS1apGenCounters            = 1;          # TRUE 
+ collectS1apPeerNodeCounters       = 1;          # TRUE 
+ collectRrcGenCounters             = 1;          # TRUE 
+ collectRrcCellCounters            = 1;          # TRUE 
+ collectRrmCounters                = 1;          # TRUE 
+ collectIPCounters                 = 1;          # TRUE 
+ collectEthernetCounters           = 1;          # TRUE 
+};
+logConfig  = (
+{
+ moduleId = 1;
+ logMask1 = 65;
+},
+{
+ moduleId = 2;
+ logMask1 = 65;
+},
+{
+ moduleId = 3;
+ logMask1 = 65;
+},
+{
+ moduleId = 4;
+ logMask1 = 28647;
+},
+{
+ moduleId = 5;
+ logMask1 = 65;
+},
+{
+ moduleId = 6;
+ logMask1 = 85;
+},
+{
+ moduleId = 7;
+ logMask1 = 65;
+},
+{
+ moduleId = 8;
+ logMask1 = 28647;
+},
+{
+ moduleId = 9;
+ logMask1 = 65;
+},
+{
+ moduleId = 10;
+ logMask1 = 65;
+},
+{
+ moduleId = 11;
+ logMask1 = 65;
+},
+{
+ moduleId = 12;
+ logMask1 = 65;
+},
+{
+ moduleId = 13;
+ logMask1 = 65;
+},
+{
+ moduleId = 14;
+ logMask1 = 65;
+},
+{
+ moduleId = 15;
+ logMask1 = 65;
+},
+{
+ moduleId = 16;
+ logMask1 = 65;
+},
+{
+ moduleId = 17;
+ logMask1 = 65;
+},
+{
+ moduleId = 18;
+ logMask1 = 65;
+},
+{
+ moduleId = 19;
+ logMask1 = 65;
+},
+{
+ moduleId = 20;
+ logMask1 = 65;
+},
+{
+ moduleId = 21;
+ logMask1 = 65;
+}
+); /* End Of log_cfg Table */
+sysInfo3Config :
+{
+ sysInfo3ProfileId                 = 0;
+ qHyst                             = 3;          #dB3
+ threshServingLow                  = 10;
+ cellReselectionPriority           = 7;
+ qRxLevMin                         = -65;
+ pMax                              = 33;
+ sIntraSearch                      = 2;
+ allowMeasBw                       = 6;          #SameAsOwnCellDlBw
+ neighCellConfig                   = 0;
+ tReselectionEutra                 = 1;
+ presenceAntennaPort1              = 0;          # FALSE 
+};
+mmeConfig :
+{
+ index                             = 1;
+ mmeIpAddr                         = "0.0.0.0";
+ enableSecureMmeLink               = 0;          # FALSE 
+ enableSecureGtpTunnels            = 0;          # FALSE 
+ numSctpStreams                    = 2;
+};
+sonConfig :
+{
+ sonProfileId                      = 1;
+ intraFreqHoThreshold              = 2;
+ icicThreshold                     = 5;
+ ueLoadChangeThreshold             = 25;
+};
+srsConfigDedicated :
+{
+ srsBandwidth                      = 0;          #bw0
+ srsHoppingBandWidth               = 0;          #hbw0
+ frequecyDomainPosition            = 0;
+ duration                          = 1;          # TRUE 
+};
+securityConfig :
+{
+ index                             = 0;
+ uuCiphering                       = 1;          #eea1
+ uuIntegrityProtection             = 1;          #eia1
+};
+ueEventHistoryLogConfig :
+{
+ ueEventHistoryIndex               = 0;
+ cRnti                             = 65535;
+ ueProcedureBitMap                 = 255;
+ ueEventMeasures                   = 1;          #logAllEvents
+};
+counterConfig  = (
+{
+ index = 1;
+ counterId = 1000;            # avgNumActvUesQci1
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 1 */
+{
+ index = 2;
+ counterId = 1001;            # avgNumActvUesQci2
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 2 */
+{
+ index = 3;
+ counterId = 1002;            # avgNumActvUesQci3
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 3 */
+{
+ index = 4;
+ counterId = 1003;            # avgNumActvUesQci4
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 4 */
+{
+ index = 5;
+ counterId = 1004;            # avgNumActvUesQci5
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 5 */
+{
+ index = 6;
+ counterId = 1005;            # avgNumActvUesQci6
+ profileId = 1;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 6 */
+{
+ index = 7;
+ counterId = 1006;            # avgNumActvUesQci7
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 7 */
+{
+ index = 8;
+ counterId = 1007;            # avgNumActvUesQci8
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 8 */
+{
+ index = 9;
+ counterId = 1008;            # avgNumActvUesQci9
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 9 */
+{
+ index = 10;
+ counterId = 1009;            # pktUuLossRateDlQci1
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 10 */
+{
+ index = 11;
+ counterId = 1010;            # pktUuLossRateDlQci2
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 11 */
+{
+ index = 12;
+ counterId = 1011;            # pktUuLossRateDlQci3
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 12 */
+{
+ index = 13;
+ counterId = 1012;            # pktUuLossRateDlQci4
+ profileId = 2;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 13 */
+{
+ index = 14;
+ counterId = 1013;            # pktUuLossRateDlQci5
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 14 */
+{
+ index = 15;
+ counterId = 1014;            # pktUuLossRateDlQci6
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 15 */
+{
+ index = 16;
+ counterId = 1015;            # pktUuLossRateDlQci7
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 16 */
+{
+ index = 17;
+ counterId = 1016;            # pktUuLossRateDlQci8
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 17 */
+{
+ index = 18;
+ counterId = 1017;            # pktUuLossRateDlQci9
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 18 */
+{
+ index = 19;
+ counterId = 2000;            # pktDelayDlQci1
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 19 */
+{
+ index = 20;
+ counterId = 2001;            # pktDelayDlQci2
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 20 */
+{
+ index = 21;
+ counterId = 2002;            # pktDelayDlQci3
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 21 */
+{
+ index = 22;
+ counterId = 2003;            # pktDelayDlQci4
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 22 */
+{
+ index = 23;
+ counterId = 2004;            # pktDelayDlQci5
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 23 */
+{
+ index = 24;
+ counterId = 2005;            # pktDelayDlQci6
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 24 */
+{
+ index = 25;
+ counterId = 2006;            # pktDelayDlQci7
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 25 */
+{
+ index = 26;
+ counterId = 2007;            # pktDelayDlQci8
+ profileId = 1;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 26 */
+{
+ index = 27;
+ counterId = 2008;            # pktDelayDlQci9
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 27 */
+{
+ index = 28;
+ counterId = 2009;            # pktDiscRateDlQci1
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 28 */
+{
+ index = 29;
+ counterId = 2010;            # pktDiscRateDlQci2
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 29 */
+{
+ index = 30;
+ counterId = 2011;            # pktDiscRateDlQci3
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 30 */
+{
+ index = 31;
+ counterId = 2012;            # pktDiscRateDlQci4
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 31 */
+{
+ index = 32;
+ counterId = 2013;            # pktDiscRateDlQci5
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 32 */
+{
+ index = 33;
+ counterId = 2014;            # pktDiscRateDlQci6
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 33 */
+{
+ index = 34;
+ counterId = 2015;            # pktDiscRateDlQci7
+ profileId = 2;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 34 */
+{
+ index = 35;
+ counterId = 2016;            # pktDiscRateDlQci8
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 35 */
+{
+ index = 36;
+ counterId = 2017;            # pktDiscRateDlQci9
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 36 */
+{
+ index = 37;
+ counterId = 2018;            # pktLossUlQci1
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 37 */
+{
+ index = 38;
+ counterId = 2019;            # pktLossUlQci2
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 38 */
+{
+ index = 39;
+ counterId = 2020;            # pktLossUlQci3
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 39 */
+{
+ index = 40;
+ counterId = 2021;            # pktLossUlQci4
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 40 */
+{
+ index = 41;
+ counterId = 2022;            # pktLossUlQci5
+ profileId = 1;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 41 */
+{
+ index = 42;
+ counterId = 2023;            # pktLossUlQci6
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 42 */
+{
+ index = 43;
+ counterId = 2024;            # pktLossUlQci7
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 43 */
+{
+ index = 44;
+ counterId = 2025;            # pktLossUlQci8
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 44 */
+{
+ index = 45;
+ counterId = 2026;            # pktLossUlQci9
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 45 */
+{
+ index = 46;
+ counterId = 3000;            # prbUsageDlQci1
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 46 */
+{
+ index = 47;
+ counterId = 3001;            # prbUsageDlQci2
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 47 */
+{
+ index = 48;
+ counterId = 3002;            # prbUsageDlQci3
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 48 */
+{
+ index = 49;
+ counterId = 3003;            # prbUsageDlQci4
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 49 */
+{
+ index = 50;
+ counterId = 3004;            # prbUsageDlQci5
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 50 */
+{
+ index = 51;
+ counterId = 3005;            # prbUsageDlQci6
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 51 */
+{
+ index = 52;
+ counterId = 3006;            # prbUsageDlQci7
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 52 */
+{
+ index = 53;
+ counterId = 3007;            # prbUsageDlQci8
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 53 */
+{
+ index = 54;
+ counterId = 3008;            # prbUsageDlQci9
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 54 */
+{
+ index = 55;
+ counterId = 3009;            # prbUsageUlQci1
+ profileId = 1;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 55 */
+{
+ index = 56;
+ counterId = 3010;            # prbUsageUlQci2
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 56 */
+{
+ index = 57;
+ counterId = 3011;            # prbUsageUlQci3
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 57 */
+{
+ index = 58;
+ counterId = 3012;            # prbUsageUlQci4
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 58 */
+{
+ index = 59;
+ counterId = 3013;            # prbUsageUlQci5
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 59 */
+{
+ index = 60;
+ counterId = 3014;            # prbUsageUlQci6
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 60 */
+{
+ index = 61;
+ counterId = 3015;            # prbUsageUlQci7
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 61 */
+{
+ index = 62;
+ counterId = 3016;            # prbUsageUlQci8
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 62 */
+{
+ index = 63;
+ counterId = 3017;            # prbUsageUlQci9
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 63 */
+{
+ index = 64;
+ counterId = 3018;            # numActvUesDlQci1
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 64 */
+{
+ index = 65;
+ counterId = 3019;            # numActvUesDlQci2
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 65 */
+{
+ index = 66;
+ counterId = 3020;            # numActvUesDlQci3
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 66 */
+{
+ index = 67;
+ counterId = 3021;            # numActvUesDlQci4
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 67 */
+{
+ index = 68;
+ counterId = 3022;            # numActvUesDlQci5
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 68 */
+{
+ index = 69;
+ counterId = 3023;            # numActvUesDlQci6
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 69 */
+{
+ index = 70;
+ counterId = 3024;            # numActvUesDlQci7
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 70 */
+{
+ index = 71;
+ counterId = 3025;            # numActvUesDlQci8
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 71 */
+{
+ index = 72;
+ counterId = 3026;            # numActvUesDlQci9
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 72 */
+{
+ index = 73;
+ counterId = 3027;            # numActvUesUlQci1
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 73 */
+{
+ index = 74;
+ counterId = 3028;            # numActvUesUlQci2
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 74 */
+{
+ index = 75;
+ counterId = 3029;            # numActvUesUlQci3
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 75 */
+{
+ index = 76;
+ counterId = 3030;            # numActvUesUlQci4
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 76 */
+{
+ index = 77;
+ counterId = 3031;            # numActvUesUlQci5
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 77 */
+{
+ index = 78;
+ counterId = 3032;            # numActvUesUlQci6
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 78 */
+{
+ index = 79;
+ counterId = 3033;            # numActvUesUlQci7
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 79 */
+{
+ index = 80;
+ counterId = 3034;            # numActvUesUlQci8
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 80 */
+{
+ index = 81;
+ counterId = 3035;            # numActvUesUlQci9
+ profileId = 1;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 81 */
+{
+ index = 82;
+ counterId = 3036;            # totalPrbUsageDl
+ profileId = 2;
+ isEnabled = 0;
+}, /* End Of CounterConfig for row 82 */
+{
+ index = 83;
+ counterId = 3037;            # totalPrbUsageUl
+ profileId = 2;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 83 */
+{
+ index = 84;
+ counterId = 3038;            # recvRaPreamblesDedicated
+ profileId = 2;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 84 */
+{
+ index = 85;
+ counterId = 3039;            # recvRaPreamblesLowRange
+ profileId = 2;
+ isEnabled = 1;
+}, /* End Of CounterConfig for row 85 */
+{
+ index = 86;
+ counterId = 3040;            # recvRaPreamblesHighRange
+ profileId = 2;
+ isEnabled = 1;
+} /* End Of CounterConfig for row 86 */
+); /* End Of CounterConfig Table */

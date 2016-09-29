@@ -1,0 +1,166 @@
+<project name="LTE" basedir="." >
+
+
+
+<property name="SRC1" location ="/home/naveen/NWSW/nwsw"/>
+
+<property name="SRC2" location ="/home/naveen/NWSW/nwsw/build/scripts"/>
+
+<property name="SRC3" location ="/home/naveen/NWSW/nwsw/build/config"/>
+
+
+
+
+<property name="pico" value="xx"/>
+<property name="prop" value="xx"/>
+
+
+<property name="relv" value="xxx"/>
+<property name="bufv" value="xxx"/>
+
+
+
+
+
+
+
+
+
+<target name="upperarm">
+
+
+
+  <exec dir="${SRC1}" executable="/bin/sh">
+ 
+
+  <arg line='-c "make clean"'/>
+  
+   
+ 
+
+ 
+  </exec>
+
+
+</target>
+
+
+
+
+
+
+
+<target name="upperarm4gmx">
+
+    <exec dir="${SRC1}" executable="/bin/sh">
+ 
+    <arg line='-c "make 4gmx"'/>
+
+
+ 
+    </exec>
+
+
+
+
+</target>
+
+
+
+
+
+
+<target name="NFSpackage">
+
+
+
+  <exec dir="${SRC2}" executable="/bin/sh">
+   
+  <arg line='-c "./create_package.sh"'/>
+
+
+ 
+  </exec>
+
+</target>
+
+
+
+
+
+
+
+<target name="JFFSpackage">
+
+  <exec dir="${SRC2}" executable="/bin/sh">
+
+  <arg line='-c "./create_package_ubfs.sh"'/>
+
+
+ 
+  </exec>
+
+
+
+</target>
+
+
+
+<target name="RadioHead">
+
+<copy file="/home/naveen/SEC/PICO_V00.01.01.27/PICO_00.01.01.27.bin" todir="/home/naveen/NWSW/nwsw/build/config/"/>
+
+
+
+<replace file="${SRC3}/packageInfo.txt" token='PICO_00.01.01.25.bin' value='${pico}'/>
+
+<replace file="${SRC3}/packageInfo.txt" token='0.0.1.1.25' value='${prop}'/>
+
+
+
+<exec dir="${SRC3}" executable="/bin/sh">
+   
+    <arg line='-c "tar -cvzf rh.tgz packageInfo.txt PICO_00.01.01.27.bin"'/>
+
+
+</exec>
+
+
+
+</target>
+
+
+
+
+<target name="JFFSpackagesw">
+
+
+
+
+<replace file="${SRC3}/version.cfg" token='1' value='${relv}'/>
+
+
+<replace file="${SRC3}/version.cfg" token='2' value='${bufv}'/> 
+
+
+<exec dir="${SRC2}" executable="/bin/sh">
+   
+    <arg line='-c "./create_swinstall_package.sh jffs SwInstall 2"'/>
+
+
+</exec>
+
+
+
+</target>
+
+
+
+
+</project>
+
+
+
+
+
+

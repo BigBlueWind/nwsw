@@ -1,0 +1,5 @@
+enbLimitsDefaultCfg :
+{
+ maxTraceFileSize             = 5; #units interms of Megabytes
+ maxCombinedPmLogFileSize	  = 400; #Units interms of Megabytes
+};

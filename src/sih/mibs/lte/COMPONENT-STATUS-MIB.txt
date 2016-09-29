@@ -1,0 +1,132 @@
+ -- @file    COMPONENT-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:48 PM
+ --
+
+COMPONENT-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, VersionString, String64           FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+componentStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Hw version version, desc of HW, repair date etc"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 105 }
+
+componentStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF ComponentStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Hw version version, desc of HW, repair date etc
+            This is a MULTI ROW Table"
+       ::= { componentStatus 1 }
+
+componentStatusEntry OBJECT-TYPE
+       SYNTAX      ComponentStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry of component status objects."
+       INDEX  { index }
+       ::= { componentStatusTable 1 }
+
+ComponentStatusEntry ::= 
+   SEQUENCE {
+       index                         RowNumber,
+       componentType                 INTEGER,
+       componentVersion              VersionString,
+       componentInstance             Unsigned32,
+       componentOperationalState     INTEGER,
+       infoString                    String64,
+       errorString                   String64
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { componentStatusEntry 1 }
+
+componentType OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   baseBand(1),
+                   radioHead(2),
+                   ethernet(3),
+                   tempSensor(4),
+                   cpri(5),
+                   gps(6),
+                   clock(7)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNB-Pico HW components types.]"
+       ::= { componentStatusEntry 2 }
+
+componentVersion OBJECT-TYPE
+       SYNTAX      VersionString
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The release.revision.bugfix.ffu.ffu of the hardware component]"
+       ::= { componentStatusEntry 3 }
+
+componentInstance OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 10 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Instance of each device]"
+       ::= { componentStatusEntry 4 }
+
+componentOperationalState OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   up(1),
+                   down(2),
+                   unknown(3),
+                   notMonitored(4)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Operational state of the device ]"
+       ::= { componentStatusEntry 5 }
+
+infoString OBJECT-TYPE
+       SYNTAX      String64
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             General information about the hardware component]"
+       ::= { componentStatusEntry 6 }
+
+errorString OBJECT-TYPE
+       SYNTAX      String64
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Error information if the device is down ]"
+       ::= { componentStatusEntry 7 }
+
+END

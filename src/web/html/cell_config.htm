@@ -1,0 +1,1229 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';
+    </style>
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip_chkbox.js'></script>
+    <script type='text/javascript' src='../script/validate.js'></script>
+    <script type='text/javascript' src='../script/mapping.js'></script>
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>    
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+        $(document).ready(function() {
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason,Right Click is not allowed.'); return false; });
+
+           
+            $(':text, :password, select').each(function() {
+                $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+            });
+            LteGet('cellConfig', null, ChkLock);
+
+            if (sessionID != 'undefined' && sessionID != null) {
+                $('#schedulerProfileId').attr('href', sessionID + '-scheduler_config.htm');
+                $('#phyProfileId').attr('href', sessionID + '-phy_config.htm');
+                $('#sysInfo1ProfileId').attr('href', sessionID + '-sysinfo1_config.htm');
+                $('#sysInfo2ProfileId').attr('href', sessionID + '-sysinfo2_config.htm');
+                $('#sysInfo3ProfileId').attr('href', sessionID + '-sysinfo3_config.htm');
+            }
+
+            if (parent.frames['Top'].link == 1) {
+                $('#btnBack').hide();
+                $('#pageTitle').html('Configuration > Cell');
+            }
+            else
+                if (parent.frames['Top'].link == 2) {
+                $('#pageTitle').html('Configuration > eNodeB  > Cell ')
+            }
+
+            $('#schedulerProfileId, #phyProfileId, #sysInfo1ProfileId, #sysInfo2ProfileId,#sysInfo3ProfileId').click(function() {
+                parent.frames['Top'].link++;
+            });
+
+
+            $('#btnBack').click(function() {
+                if (sessionID != null && sessionID != 'undefined')
+                    window.location.href = sessionID + '-enodeb_config.htm';
+                parent.frames['Top'].link--;
+            });
+
+            $('#btnApply').click(function() {
+                var msg = '';
+                var change = 'false';
+                                
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                            change = 'true';
+                        }
+                    }
+                });
+                $("#acBarrMoSigEnabled, #acBarrMoDataEnabled").each(function() {                    
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }                    
+                });
+
+                if (change == 'true') {
+                    SelectBoxReload('#acBarrMoSigFactor,#acBarrMoSigTime,#acBarrMoDataFactor,#acBarrMoDataTime,#acBarrMoSigSpecialAC,#acBarrMoDataSpecialAC,#ueResponseTimer,#antInfoTxMode,#cqiPeriodicityIdx,#sriPeriodicityIdx');
+                    $('input, select').each(function() {
+                        if ($(this).is(':text, :password, select') == true) {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                            else {
+                                if ($(this).is(':text, :password') == true) {
+                                    if (this.id == "pMax" && $("#pMaxChkb").is(":checked") == false)
+                                        msg = msg;
+                                    else
+                                    if (this.id == "ueInactivityCheckIntervalSecs" && $("#ueInactivityCheckIntervalSecsChkb").is(":checked") == false)
+                                        msg = msg;
+                                    else
+                                    if (this.id == "acBarrMoDataSpecialAC" && $("#acBarrMoDataEnabledChkb").is(":checked") == false)
+                                        msg = msg;
+                                    else
+                                    if (this.id == "acBarrMoSigSpecialAC" && $("#acBarrMoSigEnabledChkb").is(":checked") == false)
+                                        msg = msg;
+                                    else
+                                    if (this.id == "ulEarfcn" && $("#ulEarfcnChkb").is(":checked") == false)
+                                        msg = msg;
+                                    else
+                                    if (this.id == "freqBandInd" && $("#freqBandIndChkb").is(":checked") == false)
+                                        msg = msg;    
+                                    else
+                                    if (this.id == "acBarrMoSigEnabledtext" || this.id == "acBarrMoDataEnabledtext")
+                                        msg = msg;
+                                    else    
+                                        msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                                }
+                            }
+                        }
+                    });
+                    if (msg != "") {
+                        $(':text, :password, select').each(function() {
+                            $(this).attr('disabled', false);
+                        });
+                        if (parent.frames["Top"].isLocked == "unlocked") {
+                            ChkSpecialValues();
+                            LockAttributes();
+                        }
+                        alert(msg);
+                    }
+                    else {
+                        if (parent.frames['Top'].isLocked == 'unlocked') {
+                            $('#cellId,#initialUlCqi,#pucchResourceSize,#plmnMCC,#plmnMNC,#tac,#freqBandInd,#dlBandwidth,#dlEarfcn,#ulBandwidth,#ulEarfcn,\
+                            #cellReservedForOperatorUse,#startRnti,#phyLayerId,#phyCellIdentityGroup,\
+                            #rrcConnRejWaitTime,#maxConnectedUes,#ueResponseTimer,#antInfoTxMode,#cqiPeriodicityIdx,#sriPeriodicityIdx,#ueInactivityCheckIntervalSecs,#pMax,#siReTxCnt').attr('disabled', true).css('background-color', '#C0C0C0');
+                        }
+                        if ($('#acBarrMoDataEnabled').val() == '0')
+                            $('#acBarrMoDataFactor,#acBarrMoDataTime,#acBarrMoDataSpecialAC').attr('disabled', true);
+                        if ($('#acBarrMoSigEnabled').val() == '0')
+                            $('#acBarrMoSigFactor,#acBarrMoSigTime,#acBarrMoSigSpecialAC').attr('disabled', true);
+                        if (($('#acBarrMoSigEnabledChkb').is(':checked') == false) && ($('#acBarrMoSigEnabled').val() == $('#acBarrMoSigEnabledHidden').val()))
+                            $('#acBarrMoSigEnabled').attr('disabled', true);
+                        if (($('#acBarrMoDataEnabledChkb').is(':checked') == false) && ($('#acBarrMoDataEnabled').val() == $('#acBarrMoDataEnabledHidden').val()))
+                            $('#acBarrMoDataEnabled').attr('disabled', true);
+                        $('#pMaxChkb,#ueInactivityCheckIntervalSecsChkb,#acBarrMoDataEnabledChkb,#acBarrMoDataEnabledtext,#acBarrMoSigEnabledChkb,#acBarrMoSigEnabledtext,#acBarrMoSigEnabledHidden,#acBarrMoDataEnabledHidden,#ulEarfcnChkb, #freqBandIndChkb').attr('disabled', true);
+                        $('input, select').each(function() {
+                            if ($(this).is(':text, :password, select') == true) {
+                                if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                    $(this).attr('disabled', true);
+                                }
+                            }
+                        });
+                        $("#acBarrMoSigEnabled, #acBarrMoDataEnabled").each(function() {
+                            if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                                $(this).attr('disabled', true);
+                            }
+                        });
+                        LteSet('cellConfig', $('#cellConfig'), $('#btnApply'), ChkLock);
+                    }
+                }
+                else {
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                }
+            });
+
+            $('#ulEarfcnChkb,#pMaxChkb,#ueInactivityCheckIntervalSecsChkb,#freqBandIndChkb').click(function() {
+                if (this.id == 'ulEarfcnChkb')
+                    EnableInput(this.id, 'ulEarfcn', '65536', 'ulEarfcnHidden');
+                else    
+                if (this.id == 'freqBandIndChkb')
+                    EnableInput(this.id, 'freqBandInd', '17', 'freqBandIndHidden');    
+                else
+                if (this.id == 'pMaxChkb')
+                    EnableInput(this.id, 'pMax', '65', 'pMaxHidden');
+                else
+                if (this.id == 'ueInactivityCheckIntervalSecsChkb')
+                    EnableInput(this.id, 'ueInactivityCheckIntervalSecs', '0', 'ueInactivityCheckIntervalSecsHidden');
+
+            });
+
+            $('#acBarrMoSigEnabledChkb,#acBarrMoDataEnabledChkb').click(function() {
+                if ($(this).is(':checked') == true) {
+                    SpecialUsedAttributes(this.id, 'enable');
+                }
+                else {
+                    SpecialUsedAttributes(this.id, 'disable');
+                }
+            });
+
+            $('#acBarrMoSigFactor,#acBarrMoSigTime').change(function() {
+                if ($('#acBarrMoSigEnabledChkb').is(':checked') == false)
+                    FreezeList($('#acBarrMoSigFactor,#acBarrMoSigTime'));
+            });
+            $('#acBarrMoDataFactor,#acBarrMoDataTime').change(function() {
+                if ($('#acBarrMoDataEnabledChkb').is(':checked') == false)
+                    FreezeList($('#acBarrMoDataFactor,#acBarrMoDataTime'));
+            });
+
+            $('#btnHelp').click(function() {
+                window.open(sessionID + "-help.htm#cellConfig", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+
+        });
+
+
+        function ChkSpecialValues() {
+            $('#cellId,#initialUlCqi,#pucchResourceSize,#plmnMCC,#plmnMNC,#tac,#freqBandInd,#dlBandwidth,#dlEarfcn,#ulBandwidth,#ulEarfcn,\
+            #cellReservedForOperatorUse,#ueInactivityCheckIntervalSecs, #ueInactivityCheckIntervalSecsChkb, #startRnti,#phyLayerId,#phyCellIdentityGroup,\
+            #pMaxChkb,#acBarrMoDataEnabledChkb,#acBarrMoSigEnabledChkb,#acBarrMoSigEnabledtext,#acBarrMoDataEnabledtext,#ulEarfcnChkb,#freqBandIndChkb,#acBarrMoDataFactor,#acBarrMoDataTime,#acBarrMoDataSpecialAC,#acBarrMoSigFactor,#acBarrMoSigTime,#acBarrMoSigSpecialAC,#rrcConnRejWaitTime,#maxConnectedUes,#ueResponseTimer,#antInfoTxMode,#cqiPeriodicityIdx,#sriPeriodicityIdx,#siReTxCnt').attr('disabled', false).css('background-color', 'white');
+            if ($('#ulEarfcn').val() == '65536') {
+                $('#ulEarfcnChkb').attr('checked', false);
+                $('#ulEarfcn').attr('readonly', true).css('background-color', '#A4A4A4');              
+            }
+            else {
+                $('#ulEarfcnChkb').attr('checked', true);
+                $('#ulEarfcn').attr('disabled', false).css('background-color', 'white');
+                $('#ulEarfcnHidden').val($('#ulEarfcn').val());
+            }
+            if ($('#freqBandInd').val() == '17') {
+                $('#freqBandIndChkb').attr('checked', false);
+                $('#freqBandInd').attr('readonly', true).css('background-color', '#A4A4A4');
+            }
+            else {
+                $('#freqBandIndChkb').attr('checked', true);
+                $('#freqBandInd').attr('disabled', false).css('background-color', 'white');
+                $('#freqBandIndHidden').val($('#freqBandInd').val());
+            }
+            if ($('#acBarrMoSigEnabled').val() == '0') {
+                $('#acBarrMoSigEnabledChkb').attr('checked', false);                
+                SpecialUsedAttributes('acBarrMoSigEnabledChkb','disable');
+            }
+            else {
+                $('#acBarrMoSigEnabledChkb').attr('checked', true);                
+                SpecialUsedAttributes('acBarrMoSigEnabledChkb','enable');                
+            }
+
+            if ($('#acBarrMoDataEnabled').val() == '0') {
+                $('#acBarrMoDataEnabledChkb').attr('checked', false);                
+                SpecialUsedAttributes('acBarrMoDataEnabledChkb','disable');
+            }
+            else {
+                $('#acBarrMoDataEnabledChkb').attr('checked', true);                
+                SpecialUsedAttributes('acBarrMoDataEnabledChkb','enable');  
+            }
+            if ($('#pMax').val() == '65') {
+                $('#pMaxChkb').attr('checked', false);
+                $('#pMax').attr('readonly', true).css('background-color', '#A4A4A4');                               
+            }
+            else {
+                $('#pMaxChkb').attr('checked', true);
+                $('#pMax').attr('disabled', false).css('background-color', 'white');
+                $('#pMaxHidden').val($('#pMax').val());
+            }
+            if ($('#ueInactivityCheckIntervalSecs').val() == '0') {
+                $('#ueInactivityCheckIntervalSecsChkb').attr('checked', false);
+                $('#ueInactivityCheckIntervalSecs').attr('readonly', true).css('background-color', '#A4A4A4');                               
+            }
+            else {
+                $('#ueInactivityCheckIntervalSecsChkb').attr('checked', true);
+                $('#ueInactivityCheckIntervalSecs').attr('disabled', false).css('background-color', 'white');
+                $('#ueInactivityCheckIntervalSecsHidden').val($('#ueInactivityCheckIntervalSecs').val());
+            }
+            $("#acBarrMoSigEnabled, #acBarrMoDataEnabled").each(function() {                
+                    $(this).attr('disabled', false);                
+            });          
+        }
+        
+        function LockAttributes() {
+            $('#cellId,#initialUlCqi,#pucchResourceSize,#plmnMCC,#plmnMNC,#tac,#freqBandInd,,#dlEarfcn,,#ulEarfcn,#ueInactivityCheckIntervalSecs,#startRnti,\
+                #phyLayerId,#phyCellIdentityGroup,#rrcConnRejWaitTime,#maxConnectedUes,#pMax,#siReTxCnt').attr('readonly', true).attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip();
+            $('#ulEarfcnChkb,#freqBandIndChkb,#ueInactivityCheckIntervalSecsChkb,#pMaxChkb').attr('disabled', true);
+            FreezeList('#dlBandwidth,#ulBandwidth,#cellReservedForOperatorUse,#ueResponseTimer,#antInfoTxMode,#cqiPeriodicityIdx,#sriPeriodicityIdx');
+            $('#dlBandwidth,#ulBandwidth,#cellReservedForOperatorUse,#ueResponseTimer,#antInfoTxMode,#cqiPeriodicityIdx,#sriPeriodicityIdx').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+                if (parent.frames['Top'].isLocked == 'unlocked') 
+                    FreezeList(this);
+            });
+        }
+        
+        function MapIdName(fieldName) {
+            switch (fieldName) {
+                case 'cellId': return 'Cell Id';
+                case 'plmnMCC': return 'Mobile Country Code';
+                case 'plmnMNC': return 'Mobile Network Code';
+                case 'tac': return  'Tracking Area Code';
+                case 'freqBandInd': return 'Frequency Band Indicator';
+                case 'dlEarfcn': return 'Downlink EARFCN';
+                case 'maxConnectedUes': return 'Max Connected mode Ues';        
+                case 'acBarrMoSigSpecialAC': return  'Barring AC 11-15 MO Signaling';    
+                case 'acBarrMoDataSpecialAC': return 'Barring AC 11-15 MO Data';
+                case 'startRnti': return 'Lower Bound Value for RNTI Pool';                
+                case 'phyLayerId': return  'Physical Cell Identity';
+                case 'phyCellIdentityGroup': return 'Physical Cell Group Identity';        
+                case 'ueInactivityCheckIntervalSecs':  return 'UE Inactivity Check Interval';        
+                case 'ulEarfcn': return 'Uplink EARFCN';        
+                case 'pMax': return 'P-Max';
+                case 'rrcConnRejWaitTime': return 'RRC Connection Reject Wait Time';
+                case 'siReTxCnt': return 'SI Retransmission count';
+                case 'initialUlCqi': return 'Initial UL CQI';
+                case 'pucchResourceSize': return 'PUCCH Resource Size';                    
+            }
+        }   
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title' id='pageTitle'></span>
+            </td>
+            <td align='right' width='40%'>
+                <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'/></td></tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Back' name='btnBack' id='btnBack' />
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />                        
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+       </table>
+    </div>
+    <div style='margin-left: 10px; width: 570px; height: 610px;'>
+        <form name='cellConfig' id='cellConfig' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td class='tblTitleBg' align='left'>
+                    &nbsp Cell Configuration
+                </td>                
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style='overflow-x: hidden; overflow-y: scroll; height:610px;width:570px;
+                        border-bottom: 1px; scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black'>
+                        <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                            <tr class='tblSubTitleBg'>
+                                <td colspan='5'>
+                                    &nbsp; Cell Information
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Cell Identifier
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='cellId' name='cellId' type='text' class='lteinput' validate="IntRangeChk" min="1" max="255"/>&nbsp;(1 ~ 255)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Mobile Country Code
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='plmnMCC' name='plmnMCC' type='text' class='lteinput' validate="IntLengthValidate" min="3" max="3"/>&nbsp;(3 Digits)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Mobile Network Code
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='plmnMNC' name='plmnMNC' type='text' class='lteinput' validate="IntLengthValidate" min="2" max="3"/>&nbsp;(2 ~ 3 Digits)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Tracking Area Code
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='tac' name='tac' type='text' class='lteinput' validate="IntRangeChk" min="0" max="65535"/>&nbsp;(0 ~ 65535)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Downlink Bandwidth
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='dlBandwidth' id='dlBandwidth' class='lteinput'>
+                                        <option value='0'>1.4 MHz</option>
+                                        <option value='1'>3 MHz</option>
+                                        <option value='2'>5 MHz</option>
+                                        <option value='3'>10 MHz</option>
+                                        <option value='4'>20 MHz</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Uplink Bandwidth
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='ulBandwidth' id='ulBandwidth' class='lteinput'>
+                                        <option value='0'>1.4 MHz</option>
+                                        <option value='1'>3 MHz</option>
+                                        <option value='2'>5 MHz</option>
+                                        <option value='3'>10 MHz</option>
+                                        <option value='4'>20 MHz</option>
+                                        <option value='5'>UNDEFINED</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Physical Cell Identity
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='phyLayerId' name='phyLayerId' type='text' class='lteinput' validate="IntRangeChk" min="0" max="2"/>&nbsp;(0 ~ 2)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Cell Reserved for Operator Usage
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='cellReservedForOperatorUse' id='cellReservedForOperatorUse' class='lteinput'>
+                                        <option value='0'>RESERVED</option>
+                                        <option value='1'>NOT RESERVED</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Cell Type
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='cellType' id='cellType' class='lteinput'>
+                                        <option value='0'>VERY SMALL</option>
+                                        <option value='1'>SMALL</option>
+                                        <option value='2'>MEDIUM</option>
+                                        <option value='3'>LARGE</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>                            
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Frequency Band Indicator
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='freqBandInd' name='freqBandInd' type='text' class='lteinput' validate="IntRangeChk" min="1" max="25"/>&nbsp;(1 ~ 25)
+                                    <input id='freqBandIndChkb' type='checkbox' />
+                                    Used
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Downlink EARFCN
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='dlEarfcn' name='dlEarfcn' type='text' class='lteinput' validate="IntRangeChk" min="0" max="65535"/>&nbsp;(0 ~ 65535)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Uplink EARFCN
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='ulEarfcn' name='ulEarfcn' type='text' class='lteinput' validate="IntRangeChk" min="0" max="65535"/>&nbsp;(0 ~ 65535)
+                                    <input id='ulEarfcnChkb' type='checkbox' />
+                                    Used
+                                    
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Physical Cell Group Identity
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='phyCellIdentityGroup' name='phyCellIdentityGroup' type='text' class='lteinput' validate="IntRangeChk" min="0" max="167"/>&nbsp;(0 - 167)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    UE Inactivity Check Interval
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='ueInactivityCheckIntervalSecs' name='ueInactivityCheckIntervalSecs' type='text' class='lteinput' validate="IntRangeChk" min="0" max="600"/>&nbsp;(0 ~ 600)
+                                    <input id='ueInactivityCheckIntervalSecsChkb' type='checkbox' />
+                                    Used
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Initial UL CQI
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='initialUlCqi' name='initialUlCqi' type='text' class='lteinput' validate="IntRangeChk" min="0" max="15"/>&nbsp;(0 ~ 15)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>                               
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SIB1 Profiler Identifier
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <a name='sysInfo1ProfileId' id='sysInfo1ProfileId' href='' style='color: Blue; font-weight: bold'>
+                                    </a>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SIB2 Profiler Identifier
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <a name='sysInfo2ProfileId' id='sysInfo2ProfileId' href='' style='color: Blue; font-weight: bold'>
+                                    </a>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SIB3 Profiler Identifier
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <a name='sysInfo3ProfileId' id='sysInfo3ProfileId' href='' style='color: Blue; font-weight: bold'>
+                                    </a>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; Barring Information
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Access Barring for Emergency Calls
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='acBarringEmergency' id='acBarringEmergency' class='lteinput'>
+                                        <option value='1'>TRUE</option>
+                                        <option value='0'>FALSE</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Access Barring MO Signaling
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input type='hidden' name='acBarrMoSigEnabled' id='acBarrMoSigEnabled' />
+                                    <input type='hidden' name='acBarrMoSigEnabledHidden' id='acBarrMoSigEnabledHidden' />
+                                    <input type='text' id='acBarrMoSigEnabledtext' class='lteinput'/>
+                                    <input id='acBarrMoSigEnabledChkb' type='checkbox' />
+                                    Used
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Access Barring Factor MO Signaling
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='acBarrMoSigFactor' id='acBarrMoSigFactor' class='lteinput'>
+                                        <option value='0'>p00</option>
+                                        <option value='1'>p05</option>
+                                        <option value='2'>p10</option>
+                                        <option value='3'>p15</option>
+                                        <option value='4'>p20</option>
+                                        <option value='5'>p25</option>
+                                        <option value='6'>p30</option>
+                                        <option value='7'>p40</option>
+                                        <option value='8'>p50</option>
+                                        <option value='9'>p60</option>
+                                        <option value='10'>p70</option>
+                                        <option value='11'>p75</option>
+                                        <option value='12'>p80</option>
+                                        <option value='13'>p85</option>
+                                        <option value='14'>p90</option>
+                                        <option value='15'>p95</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Access Barring Time MO Signaling
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='acBarrMoSigTime' id='acBarrMoSigTime' class='lteinput'>
+                                        <option value='0'>s4</option>
+                                        <option value='1'>s8</option>
+                                        <option value='2'>s16</option>
+                                        <option value='3'>s32</option>
+                                        <option value='4'>s64</option>
+                                        <option value='5'>s128</option>
+                                        <option value='6'>s256</option>
+                                        <option value='7'>s512</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Barring Access 11-15 MO Signaling
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='acBarrMoSigSpecialAC' name='acBarrMoSigSpecialAC' type='text' class='lteinput' validate="BinaryValidate" min="5"/>&nbsp;(5 Bits)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Access Barring MO Data
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input type='hidden' name='acBarrMoDataEnabled' id='acBarrMoDataEnabled' />
+                                    <input type='hidden' name='acBarrMoDataEnabledHidden' id='acBarrMoDataEnabledHidden' />
+                                    <input type='text' id='acBarrMoDataEnabledtext' class='lteinput'/>
+                                    <input id='acBarrMoDataEnabledChkb' type='checkbox' />
+                                    Used
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Access Barring Factor MO Data
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='acBarrMoDataFactor' id='acBarrMoDataFactor' class='lteinput'>
+                                        <option value='0'>p00</option>
+                                        <option value='1'>p05</option>
+                                        <option value='2'>p10</option>
+                                        <option value='3'>p15</option>
+                                        <option value='4'>p20</option>
+                                        <option value='5'>p25</option>
+                                        <option value='6'>p30</option>
+                                        <option value='7'>p40</option>
+                                        <option value='8'>p50</option>
+                                        <option value='9'>p60</option>
+                                        <option value='10'>p70</option>
+                                        <option value='11'>p75</option>
+                                        <option value='12'>p80</option>
+                                        <option value='13'>p85</option>
+                                        <option value='14'>p90</option>
+                                        <option value='15'>p95</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Mean Access Barring Time MO Data
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='acBarrMoDataTime' id='acBarrMoDataTime' class='lteinput'>
+                                        <option value='0'>s4</option>
+                                        <option value='1'>s8</option>
+                                        <option value='2'>s16</option>
+                                        <option value='3'>s32</option>
+                                        <option value='4'>s64</option>
+                                        <option value='5'>s128</option>
+                                        <option value='6'>s256</option>
+                                        <option value='7'>s512</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Barring Access 11-15 MO Data
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='acBarrMoDataSpecialAC' name='acBarrMoDataSpecialAC' type='text' class='lteinput' validate="BinaryValidate" min="5"/>&nbsp;(5 Bits)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; MAC Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Lower Bound Value for RNTI Pool
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='startRnti' name='startRnti' type='text' class='lteinput' validate="IntRangeChk" min="61" max="65503"/>&nbsp;(61 ~ 65503)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>                            
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; RRC Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    UE Response Timer
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='ueResponseTimer' name='ueResponseTimer' class='lteinput'>
+                                    <option value="0">ms50</option>
+                                    <option value="1">ms100</option>
+                                    <option value="2">ms200</option>
+                                    <option value="3">ms500</option>
+                                    <option value="4">ms1000</option>
+                                    <option value="5">ms2000</option>
+                                    <option value="6">ms5000</option>                                    
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; Profile Identifier
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PHY Profiler Identifier
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <a id='phyProfileId' name='phyProfileId' href='' style='color: Blue; font-weight: bold'>
+                                        0</a>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    MAC Profile  Reference
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <a id='schedulerProfileId' name='schedulerProfileId' href='' style='color: Blue;
+                                        font-weight: bold'>0</a>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; UE-Physical Layer
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    P-Max
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='pMax' name='pMax' type='text' class='lteinput' validate="IntRangeChk" min="-30" max="33"/>&nbsp;(-30 ~ 33)
+                                    <input id='pMaxChkb' type='checkbox' />
+                                    Used
+                                    
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; Uplink Power Control
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RSRP Measuemenr Filter Coefficient
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select name='rsrpFilterCoefficient' id='rsrpFilterCoefficient' class='lteinput'>
+                                        <option value='1'>fc0</option>
+                                        <option value='2'>fc1</option>
+                                        <option value='3'>fc2</option>
+                                        <option value='4'>fc3</option>
+                                        <option value='5'>fc4</option>
+                                        <option value='6'>fc5</option>
+                                        <option value='7'>fc6</option>
+                                        <option value='8'>fc7</option>
+                                        <option value='9'>fc8</option>
+                                        <option value='10'>fc9</option>
+                                        <option value='11'>fc11</option>
+                                        <option value='12'>fc13</option>
+                                        <option value='13'>fc15</option>
+                                        <option value='14'>fc17</option>
+                                        <option value='15'>fc19</option>
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; Admission Control
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Maximum Connected mode UEs
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='maxConnectedUes' name='maxConnectedUes' type='text' class='lteinput' validate="IntRangeChk" min="1" max="100"/>&nbsp;(1 ~ 100) &nbsp;
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    RRC Connection Reject Wait Time
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='rrcConnRejWaitTime' name='rrcConnRejWaitTime' type='text' class='lteinput' validate="IntRangeChk" min="1" max="16"/>&nbsp;(1 ~ 16) &nbsp;
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; SI Configuration
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SI Retransmission count
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='siReTxCnt' name='siReTxCnt' type='text' class='lteinput' validate="IntRangeChk" min="0" max="5"/>&nbsp;(1 ~ 100) &nbsp;
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; Antenna Information
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    Antenna Transmission Mode
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='antInfoTxMode' name='antInfoTxMode' class='lteinput'>
+                                    <option value="0">tm1</option>
+                                    <option value="1">tm2</option>
+                                    <option value="2">tm3</option>
+                                    <option value="3">tm4</option>
+                                    <option value="4">tm5</option>
+                                    <option value="5">tm6</option>
+                                    <option value="6">tm7</option>                                    
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan='5' class='tblSubTitleBg'>
+                                    &nbsp; PUCCH Configuration
+                                </td>
+                            </tr>                            
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    PUCCH Resource Size
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <input id='pucchResourceSize' name='pucchResourceSize' type='text' class='lteinput' validate="IntRangeChk" min="0" max="10"/>&nbsp;(0 ~ 10)
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg2'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    CQI Periodicity
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='cqiPeriodicityIdx' name='cqiPeriodicityIdx' class='lteinput'>
+                                    <option value="0">CP_2</option>
+                                    <option value="1">CP_5</option>
+                                    <option value="2">CP_10</option>
+                                    <option value="3">CP_20</option>
+                                    <option value="4">CP_40</option>
+                                    <option value="5">CP_80</option>
+                                    <option value="6">CP_160</option>
+                                    <option value="7">CP_32</option>
+                                    <option value="8">CP_64</option>
+                                    <option value="9">CP_128</option>                                     
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr class='conTblRowBg1'>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    SRI Periodicity
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    :&nbsp;
+                                </td>
+                                <td nowrap='nowrap'>
+                                    <select id='sriPeriodicityIdx' name='sriPeriodicityIdx' class='lteinput'>
+                                    <option value="0">SP_5</option>
+                                    <option value="1">SP_10</option>
+                                    <option value="2">SP_20</option>
+                                    <option value="3">SP_40</option>
+                                    <option value="4">SP_80</option>                                                                       
+                                    </select>
+                                </td>
+                                <td nowrap='nowrap' class='rowcell'>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </form>
+        <input id='freqBandIndHidden' type='hidden' />
+        <input id='ulEarfcnHidden' type='hidden' />
+        <input id='pMaxHidden' type = 'hidden' />
+        <input id='ueInactivityCheckIntervalSecsHidden' type = 'hidden' />        
+    </div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+void printMacCellCfg(CrgCellCfg *cellCfg);
+void printMacUeCfg(CrgUeCfg *ueCfg);
+void printMacLchCfg(CrgLchCfg *lchCfg);
+void printCtfCellCfg(CtfCellCfgInfo *cellCfg);
+void printCtfUeCfg(CtfDedCfgInfo  *dedCfg);
+void printSchCellCfg(RgrCellCfg *rgrCellCfg);
+void printSchLcgCfg(RgrLcgCfg *lcgCfg);
+void printSchLchCfg(RgrLchCfg *lchCfg);
+void printSchUeCfg(RgrUeCfg *rgrUeCfg);
+void printRlcCfg(CkwCfgInfo *ckwCfgInfo);
+void printPdcpCfg(CpjCfgReqInfo *cfgReqInfo);

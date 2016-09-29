@@ -1,0 +1,99 @@
+ -- @file    MODULE-LOG-FILE-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+MODULE-LOG-FILE-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp, String256          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32             FROM SNMPv2-SMI;
+
+moduleLogFileStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the module-log files that are available for upload."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 123 }
+
+moduleLogFileStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF ModuleLogFileStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the module-log files that are available for upload.
+            This is a MULTI ROW Table"
+       ::= { moduleLogFileStatus 1 }
+
+moduleLogFileStatusEntry OBJECT-TYPE
+       SYNTAX      ModuleLogFileStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains module log file status objects."
+       INDEX  { index }
+       ::= { moduleLogFileStatusTable 1 }
+
+ModuleLogFileStatusEntry ::= 
+   SEQUENCE {
+       index            RowNumber,
+       fileName         String256,
+       fileSizeInKB     Unsigned32,
+       openedAt         DateAndTimeStamp,
+       closedAt         DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { moduleLogFileStatusEntry 1 }
+
+fileName OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Name of the file with location]"
+       ::= { moduleLogFileStatusEntry 2 }
+
+fileSizeInKB OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Size of file in KB]"
+       ::= { moduleLogFileStatusEntry 3 }
+
+openedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This is the time at which the file was opened for logging  in YYYYMMDDHHNNSSTTT format.]"
+       ::= { moduleLogFileStatusEntry 4 }
+
+closedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This is the time at which the file was closed in YYYYMMDDHHNNSSTTT format.]"
+       ::= { moduleLogFileStatusEntry 5 }
+
+END

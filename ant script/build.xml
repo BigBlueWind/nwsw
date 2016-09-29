@@ -1,0 +1,52 @@
+ <project name="LTE" basedir="." default="JFFS">
+
+
+<property name="SRC" location="C:\Users\nsannisetty\Desktop\nwsw\lowerarm\ltephy\mindSpeed\lowercore\T4KDev\LTERT"/>
+                          
+<target name= "clean">
+
+<echo> below is the o/p for basedir </echo>
+<echo> ${basedir} </echo>
+
+
+<echo> below is the o/p for SRCDIR </echo>
+<echo> ${SRC} </echo>
+
+<sleep milliseconds="10"/>
+
+ <exec dir="${SRC}" executable="cmd">
+     <arg value="/c"/>
+     <arg value="larm.bat xclean"/>
+     <arg value="-p"/>
+ </exec>
+
+</target>
+
+
+<target name= "JFFS" depends="clean">
+
+ <exec dir="${SRC}" executable="cmd">
+ <arg value="/c"/>
+ <arg value="larm.bat p1c"/>
+ <arg value="-p"/>
+ </exec>
+
+
+<echo> Ant call target  copy target started </echo>
+
+
+<antcall target="copy"/>
+
+
+</target>
+
+
+<target name="copy">
+
+<copy file="C:\Users\nsannisetty\Desktop\nwsw\lowerarm\ltephy\mindSpeed\lowercore\T4KDev\LTERT\ltearm.elf" todir="C:\Users\nsannisetty\Desktop\nwsw\build\bin\4gmx\lowerarm"/>
+
+
+</target>
+
+</project>
+

@@ -1,0 +1,203 @@
+#....MakeCfg............................
+
+.SUFFIXES: .o .c .s .i .cpp
+
+# -----------------------------------------
+#  Tools name
+# -----------------------------------------
+AS  = armasm
+LD  = armlink
+AR  = armar
+CC  = armcc
+COPY= move
+
+ENV =-DMX_ARM_ENABLED -DLOWERARM -DSCHEDULER -D_MX_DEBUG -D_APP_ASSERT_HANDLER -DSS_DRVR_SUPPORT -DSS_MT_TMR -DSS_FLOAT -DBIT_64 -DRB_ACC_TEST -DSS -DCONRD -DNOFILESYS -DCMFILE_REORG_1 -DNO_ERRCLS -DCMFIlE_REORG_2 -USS_PERF -DSS_WL_REGION=1 -DNOERRCHK -DSS_4GMX_LCORE -DANSI -D_GNU_SOURCE -D_REENTRANT -D__EXTENSIONS__ -DDEBUGNOEXIT -DSUNOS -DRB_DEBUG -DRB_TICK_TIMER -DRB_CHANNEL_SVSR -USS_TTI_TMR
+
+!IF "$(RELEASEBUILD)" != "1"
+
+!MESSAGE "Debug building ... "
+
+#
+#  Debug build
+#
+CC_FLAGS= --apcs=norwpi/noswst \
+	  --arm \
+	  --no_unaligned_access \
+	  --library_interface=aeabi_clib \
+	  --cpu=Cortex-A9.no_neon.no_vfp \
+	  --fpu=softvfp \
+	  -c \
+	  --li \
+	  -g \
+	  -O0 \
+	  -Ono_memcpy
+#	  --enum_is_int\
+
+AS_FLAGS= --Xref \
+	  --apcs=norwpi/noswst \
+	  --ARM \
+	  --LIttleend \
+	  --errors=_cc.err \
+	  --cpu=Cortex-A9.no_neon.no_vfp \
+	  --fpu=softvfp \
+	  -g
+
+AR_FLAGS= -r
+
+LD_FLAGS= --xref \
+	  --map \
+	  --list=$(BIN).lst \
+	  --symdefs=$(BIN).sym \
+	  --errors=_lnk.err \
+	  --symbols \
+	  --Output=$(BIN) \
+	  --remove \
+	  --entry=ResetHandler \
+	  --scatter=$(SCT) \
+	  --bestdebug
+
+!ELSE
+
+!MESSAGE "Release building ... "
+
+#
+#  Release build
+#
+CC_FLAGS= --apcs=norwpi/noswst \
+	  --arm \
+	  --no_unaligned_access \
+	  --library_interface=aeabi_clib \
+	  --cpu=Cortex-A9.no_neon.no_vfp \
+	  --fpu=softvfp \
+	  -c \
+	  --li \
+	  -O2 \
+	  -Otime \
+	  -Ono_memcpy
+#	  --enum_is_int\
+
+AS_FLAGS= --Xref \
+	  --apcs=norwpi/noswst \
+	  --ARM \
+	  --LIttleend \
+	  --cpu=Cortex-A9.no_neon.no_vfp \
+	  --fpu=softvfp
+
+AR_FLAGS= -r
+
+LD_FLAGS= --xref \
+	  --map \
+	  --list=$(BIN).lst \
+	  --symdefs=$(BIN).sym \
+	  --errors=_lnk.err \
+	  --symbols \
+	  --Output=$(BIN) \
+	  --remove \
+	  --entry=ResetHandler \
+	  --scatter=$(SCT)
+
+!ENDIF
+
+ROOT = $(LTERT)\..
+COMMON = $(ROOT)\..\common
+CCODE = $(ROOT)\..\PHY\LTE\C-Code
+NC4GMX = $(ROOT)\..\4GMX\Inc
+LTEARM = $(ROOT)\..\PHY\LTE\Arm
+SCORE = $(ROOT)\SYSCORE
+DRV = $(SCORE)\DRIVERS
+SRV = $(SCORE)\SERVICES
+FEC = $(DRV)\FEC
+FP  = $(DRV)\MAP
+CPRI = $(DRV)\CPRI
+MX  = $(ROOT)\4gmx
+SS_DIR = .
+RB_DIR = .
+SY_DIR = .
+CM_DIR = .
+
+!IF "$(RELEASEBUILD)" != "1"
+CEVABINPATH = $(LTERT)\..\..\PHY\LTE\Ceva\Prj\LteApp\EVM_Debug
+CEVABINPATHDMP = $(LTERT)\..\..\PHY\LTE\Ceva\Prj\LteAppDmp\EVM_Debug
+!ELSE
+CEVABINPATH = $(LTERT)\..\..\PHY\LTE\Ceva\Prj\LteApp\EVM_Release
+CEVABINPATHDMP = $(LTERT)\..\..\PHY\LTE\Ceva\Prj\LteAppDmp\EVM_Release
+!ENDIF
+DEPFILE    = makefile.dep
+
+MX_ARM_SRC = $(MX)\ARM\src
+MX_ARM_INC = $(MX)\ARM\inc
+MX_SRC	   = $(MX)\src
+MX_INC	   = $(MX)\inc
+
+_INC =	-I"$(MX_ARM_SRC)" \
+	-I"$(MX_ARM_INC)" \
+	-I"$(MX_SRC)" \
+	-I"$(MX_INC)" \
+	-I"$(COMMON)" \
+	-I"$(CCODE)" \
+	-I"$(NC4GMX)" \
+	-I"$(LTEARM)" \
+	-I"$(SCORE)" \
+	-I"$(DRV)" \
+	-I"$(SRV)" \
+	-I"$(FEC)" \
+	-I"$(FP)" \
+	-I"$(CPRI)" \
+	-I"$(LTEDIR)\..\.." \
+	-I"$(LTE)" \
+	-I"$(SS_DIR)" \
+	-I.
+
+#CC_FLAGS = $(CC_FLAGS) $(BUILDCFG) $(_INC)
+NO_HEADER = -M --no_depend_system_headers
+CC_FLAGS = $(CC_FLAGS) $(ENV) $(BUILDCFG) $(_INC)
+OBJS= ss_drvr.o cm_gen.o ss_gen.o ss_task.o ss_timer.o ss_mem.o ss_strm.o ss_msg.o ss_pack.o rb_acc.o cm_hash.o cm_lib.o cm_mem.o cm_bdy5.o rb_ss.o rb_icpu.o rb_icore.o rb_timer.o cevabincode.o cevabincodedmp.o rb_log.o
+#OBJS= main.o cevabincode.o
+
+#  In case of non-hbi mode, the <CEVACODELIB> will be empty
+#$(BIN): makefile-ssi $(DEPFILE) $(OBJS) $(MXLIB) $(CORELIB) $(PHYLIB) $(LTELIB) $(MACLIB) $(SCT)
+#	echo Going to Link with ROOT=$(ROOT) DEPFILE=$(DEPFILE) MXLIB=$(MXLIB) CORELIB=$(CORELIB) PHYLIB=$(PHYLIB) LTELIB=$(LTELIB) MACLIB=$(MACLIB) OBJS=$(OBJS) SCT=$(SCT) CC_FLAGS=$(CC_FLAGS)
+#	$(LD) $(LD_FLAGS) $(MXLIB) $(CORELIB) $(PHYLIB) $(LTELIB) $(MACLIB) $(OBJS)
+$(BIN): makefile-ssi $(DEPFILE) $(OBJS) $(MXLIB) $(CORELIB) $(PHYLIB) $(LTELIB) $(MACLIB) $(SCT)
+	echo Linking CFLAGS=$(CC_FLAGS) LFLAGS=$(LD_FLAGS)
+	$(LD) $(LD_FLAGS)  $(MXLIB) $(CORELIB) $(PHYLIB) $(LTELIB) $(MACLIB) $(OBJS)
+	dir *.elf
+
+#......if DEPFILE
+
+#$(DEPFILE): $(OBJS)
+
+#!IF "$(GEN_DEP)" != "1"
+#!INCLUDE "$(DEPFILE)"
+#!ENDIF
+
+cevabincode.o:
+#	echo Compiling "$(CEVABINPATH)\cevabincode.c"
+#!IF "$(GEN_DEP)" == "1"
+#	$(CC) -M --no_depend_system_headers $(CC_FLAGS) "$(CEVABINPATH)\cevabincode.c" >> $(DEPFILE)
+#	$(CC) -M --no_depend_system_headers $(CC_FLAGS) "$(CEVABINPATH)\cevabincode.c"
+#!ENDIF
+	$(CC)  $(CC_FLAGS) "$(CEVABINPATH)\cevabincode.c"
+
+cevabincodedmp.o:
+	$(CC)  $(CC_FLAGS) "$(CEVABINPATHDMP)\cevabincodedmp.c"
+
+.c.o:
+	echo Compiling $<
+#	$(CC) $(CC_FLAGS) -M --no_depend_system_headers $<
+	$(CC)  $(CC_FLAGS) $<
+
+.s.o:
+	echo Compiling $<
+	$(AS) $(AS_FLAGS) $<
+
+clean:
+	del /q *.err
+	del /q *.lst
+	del /q *.sym
+	del /q *.o
+	del /q *.elf
+	del /q *.axf
+	del /q *.a
+	del /q *.hex
+	del /q *.asm

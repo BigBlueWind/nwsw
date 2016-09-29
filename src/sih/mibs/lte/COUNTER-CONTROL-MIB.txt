@@ -1,0 +1,116 @@
+ -- @file    COUNTER-CONTROL-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:47 PM
+ --
+
+COUNTER-CONTROL-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, ProfileId             FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY          FROM SNMPv2-SMI;
+
+counterControl MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to start and stop measurement"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 8 }
+
+counterControlTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF CounterControlEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to start and stop measurement
+            This is a SINGLE ROW Table"
+       ::= { counterControl 1 }
+
+counterControlEntry OBJECT-TYPE
+       SYNTAX      CounterControlEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "Allows operator to start and stop measurement"
+       INDEX  { index }
+       ::= { counterControlTable 1 }
+
+CounterControlEntry ::= 
+   SEQUENCE {
+       index                   RowNumber,
+       profileId               ProfileId,
+       counterCommand          INTEGER,
+       measurementDuration     INTEGER,
+       reportingDuration       INTEGER
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { counterControlEntry 1 }
+
+profileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Profile Id for which measurement need to start/stop]"
+       ::= { counterControlEntry 2 }
+
+counterCommand OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   start(1),
+                   stop(2)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Counter command, 1:to start the measurement 2: To stop the running measurement]"
+       ::= { counterControlEntry 3 }
+
+measurementDuration OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-2mins(1),
+                   e-15mins(2),
+                   e-30mins(3),
+                   e-1hour(4),
+                   e-2hour(5),
+                   infinite(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             measurement duration]"
+       ::= { counterControlEntry 4 }
+
+reportingDuration OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-2mins(1),
+                   e-15mins(2),
+                   e-30mins(3),
+                   e-1hour(4),
+                   e-2hour(5)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Reporting interval, on which new file will be created.
+             This parameter is provied because if user run the collection for infinite duration.]"
+       ::= { counterControlEntry 5 }
+
+END

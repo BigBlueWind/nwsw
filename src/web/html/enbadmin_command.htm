@@ -1,0 +1,120 @@
+<html>
+<head>
+    <style type='text/css' lang='css'>
+        @import '../css/styles.css';        
+    </style>
+    <script type='text/javascript' src='../script/jquery.js'></script>
+    <script type='text/javascript' src='../script/jquery_tooltip.js'></script> 
+    <script type='text/javascript' src='../script/lte_set_get.js'></script>
+    <script type='text/javascript'>
+        var sessionID = parent.sessionID;
+    
+        $(document).ready(function() {            
+            ChkLock('enbAdmin');
+            
+            var fn = function(e) {
+                return DisableRefresh(e);
+            }
+            document.onkeydown = fn;
+            $(document).bind('contextmenu', function(e) { alert('Due to security reason,Right Click is not allowed.'); return false; });
+            
+            $('#btnApply').click(function() {
+                var where_to = confirm('Do you really want to ' + $('#eNbCommand option:selected').text() + ' ?');
+                if (where_to == true) {
+                    LteSet('enbAdmin', $('#enbAdmin'), $('#btnApply'), null);
+                }
+            });
+            $('#btnHelp').click(function() {
+            window.open(sessionID + "-help.htm#enbAdmin", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+            });
+        });
+        
+      /*  function LockAttributes() {           
+            $('#btnApply').attr('disabled', 'true');
+            FreezeList($('#eNbCommand'));
+            $('#eNbCommand').attr('title', 'Lock eNodeB to Modify').css('background-color', '#E6E6E6').simpletooltip().bind('keydown keypress keyup change', function() {
+                if (parent.frames['Top'].isLocked == 'unlocked')
+                    FreezeList(this);
+            });*/
+     
+    </script>
+
+</head>
+<body>
+    <table width='100%'>
+        <tr>
+            <td align='left' width='60%'>
+                <span class='title'>Commands > eNodeB Control</span>
+            </td>
+             <td align='right' width='40%'>
+                 <span class='cmdMsg' id='cmdMsg'></span>
+            </td>
+        </tr>
+    </table>
+   <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='left: 10px; margin-top: 10px'>
+        <table cellspacing='0' cellpadding='1' border='0' width='1055px'>
+            <tbody>
+                <tr>
+                    <td align='right' class='txtPageTitle'>
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style='margin-left: 10px; width: 450px; height: 615px;'>
+        <form name='enbAdmin' id='enbAdmin' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td align='left' class='tblTitleBg'>
+                    &nbsp; Action
+                </td>
+            </tr>
+            <tr class='formheadingborder'>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>                        
+                        <tr class='conTblRowBg2'>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                eNodeB Command
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                :&nbsp;
+                            </td>
+                            <td nowrap='nowrap'>
+                                <input type='hidden' id='index' />
+                                <select name='eNbCommand' id='eNbCommand' style='width:200px'>
+                                    <option value='1'>LOCK ENODEB</option>
+                                    <option value='2'>UNLOCK ENODEB</option>
+                                    <option value='3'>RESTART ENODEB</option>
+                                    <option value='4'>SAVE CONFIGURATION</option>
+                                    <option value='5'>ROLL-BACK CONFIGURATION</option>
+                                    <option value='6'>RESET RADIO HEAD</option>
+                                    <option value='7'>RESET GPS</option>
+                                    <option value='8'>RUN BUILT-IN SELF TEST</option>
+                                    <option value='9'>SET LONG POST</option>
+                                    <option value='10'>REBOOT ENODEB</option>
+                                    <option value='11'>COUNTER RESET</option>                                     
+                                </select>
+                            </td>
+                            <td nowrap='nowrap' class='rowcell'>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>            
+</body>
+</html>

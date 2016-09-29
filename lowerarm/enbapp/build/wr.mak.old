@@ -1,0 +1,620 @@
+#-------------------------------------------------------------#
+#Makefile for product WR
+#-------------------------------------------------------------#
+
+#-------------------------------------------------------------#
+#User macros (to be modified)
+#-------------------------------------------------------------#
+
+ifeq (${BLD},seum)
+CCwrFLAGS=-DWR_RELAY -DEU_DAT_APP -DEGTP_U -DNX -DPX -DUZ -DEU -DKW_PDCP -UPTNXLIPJU -UPTWRLIRGR -DDEBUGP -UTFU_TDD -DTFU_WRR_2 -DLCEGUIEGT -DLCWRLICTF -DLCWRLINHU -DLCPJUIPJU -DLCWRLIRGR -ULTE_TDD -UTA_NEW -USI_NEW -URGR_SI_SCH -DENB_OVRLOAD
+else
+ifeq (${BLD},picoseum)
+CCwrFLAGS=-DWR_RELAY -DEU_DAT_APP -DEGTP_U -DNX -DPX -DUZ -DEU -DKW_PDCP -UPTNXLIPJU -UPTWRLIRGR -DDEBUGP -UTFU_TDD -DTFU_WRR_2 -DLCEGUIEGT -DLCWRLICTF -DLCWRLINHU -DLCPJUIPJU -DLCWRLIRGR -ULTE_TDD -UWR_PICO -UWR_WITHOUT_CNE -DWIRESHARK_LOG -UYS_PICO -DSI_NEW -DYS_PICO -DWR_PICO -DENB_OVRLOAD 
+else
+ifeq (${BLDENV},lnx_e2e_ms)
+CCwrFLAGS=-DWR_RELAY -DEU_DAT_APP -DEGTP_U -DNX -DPX -DUZ -DEU -DKW_PDCP -DPTNXLIPJU -DPTWRLIRGR -DDEBUGP -UTFU_TDD -DTFU_WRR_2 -DLCEGUIEGT -DLCWRLICTF -DLCWRLINHU -DLCPJUIPJU -DLCWRLIRGR -ULTE_TDD -DLCSMNHMILNH -DENB_OVRLOAD
+else
+CCwrFLAGS=-DWR_RELAY -DEU_DAT_APP -DEGTP_U -DNX -DPX -DUZ -DEU -DKW_PDCP -DKW -UPTNXLIPJU -UPTWRLIRGR -DDEBUGP -UTFU_TDD -DTFU_WRR_2 -DLCEGUIEGT -DLCWRLICTF -DLCWRLINHU -DLCPJUIPJU -DLCWRLIRGR -ULTE_TDD -DTA_NEW -DSI_NEW -DRGR_SI_SCH -UWR_SM_LOG_TO_FILE -DENB_OVRLOAD
+endif
+endif
+endif
+
+CCsmFLAGS=-DHI -DSB -DEG -DWR -DKW -DSZ -DYS -DRG -DPJ -DCZ
+SS_DIR=/u/prd/rtr/mt
+
+# Product sources-------------------------------------------------------
+wrPerfLnxSRCS= \
+    $(IN_DIR)/ \
+    $(IN_DIR)/
+
+
+# Product sources-------------------------------------------------------
+wrPerfLnxSRCSUU= \
+    $(IN_DIR)/ \
+    $(IN_DIR)/
+
+wrE2eLnxSRCS= \
+    $(IN_DIR)/wr_umm_ulnas.c \
+    $(IN_DIR)/wr_umm_dlnas.c \
+    $(IN_DIR)/wr_umm_rabsetup.c \
+    $(IN_DIR)/wr_umm_ctxtrel.c \
+    $(IN_DIR)/wr_umm_lclctxtrel.c \
+    $(IN_DIR)/wr_umm_rabrel.c \
+    $(IN_DIR)/wr_umm_lcrabrel.c \
+    $(IN_DIR)/wr_emm.c \
+    $(IN_DIR)/wr_emm_pbm.c \
+    $(IN_DIR)/wr_emm_eom.c \
+    $(IN_DIR)/wr_emm_pbm_sib.c \
+    $(IN_DIR)/wr_emm_cell.c \
+    $(IN_DIR)/wr_emm_mme.c \
+    $(IN_DIR)/wr_emm_mme_s1ap.c \
+    $(IN_DIR)/wr_emm_plmn.c \
+    $(IN_DIR)/wr_utils.c \
+    $(IN_DIR)/wr_sm_init.c \
+    $(IN_DIR)/wr_sm_nh_cntrl.c \
+    $(IN_DIR)/wr_sm_nh_exms.c \
+    $(IN_DIR)/wr_sm_nh_ptmi.c \
+    $(IN_DIR)/wr_sm_kw_cntrl.c \
+    $(IN_DIR)/wr_sm_kw_exms.c \
+    $(IN_DIR)/wr_sm_kw_ptmi.c \
+    $(IN_DIR)/wr_sm_rg_cntrl.c \
+    $(IN_DIR)/wr_sm_rg_exms.c \
+    $(IN_DIR)/wr_sm_rg_ptmi.c \
+    $(IN_DIR)/wr_sm_sz_cntrl.c \
+    $(IN_DIR)/wr_sm_sz_exms.c \
+    $(IN_DIR)/wr_sm_sz_ptmi.c \
+    $(IN_DIR)/wr_sm_sb_cntrl.c \
+    $(IN_DIR)/wr_sm_sb_exms.c \
+    $(IN_DIR)/wr_sm_sb_ptmi.c \
+    $(IN_DIR)/wr_sm_hi_cntrl.c \
+    $(IN_DIR)/wr_sm_hi_exms.c \
+    $(IN_DIR)/wr_sm_hi_ptmi.c \
+    $(IN_DIR)/wr_sm_eg_cntrl.c \
+    $(IN_DIR)/wr_sm_eg_exms.c \
+    $(IN_DIR)/wr_sm_eg_ptmi.c \
+    $(IN_DIR)/wr_sm_wr_cntrl.c \
+    $(IN_DIR)/wr_sm_wr_exms.c \
+    $(IN_DIR)/wr_sm_wr_ptmi.c \
+    $(IN_DIR)/wr_sm_pj_cntrl.c \
+    $(IN_DIR)/wr_sm_pj_exms.c \
+    $(IN_DIR)/wr_sm_pj_ptmi.c \
+    $(IN_DIR)/wr_sm_ys_cntrl.c \
+    $(IN_DIR)/wr_sm_ys_exms.c \
+    $(IN_DIR)/wr_sm_ys_ptmi.c \
+    $(IN_DIR)/wr_sm_cz_cntrl.c \
+    $(IN_DIR)/wr_sm_cz_exms.c \
+    $(IN_DIR)/wr_sm_cz_ptmi.c \
+    $(IN_DIR)/wr_ifm_x2ap.c \
+    $(IN_DIR)/wr_ifm_egtp.c \
+    $(IN_DIR)/wr_ifm_rrc.c \
+    $(IN_DIR)/wr_ifm_pdcp.c \
+    $(IN_DIR)/wr_ifm_schd.c \
+    $(IN_DIR)/wr_ifm_s1ap.c \
+    $(IN_DIR)/wr_ifm_l1.c \
+    $(IN_DIR)/wr_umm.c \
+    $(IN_DIR)/wr_dam.c \
+    $(IN_DIR)/wr_ifm_dam.c \
+    $(IN_DIR)/wr_umm_egtp_hdl.c \
+    $(IN_DIR)/wr_umm_rrc_msg.c \
+    $(IN_DIR)/wr_umm_sch_msg.c \
+    $(IN_DIR)/wr_umm_s1ap_msg.c \
+    $(IN_DIR)/wr_umm_rrccon.c \
+    $(IN_DIR)/wr_umm_l1_msg.c \
+    $(IN_DIR)/wr_umm_l1_hdl.c \
+    $(IN_DIR)/wr_umm_pdcp_hdl.c \
+    $(IN_DIR)/wr_umm_rrc_hdl.c \
+    $(IN_DIR)/wr_umm_sch_hdl.c \
+    $(IN_DIR)/wr_umm_s1ap_hdl.c \
+    $(IN_DIR)/wr_umm_x2ap_hdl.c \
+    $(IN_DIR)/wr_smallcell.c \
+    $(IN_DIR)/wr_tmr.c \
+    $(IN_DIR)/wr_ex_ms.c \
+    $(IN_DIR)/wr_lwr.c \
+    $(IN_DIR)/wr_umm_sec.c \
+    $(IN_DIR)/wr_umm_uecap.c \
+    $(IN_DIR)/wr_umm_initcntsetup.c \
+    $(IN_DIR)/wr_umm_recfg.c \
+    $(IN_DIR)/wr_umm_rrcreestab.c \
+    $(IN_DIR)/wr_umm_ctxtmod.c \
+    $(IN_DIR)/wr_umm_rabmod.c
+
+
+# Product objects-------------------------------------------------------
+wrE2eLnxOBJS= \
+    $(OUT_DIR)/wr_ifm_s1ap.$(OBJ) \
+    $(OUT_DIR)/wr_mi.$(OBJ) \
+    $(OUT_DIR)/wr_utils.$(OBJ) \
+    $(OUT_DIR)/wr_dam.$(OBJ) \
+    $(OUT_DIR)/wr_ifm_dam.$(OBJ) \
+    $(OUT_DIR)/wr_umm_ulnas.$(OBJ) \
+    $(OUT_DIR)/wr_umm_dlnas.$(OBJ) \
+    $(OUT_DIR)/wr_umm_rabsetup.$(OBJ) \
+    $(OUT_DIR)/wr_umm_lclctxtrel.$(OBJ) \
+    $(OUT_DIR)/wr_umm_ctxtrel.$(OBJ) \
+    $(OUT_DIR)/wr_emm_cell.$(OBJ) \
+    $(OUT_DIR)/wr_emm_mme.$(OBJ) \
+    $(OUT_DIR)/wr_umm_sch_msg.$(OBJ) \
+    $(OUT_DIR)/wr_umm_rrc_msg.$(OBJ) \
+    $(OUT_DIR)/wr_umm_s1ap_msg.$(OBJ) \
+    $(OUT_DIR)/wr_umm_rrccon.$(OBJ) \
+    $(OUT_DIR)/wr_umm_l1_msg.$(OBJ) \
+    $(OUT_DIR)/wr_emm_mme_s1ap.$(OBJ) \
+    $(OUT_DIR)/wr_emm_plmn.$(OBJ) \
+    $(OUT_DIR)/wr_emm.$(OBJ) \
+    $(OUT_DIR)/wr_emm_pbm.$(OBJ) \
+    $(OUT_DIR)/wr_emm_pbm_sib.$(OBJ) \
+    $(OUT_DIR)/wr_sm_init.$(OBJ)  	\
+    $(OUT_DIR)/wr_sm_ys_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_ys_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_ys_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_rg_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_rg_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_rg_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_kw_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_kw_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_kw_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_pj_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_pj_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_pj_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_nh_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_nh_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_nh_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_sz_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_sz_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_sz_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_cz_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_cz_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_cz_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_eg_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_eg_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_eg_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_sb_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_sb_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_sb_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_sm_hi_cntrl.$(OBJ)	\
+    $(OUT_DIR)/wr_sm_hi_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_hi_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_ifm_x2ap.$(OBJ) \
+    $(OUT_DIR)/wr_ifm_egtp.$(OBJ) \
+    $(OUT_DIR)/wr_ifm_rrc.$(OBJ) \
+    $(OUT_DIR)/wr_ifm_pdcp.$(OBJ) \
+    $(OUT_DIR)/wr_ifm_schd.$(OBJ) \
+    $(OUT_DIR)/wr_ifm_l1.$(OBJ) \
+    $(OUT_DIR)/wr_umm.$(OBJ) \
+    $(OUT_DIR)/wr_umm_s1ap_hdl.$(OBJ) \
+    $(OUT_DIR)/wr_umm_egtp_hdl.$(OBJ) \
+    $(OUT_DIR)/wr_umm_l1_hdl.$(OBJ) \
+    $(OUT_DIR)/wr_umm_pdcp_hdl.$(OBJ) \
+    $(OUT_DIR)/wr_umm_rrc_hdl.$(OBJ) \
+    $(OUT_DIR)/wr_umm_sch_hdl.$(OBJ) \
+    $(OUT_DIR)/wr_umm_x2ap_hdl.$(OBJ) \
+    $(OUT_DIR)/wr_sm_wr_cntrl.$(OBJ) \
+    $(OUT_DIR)/wr_sm_wr_exms.$(OBJ) \
+    $(OUT_DIR)/wr_sm_wr_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_smallcell.$(OBJ) \
+    $(OUT_DIR)/wr_tmr.$(OBJ) \
+    $(OUT_DIR)/wr_ptmi.$(OBJ) \
+    $(OUT_DIR)/wr_utils.$(OBJ) \
+    $(OUT_DIR)/wr_ex_ms.$(OBJ) \
+    $(OUT_DIR)/wr_lwr.$(OBJ) \
+    $(OUT_DIR)/wr_umm_sec.$(OBJ) \
+    $(OUT_DIR)/wr_umm_uecap.$(OBJ) \
+    $(OUT_DIR)/wr_umm_initcntsetup.$(OBJ) \
+    $(OUT_DIR)/wr_umm_lcrabrel.$(OBJ) \
+    $(OUT_DIR)/wr_umm_rabrel.$(OBJ) \
+    $(OUT_DIR)/wr_umm_rrcreestab.$(OBJ) \
+    $(OUT_DIR)/wr_umm_ctxtmod.$(OBJ) \
+    $(OUT_DIR)/wr_umm_rabmod.$(OBJ)
+#   $(OUT_DIR)/wr_emm_eom.$(OBJ) \
+#   $(OUT_DIR)/wr_umm_recfg.$(OBJ) \
+
+wrPerfLnxOBJS= \
+    $(OUT_DIR)/ \
+    $(OUT_DIR)/
+
+wrPerfLnxOBJSUU= \
+    $(OUT_DIR)/ \
+    $(OUT_DIR)/
+    
+wrPerfCavSRCS= \
+    $(IN_DIR)/ \
+    $(IN_DIR)/
+
+wrE2eCavSRCS= \
+    $(IN_DIR)/ \
+    $(IN_DIR)/
+
+
+# Product objects-------------------------------------------------------
+wrE2eCavOBJS= \
+    $(OUT_DIR)/ \
+    $(OUT_DIR)/
+
+wrPerfCavOBJS= \
+    $(OUT_DIR)/ \
+    $(OUT_DIR)/
+ 
+# Product sources-------------------------------------------------------
+wrPerfCavSRCSUU= \
+    $(IN_DIR)/ \
+    $(IN_DIR)/
+
+wrPerfCavOBJSUU=\
+    $(OUT_DIR)/ \
+    $(OUT_DIR)/
+
+WRCM_INC=$(IN_DIR)/wr.h
+
+ALL_INC=$(WRCM_INC) $(CM_INC)
+   
+#-------------------------------------------------------------#
+#-------------------------------------------------------------#
+#Compiler macros             
+#-------------------------------------------------------------#
+$(OUT_DIR)/wr_umm_ulnas.$(OBJ): $(IN_DIR)/wr_umm_ulnas.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_ulnas.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_ulnas.c
+
+$(OUT_DIR)/wr_umm_s1ap_msg.$(OBJ): $(IN_DIR)/wr_umm_s1ap_msg.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_s1ap_msg.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_s1ap_msg.c
+
+$(OUT_DIR)/wr_umm_dlnas.$(OBJ): $(IN_DIR)/wr_umm_dlnas.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_dlnas.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_dlnas.c
+
+$(OUT_DIR)/wr_umm_rabsetup.$(OBJ): $(IN_DIR)/wr_umm_rabsetup.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_rabsetup.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_rabsetup.c
+
+$(OUT_DIR)/wr_umm_lclctxtrel.$(OBJ): $(IN_DIR)/wr_umm_lclctxtrel.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_lclctxtrel.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_lclctxtrel.c
+
+$(OUT_DIR)/wr_umm_ctxtrel.$(OBJ): $(IN_DIR)/wr_umm_ctxtrel.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_ctxtrel.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_ctxtrel.c
+
+$(OUT_DIR)/wr_umm_rabrel.$(OBJ): $(IN_DIR)/wr_umm_rabrel.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_rabrel.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_rabrel.c
+
+$(OUT_DIR)/wr_umm_lcrabrel.$(OBJ): $(IN_DIR)/wr_umm_lcrabrel.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_lcrabrel.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_lcrabrel.c
+
+
+
+$(OUT_DIR)/wr_umm_rrccon.$(OBJ): $(IN_DIR)/wr_umm_rrccon.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_rrccon.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_rrccon.c
+
+$(OUT_DIR)/wr_emm.$(OBJ): $(IN_DIR)/wr_emm.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm.c
+
+$(OUT_DIR)/wr_emm_cell.$(OBJ): $(IN_DIR)/wr_emm_cell.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_cell.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_cell.c
+
+$(OUT_DIR)/wr_emm_mme.$(OBJ): $(IN_DIR)/wr_emm_mme.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_mme.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_mme.c
+
+$(OUT_DIR)/wr_emm_pbm.$(OBJ): $(IN_DIR)/wr_emm_pbm.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_pbm.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_pbm.c
+
+$(OUT_DIR)/wr_emm_eom.$(OBJ): $(IN_DIR)/wr_emm_eom.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_eom.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_eom.c
+
+$(OUT_DIR)/wr_emm_mme.$(OBJ): $(IN_DIR)/wr_emm_mme.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_mme.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_mme.c
+$(OUT_DIR)/wr_utils.$(OBJ): $(IN_DIR)/wr_utils.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_utils.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_utils.c
+$(OUT_DIR)/wr_emm_mme_s1ap.$(OBJ): $(IN_DIR)/wr_emm_mme_s1ap.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_mme_s1ap.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_mme_s1ap.c 
+$(OUT_DIR)/wr_umm_rrc_msg.$(OBJ): $(IN_DIR)/wr_umm_rrc_msg.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_rrc_msg.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_rrc_msg.c
+$(OUT_DIR)/wr_umm_l1_msg.$(OBJ): $(IN_DIR)/wr_umm_l1_msg.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_l1_msg.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_l1_msg.c
+$(OUT_DIR)/wr_umm_sch_msg.$(OBJ): $(IN_DIR)/wr_umm_sch_msg.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_sch_msg.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_sch_msg.c
+
+$(OUT_DIR)/wr_emm_plmn.$(OBJ): $(IN_DIR)/wr_emm_plmn.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_plmn.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_plmn.c
+
+$(OUT_DIR)/wr_emm_pbm_sib.$(OBJ): $(IN_DIR)/wr_emm_pbm_sib.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_emm_pbm_sib.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_emm_pbm_sib.c
+
+$(OUT_DIR)/wr_umm.$(OBJ): $(IN_DIR)/wr_umm.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm.c
+
+$(OUT_DIR)/wr_dam.$(OBJ): $(IN_DIR)/wr_dam.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_dam.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_dam.c
+$(OUT_DIR)/wr_ifm_dam.$(OBJ): $(IN_DIR)/wr_ifm_dam.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_dam.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_dam.c
+
+$(OUT_DIR)/wr_sm_init.$(OBJ): $(IN_DIR)/wr_sm_init.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_init.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_init.c
+$(OUT_DIR)/wr_sm_init_merged.$(OBJ): $(IN_DIR)/wr_sm_init_merged.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_init_merged.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_init_merged.c
+$(OUT_DIR)/wr_sm_nh_cntrl.$(OBJ): $(IN_DIR)/wr_sm_nh_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_nh_cntrl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_nh_cntrl.c
+$(OUT_DIR)/wr_sm_nh_exms.$(OBJ): $(IN_DIR)/wr_sm_nh_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMNHMILNH -DLCLNH $(IN_DIR)/wr_sm_nh_exms.c -o \
+	$(OUT_DIR)/wr_sm_nh_exms.$(OBJ)
+$(OUT_DIR)/wr_sm_nh_ptmi.$(OBJ): $(IN_DIR)/wr_sm_nh_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMNHMILNH -DLCLNH $(IN_DIR)/wr_sm_nh_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_nh_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_sm_kw_cntrl.$(OBJ): $(IN_DIR)/wr_sm_kw_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_kw_cntrl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_kw_cntrl.c
+$(OUT_DIR)/wr_sm_kw_exms.$(OBJ): $(IN_DIR)/wr_sm_kw_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCKWMILKW -DLCPJMILPJ -DLCLKW -DLCLPJ $(IN_DIR)/wr_sm_kw_exms.c -o \
+	$(OUT_DIR)/wr_sm_kw_exms.$(OBJ)
+$(OUT_DIR)/wr_sm_kw_ptmi.$(OBJ): $(IN_DIR)/wr_sm_kw_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCKWMILKW -DLCPJMILPJ -DLCLKW $(IN_DIR)/wr_sm_kw_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_kw_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_sm_rg_cntrl.$(OBJ): $(IN_DIR)/wr_sm_rg_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_rg_cntrl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_rg_cntrl.c
+$(OUT_DIR)/wr_sm_rg_exms.$(OBJ): $(IN_DIR)/wr_sm_rg_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCRGMILRG -DLCLRG $(IN_DIR)/wr_sm_rg_exms.c -o \
+	$(OUT_DIR)/wr_sm_rg_exms.$(OBJ)
+$(OUT_DIR)/wr_sm_rg_ptmi.$(OBJ): $(IN_DIR)/wr_sm_rg_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMMILRG -DLCRGMILRG -DLCLRG $(IN_DIR)/wr_sm_rg_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_rg_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_sm_sz_cntrl.$(OBJ): $(IN_DIR)/wr_sm_sz_cntrl.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSZMILSZ -DLCLSZ -DSZ_ENB $(IN_DIR)/wr_sm_sz_cntrl.c -o \
+	$(OUT_DIR)/wr_sm_sz_cntrl.$(OBJ)
+
+$(OUT_DIR)/wr_sm_sz_exms.$(OBJ): $(IN_DIR)/wr_sm_sz_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSZMILSZ -DLCLSZ -DSZ_ENB $(IN_DIR)/wr_sm_sz_exms.c -o \
+	$(OUT_DIR)/wr_sm_sz_exms.$(OBJ)
+
+$(OUT_DIR)/wr_sm_sz_ptmi.$(OBJ): $(IN_DIR)/wr_sm_sz_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMSZMILSZ -DLCLSZ -DSZ_ENB $(IN_DIR)/wr_sm_sz_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_sz_ptmi.$(OBJ)
+
+
+
+$(OUT_DIR)/wr_sm_cz_cntrl.$(OBJ): $(IN_DIR)/wr_sm_cz_cntrl.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCCZMILCZ -DLCLCZ -DCZ_ENB $(IN_DIR)/wr_sm_cz_cntrl.c -o \
+	$(OUT_DIR)/wr_sm_cz_cntrl.$(OBJ)
+
+$(OUT_DIR)/wr_sm_cz_exms.$(OBJ): $(IN_DIR)/wr_sm_cz_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCCZMILCZ -DLCLCZ -DCZ_ENB $(IN_DIR)/wr_sm_cz_exms.c -o \
+	$(OUT_DIR)/wr_sm_cz_exms.$(OBJ)
+
+$(OUT_DIR)/wr_sm_cz_ptmi.$(OBJ): $(IN_DIR)/wr_sm_cz_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMCZMILCZ -DLCLCZ -DCZ_ENB $(IN_DIR)/wr_sm_cz_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_cz_ptmi.$(OBJ)
+
+
+
+$(OUT_DIR)/wr_sm_sb_cntrl.$(OBJ): $(IN_DIR)/wr_sm_sb_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_sb_cntrl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(SBOPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_sb_cntrl.c
+
+$(OUT_DIR)/wr_sm_sb_exms.$(OBJ): $(IN_DIR)/wr_sm_sb_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(SBOPTS) $(CCwrFLAGS) $(IN_DIR)/wr_sm_sb_exms.c -o \
+	$(OUT_DIR)/wr_sm_sb_exms.$(OBJ)
+
+$(OUT_DIR)/wr_sm_sb_ptmi.$(OBJ): $(IN_DIR)/wr_sm_sb_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMSBMILSB -DLCLSB $(IN_DIR)/wr_sm_sb_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_sb_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_sm_hi_cntrl.$(OBJ): $(IN_DIR)/wr_sm_hi_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_hi_cntrl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_hi_cntrl.c
+$(OUT_DIR)/wr_sm_hi_exms.$(OBJ): $(IN_DIR)/wr_sm_hi_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(HIOPTS) $(CCwrFLAGS) $(IN_DIR)/wr_sm_hi_exms.c -o \
+	$(OUT_DIR)/wr_sm_hi_exms.$(OBJ)
+
+$(OUT_DIR)/wr_sm_hi_ptmi.$(OBJ): $(IN_DIR)/wr_sm_hi_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMHIMILHI $(IN_DIR)/wr_sm_hi_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_hi_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_sm_eg_cntrl.$(OBJ): $(IN_DIR)/wr_sm_eg_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_eg_cntrl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_eg_cntrl.c
+$(OUT_DIR)/wr_sm_eg_exms.$(OBJ): $(IN_DIR)/wr_sm_eg_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCEGMILEG -DLCLEG $(IN_DIR)/wr_sm_eg_exms.c -o \
+	$(OUT_DIR)/wr_sm_eg_exms.$(OBJ)
+$(OUT_DIR)/wr_sm_eg_ptmi.$(OBJ): $(IN_DIR)/wr_sm_eg_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS)  -DLCSMEGMILEG -DLCLEG $(IN_DIR)/wr_sm_eg_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_eg_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_sm_wr_cntrl.$(OBJ): $(IN_DIR)/wr_sm_wr_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_wr_cntrl.o -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_wr_cntrl.c
+$(OUT_DIR)/wr_sm_wr_exms.$(OBJ): $(IN_DIR)/wr_sm_wr_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCWRMILWR -DLCLWR $(IN_DIR)/wr_sm_wr_exms.c -o \
+	$(OUT_DIR)/wr_sm_wr_exms.$(OBJ)
+$(OUT_DIR)/wr_sm_wr_ptmi.$(OBJ): $(IN_DIR)/wr_sm_wr_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMWRMILWR -DLCLWR $(IN_DIR)/wr_sm_wr_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_wr_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_sm_pj_cntrl.$(OBJ): $(IN_DIR)/wr_sm_pj_cntrl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_sm_pj_cntrl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_sm_pj_cntrl.c
+
+$(OUT_DIR)/wr_sm_pj_exms.$(OBJ): $(IN_DIR)/wr_sm_pj_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMPJMILPJ -DLCPJMILPJ -DLCLPJ $(IN_DIR)/wr_sm_pj_exms.c -o \
+	$(OUT_DIR)/wr_sm_pj_exms.$(OBJ)
+
+$(OUT_DIR)/wr_sm_pj_ptmi.$(OBJ): $(IN_DIR)/wr_sm_pj_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMPJMILPJ -DLCPJMILPJ -DLCLPJ $(IN_DIR)/wr_sm_pj_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_pj_ptmi.$(OBJ)
+
+
+$(OUT_DIR)/wr_sm_ys_cntrl.$(OBJ): $(IN_DIR)/wr_sm_ys_cntrl.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMYSMILYS -DLCYSMILYS -DLCLYS $(IN_DIR)/wr_sm_ys_cntrl.c -o \
+	$(OUT_DIR)/wr_sm_ys_cntrl.$(OBJ)
+
+$(OUT_DIR)/wr_sm_ys_exms.$(OBJ): $(IN_DIR)/wr_sm_ys_exms.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMYSMILYS -DLCYSMILYS -DLCLYS $(IN_DIR)/wr_sm_ys_exms.c -o \
+	$(OUT_DIR)/wr_sm_ys_exms.$(OBJ)
+
+$(OUT_DIR)/wr_sm_ys_ptmi.$(OBJ): $(IN_DIR)/wr_sm_ys_ptmi.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMYSMILYS -DLCYSMILYS -DLCLYS $(IN_DIR)/wr_sm_ys_ptmi.c -o \
+	$(OUT_DIR)/wr_sm_ys_ptmi.$(OBJ)
+
+$(OUT_DIR)/wr_emm.$(OBJ): $(IN_DIR)/wr_emm.c $(ALL_INC)
+	$(CC) -c -I$(SS_DIR)  $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) -DLCSMYSMILYS -DLCYSMILYS -DLCLYS $(IN_DIR)/wr_emm.c -o \
+	$(OUT_DIR)/wr_emm.$(OBJ)
+
+$(OUT_DIR)/wr_ifm_x2ap.$(OBJ): $(IN_DIR)/wr_ifm_x2ap.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_x2ap.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_x2ap.c
+
+$(OUT_DIR)/wr_ifm_egtp.$(OBJ): $(IN_DIR)/wr_ifm_egtp.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_egtp.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_egtp.c
+
+$(OUT_DIR)/wr_ifm_rrc.$(OBJ): $(IN_DIR)/wr_ifm_rrc.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_rrc.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_rrc.c
+
+$(OUT_DIR)/wr_ifm_pdcp.$(OBJ): $(IN_DIR)/wr_ifm_pdcp.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_pdcp.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_pdcp.c
+
+$(OUT_DIR)/wr_ifm_schd.$(OBJ): $(IN_DIR)/wr_ifm_schd.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_schd.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_schd.c
+
+$(OUT_DIR)/wr_ifm_s1ap.$(OBJ): $(IN_DIR)/wr_ifm_s1ap.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_s1ap.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_s1ap.c
+
+$(OUT_DIR)/wr_ifm_l1.$(OBJ): $(IN_DIR)/wr_ifm_l1.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ifm_l1.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ifm_l1.c
+
+$(OUT_DIR)/wr_umm_egtp_hdl.$(OBJ): $(IN_DIR)/wr_umm_egtp_hdl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_egtp_hdl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_egtp_hdl.c
+
+$(OUT_DIR)/wr_umm_l1_hdl.$(OBJ): $(IN_DIR)/wr_umm_l1_hdl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_l1_hdl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_l1_hdl.c
+
+$(OUT_DIR)/wr_umm_pdcp_hdl.$(OBJ): $(IN_DIR)/wr_umm_pdcp_hdl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_pdcp_hdl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_pdcp_hdl.c
+
+$(OUT_DIR)/wr_umm_rrc_hdl.$(OBJ): $(IN_DIR)/wr_umm_rrc_hdl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_rrc_hdl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_rrc_hdl.c
+
+$(OUT_DIR)/wr_umm_s1ap_hdl.$(OBJ): $(IN_DIR)/wr_umm_s1ap_hdl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_s1ap_hdl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_s1ap_hdl.c
+
+$(OUT_DIR)/wr_umm_sch_hdl.$(OBJ): $(IN_DIR)/wr_umm_sch_hdl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_sch_hdl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_sch_hdl.c
+
+$(OUT_DIR)/wr_umm_x2ap_hdl.$(OBJ): $(IN_DIR)/wr_umm_x2ap_hdl.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_x2ap_hdl.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_x2ap_hdl.c
+
+$(OUT_DIR)/wr_smallcell.$(OBJ): $(IN_DIR)/wr_smallcell.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_smallcell.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_smallcell.c
+
+$(OUT_DIR)/wr_tmr.$(OBJ): $(IN_DIR)/wr_tmr.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_tmr.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_tmr.c
+
+$(OUT_DIR)/wr_mi.$(OBJ): $(IN_DIR)/wr_mi.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_mi.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_mi.c
+
+$(OUT_DIR)/wr_ptmi.$(OBJ): $(IN_DIR)/wr_ptmi.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ptmi.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ptmi.c
+
+$(OUT_DIR)/wr_ex_ms.$(OBJ): $(IN_DIR)/wr_ex_ms.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_ex_ms.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_ex_ms.c
+
+$(OUT_DIR)/wr_lwr.$(OBJ): $(IN_DIR)/wr_lwr.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_lwr.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_lwr.c
+
+$(OUT_DIR)/wr_umm_sec.$(OBJ): $(IN_DIR)/wr_umm_sec.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_sec.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_sec.c
+
+$(OUT_DIR)/wr_umm_uecap.$(OBJ): $(IN_DIR)/wr_umm_uecap.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_uecap.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_uecap.c
+
+$(OUT_DIR)/wr_umm_initcntsetup.$(OBJ): $(IN_DIR)/wr_umm_initcntsetup.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_initcntsetup.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_initcntsetup.c
+
+$(OUT_DIR)/wr_umm_recfg.$(OBJ): $(IN_DIR)/wr_umm_recfg.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_recfg.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_recfg.c
+
+$(OUT_DIR)/wr_umm_rrcreestab.$(OBJ): $(IN_DIR)/wr_umm_rrcreestab.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_rrcreestab.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_rrcreestab.c
+
+$(OUT_DIR)/wr_umm_rabmod.$(OBJ): $(IN_DIR)/wr_umm_rabmod.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_rabmod.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_rabmod.c
+
+$(OUT_DIR)/wr_umm_ctxtmod.$(OBJ): $(IN_DIR)/wr_umm_ctxtmod.c $(ALL_INC)
+	$(CC) -c -o$(OUT_DIR)/wr_umm_ctxtmod.o -I$(SS_DIR) $(COPTS) $(IOPTS) $(POPTS) $(CCwrFLAGS) \
+	$(IN_DIR)/wr_umm_ctxtmod.c
+#-------------------------------------------------------------#
+#Linker macros             
+#-------------------------------------------------------------#
+$(OUT_DIR)/libperflnxwr.a:$(wrPerfLnxOBJS)
+	 $(AR) -cr $(OUT_DIR)/libperflnxwr.a $(wrPerfLnxOBJS)	
+
+$(OUT_DIR)/libperflnxwruu.a:$(wrPerfLnxOBJSUU)
+	$(AR) -cr $(OUT_DIR)/libperflnxwr.a $(wrPerfLnxOBJSUU)	
+
+$(OUT_DIR)/libe2elnxwr.a:$(wrE2eLnxOBJS)
+	 $(AR) -cr $(OUT_DIR)/libe2elnxwr.a $(wrE2eLnxOBJS)	
+
+$(OUT_DIR)/libperfcavwr.a:$(wrPerfCavOBJS)
+	 $(AR) -cr $(OUT_DIR)/libperfcavwr.a $(wrPerfCavOBJS)	
+
+$(OUT_DIR)/libperfcavwruu.a:$(wrPerfCavOBJSUU)
+	$(AR) -cr $(OUT_DIR)/libperfcavwr.a $(wrPerfCavOBJSUU)	
+
+$(OUT_DIR)/libe2ecavwr.a:$(wrE2eCavOBJS)
+	 $(AR) -cr $(OUT_DIR)/libe2ecavwr.a $(wrE2eCavOBJS)	
+
+#-------------------------------------------------------------#
+#Clean macros             
+#-------------------------------------------------------------#
+clean:
+	\rm -f $(OUT_DIR)/libwr.a $(wrOBJS)
+

@@ -1,0 +1,386 @@
+.SUFFIXES: .o .c .s .i .cpp
+
+###############################################################################
+# Tools names                                                                 #
+###############################################################################
+
+AS    := armasm
+LD    := armlink
+AR    := armar
+CC    := armcc
+
+ifeq ($(SHELL),cmd.exe)
+MKDIR := mkdir.exe -p
+else
+MKDIR := mkdir -p
+endif
+
+RM    := rm -f
+RMDIR := rm -r -f
+CP    := cp -f -p
+COPY  := cp -f
+LS    := ls
+
+DELIMETER := ====================================================================
+DELIMETER1 := --------------------------------------------------------------------
+
+###############################################################################
+# Projects folders                                                            #
+###############################################################################
+
+# ---------------------------------------------------- ROOT
+
+COMMONDIR           := Common
+T4KDEVDIR           := T4KDev
+PHYDIR              := PHY
+LTEMACDIR           := LteTestMac
+TURNERPROJECTDIR    := TurnerProject
+TOOLDIR             := Bin
+
+# ---------------------------------------------------- T4K LTERT
+
+LTERTDIR            := $(T4KDEVDIR)/LTERT
+BINDIR              := $(T4KDEVDIR)/BIN
+
+# ---------------------------------------------------- T4K SYSCORE
+
+SYSCOREDIR          := $(T4KDEVDIR)/SYSCORE
+SYSCOREDRIVERSDIR   := $(SYSCOREDIR)/DRIVERS
+SYSCORESERVICESDIR  := $(SYSCOREDIR)/SERVICES
+SYSCOREFECDIR       := $(SYSCOREDRIVERSDIR)/FEC
+SYSCOREMAPDIR       := $(SYSCOREDRIVERSDIR)/MAP
+SYSCORECPRIDIR      := $(SYSCOREDRIVERSDIR)/CPRI
+SYSCORENETWORKDIR   := $(SYSCORESERVICESDIR)/network
+SYSCOREDHCPDIR      := $(SYSCORENETWORKDIR)/dhcp
+SYSCOREIPERFDIR     := $(SYSCORENETWORKDIR)/iperf
+SYSCORESCTPDIR      := $(SYSCORENETWORKDIR)/sctp
+SYSCORECEVADIR      := $(SYSCOREDIR)/CEVA
+SYSCORECEVAREXDIR   := $(SYSCORECEVADIR)/REXSERV
+SYSCORECEVADRV      := $(SYSCORECEVADIR)/DRIVERS
+
+# ---------------------------------------------------- T4K 4GMX
+
+OS4GMXDIR           := $(T4KDEVDIR)/4GMX
+OS4GMXINCDIR        := $(OS4GMXDIR)/Inc
+OS4GMXSRCDIR        := $(OS4GMXDIR)/Src
+OS4GMXARMDIR        := $(OS4GMXDIR)/ARM
+OS4GMXARMINCDIR     := $(OS4GMXARMDIR)/Inc
+OS4GMXARMSRCDIR     := $(OS4GMXARMDIR)/Src
+
+# ---------------------------------------------------- LTE PHY
+
+LTEPHYDIR           := $(PHYDIR)/LTE
+LTEPRJDIR           := $(LTEPHYDIR)/Arm/Prj
+LTECEVAPRJDIR       := $(LTEPHYDIR)/Ceva/Prj
+LTEPHYMSPDLIBDIR    := $(LTEPRJDIR)/LteLibMspd
+LTEPHYRTDIR         := $(LTEPRJDIR)/LtePhyRt
+LTEPHYCCODEDIR      := $(LTEPHYDIR)/C-Code $(LTEPHYDIR)/C-Code/UMTSNwl
+LTEPHYINCDIR        := $(LTEPHYDIR)/C-Code,$(LTEPHYDIR)/C-Code/UMTSNwl
+PHYCOMMONDIR        := $(PHYDIR)/Common
+PHYCOMMONCCODEDIR   := $(PHYCOMMONDIR)/C-Code
+
+# ---------------------------------------------------- Test MAC
+
+LTETESTMACDIR       := $(LTEMACDIR)/ENBMAC
+LTEP1ADIR           := $(LTEMACDIR)/ENODEB_CCPU
+P1MACDIR            := ../../..
+LTEP1BDIR           := $(P1MACDIR)/enbapp/build
+
+P1_BUILD_PRESENT    := $(wildcard $(LTEP1BDIR)/enodeb_larm.mak)
+
+################################################################################
+# Resulting and source binaries names and locations
+################################################################################
+
+HBI                 := 0
+
+ifeq ($(TDD_BUILD),1)
+TDD_SUFFIX			:= _TDD
+endif
+
+ifneq ($(RELEASEBUILD),1)	
+
+BUILDPOSTFIX   		:= _d
+BUILDDIR			:= Debug
+MAIN_TARGET			:= debug
+
+CEVABINPATH			:= $(LTECEVAPRJDIR)/LteApp$(TDD_SUFFIX)/EVM_Debug
+CEVABINPATHDMP		:= $(LTECEVAPRJDIR)/LteAppDmp$(TDD_SUFFIX)/EVM_Debug
+CEVAREXSERVBINPATH 	:= $(SYSCORECEVAREXDIR)/Debug
+
+else
+
+BUILDPOSTFIX		:= _r
+BUILDDIR			:= Release
+MAIN_TARGET			:= release
+
+CEVABINPATH			:= $(LTECEVAPRJDIR)/LteApp$(TDD_SUFFIX)/EVM_Release
+CEVABINPATHDMP		:= $(LTECEVAPRJDIR)/LteAppDmp$(TDD_SUFFIX)/EVM_Release
+CEVAREXSERVBINPATH 	:= $(SYSCORECEVAREXDIR)/Release
+
+endif
+
+LTEMACLIBNAME		:= libmaclte$(BUILDPOSTFIX).a
+CORELIBNAME			:= syscore$(BUILDPOSTFIX).a
+MXLIBNAME			:= 4gmxlib$(BUILDPOSTFIX).a
+LTEPHYMSPDLIBNAME	:= libltel1mspd$(BUILDPOSTFIX).a
+LTEPHYLOWERLIBNAME	:= libsrcltel1$(BUILDPOSTFIX).a
+LTEPHYUPPERLIBNAME	:= libltel1$(BUILDPOSTFIX).a
+CMNLIBNAME			:= libphycommon$(BUILDPOSTFIX).a
+
+BUILD_TESTMAC		:= 1
+
+ifneq ($(P1A_TARGET),)
+# Custom p1 MAC from CVS
+LTECUSTOMMACLIBRARY	:= $(LTEP1ADIR)/enodeb.a
+APPBIN				:= $(LTERTDIR)/ltearm.elf
+BUILD_TESTMAC		:= 0
+endif # P1A_TARGET
+
+# Custom p1 MAC from GIT
+ifneq ($(P1B_TARGET),)
+LTECUSTOMMACLIBRARY := $(LTEP1BDIR)/enodeb.a
+APPBIN				:= $(LTERTDIR)/ltearm.elf
+BUILD_TESTMAC		:= 0
+endif # P1A_TARGET
+
+# Build custom p1 MAC from GIT
+ifneq ($(P1C_TARGET),)
+LTECUSTOMMACLIBRARY := $(LTEP1BDIR)/enodeb.a
+APPBIN				:= $(LTERTDIR)/ltearm.elf
+BUILD_TESTMAC		:= 0
+endif # P1C_TARGET
+# Test MAC
+ifeq ($(BUILD_TESTMAC),1)
+
+LTETESTMACLIBRARY   := $(BINDIR)/$(LTEMACLIBNAME)
+LTEMACLIBNAME       := libmaclte$(BUILDPOSTFIX).a
+
+ifneq ($(HBI_OPTION),)
+
+HBI					:= 1
+APPBIN				:= $(LTERTDIR)/ltel1$(TDD_SUFFIX)_hbi.elf
+SCATTER_FILE		:= prj_hbi.sct
+SCT					:= M128
+
+else # HBI_OPTIONS
+
+ifeq ($(RELEASEBUILD),1)
+APPBIN				:= $(LTERTDIR)/ltel1$(TDD_SUFFIX).elf
+else # RELEASE_BUILD
+APPBIN				:= $(LTERTDIR)/ltel1$(TDD_SUFFIX)_d.elf
+endif # RELEASE_BUILD
+
+HBI					:= 0
+
+endif # HBI_OPTION
+
+endif # Test MAC
+
+SCATTER_FILE := $(LTERTDIR)/$(SCATTER_FILE)
+
+SYSCORELIBRARY      := $(BINDIR)/$(CORELIBNAME)
+FOURGMXLIB          := $(BINDIR)/$(MXLIBNAME)
+LTEPHYLOWERLIBRARY  := $(BINDIR)/$(LTEPHYLOWERLIBNAME)
+LTEPHYUPPERLIBRARY  := $(BINDIR)/$(LTEPHYUPPERLIBNAME)
+CMNLIBRARY          := $(BINDIR)/$(CMNLIBNAME)
+
+
+# force PHY as binary if there is no makefile for ltelibmspd
+ifeq ($(wildcard $(LTEPHYMSPDLIBDIR)/makefile-ltelibmspd),)
+PHYBIN_OPTION := phybin
+endif
+
+ifneq ($(PHYBIN_OPTION),)
+
+LTEPHYMSPDLIBRARY   :=
+LTEPHYMSPDLIBRARYBIN := $(LTEPHYMSPDLIBDIR)/$(BUILDDIR)RT/libltel1mspd.a
+
+# try to find MSPD PHY as binary
+
+ifeq ($(wildcard $(LTEPHYMSPDLIBRARYBIN)),)
+LTEPHYMSPDLIBRARYBIN := $(BINDIR)/$(LTEPHYMSPDLIBNAME)
+ifeq ($(wildcard $(LTEPHYMSPDLIBRARYBIN)),)
+$(error cannot locate libltel1mspd library)
+endif
+endif
+
+else
+
+LTEPHYMSPDLIBRARY   := $(BINDIR)/$(LTEPHYMSPDLIBNAME)
+
+endif
+
+###############################################################################
+ifneq ($(RELEASEBUILD),1)	
+###############################################################################
+
+#  Debug build
+
+CC_FLAGS := --apcs norwpi/noswst \
+           --arm \
+           --debug \
+           --no_unaligned_access \
+           --library_interface=aeabi_clib \
+           --cpu=Cortex-A9.no_neon.no_vfp \
+           --fpu=softvfp \
+           -c \
+           --li \
+           -g \
+           -O0 \
+           -Ono_memcpy
+
+AS_FLAGS := --Xref \
+           --apcs norwpi/noswst \
+           --ARM \
+           --LIttleend \
+           --cpu=Cortex-A9.no_neon.no_vfp \
+           --fpu=softvfp \
+           -g
+
+AR_FLAGS := -r --create --diag_style=ide
+
+LD_FLAGS := --xref \
+           --map \
+           --list $(APPBIN).lst \
+           --symdefs $(APPBIN).sym \
+           --symbols \
+           --Output $(APPBIN) \
+           --remove \
+           --entry=ResetHandler \
+           --scatter $(SCATTER_FILE) \
+           --bestdebug
+
+COMMONBUILDCFG := $(CC_FLAGS) \
+                 "-DMX_ARM_ENABLED" \
+                 "-DLOWERARM" \
+                 "-D_MX_DEBUG" \
+                 "-D_APP_ASSERT_HANDLER" \
+                 "-DMX_CREATE_OBJ_LOG_ENABLED" \
+                 "-DUSE_IPERF"
+				 
+PHYBUILDCFG := $(COMMONBUILDCFG) \
+              "-DSCHEDULER" \
+              "-DUL_CEVA" \
+              "-DUSECEVA" \
+              "-DRT_API_PROC" \
+              "-DCPRI_TIMER_EMULATION" \
+              "-DUL_STATIC_LIST" \
+              "-DIXIA_IOT" \
+              "-DFDX_RT" \
+              "-DLTE_PHY_RT" \
+              "-DSDU_THREAD" \
+              "-DUSEFEC" \
+              "-DLTE" \
+              "-DPHY_API_PROTECTION" \
+              "-DLIST_BASED" \
+              "-DRT_MODE"
+
+MACBUILDCFG    := $(COMMONBUILDCFG) \
+                 "-DENODEB" \
+                 "-DFDX_RT"
+			                
+MXBUILDCFG     := $(COMMONBUILDCFG) \
+                 --no_depend_system_headers
+                 
+COREBUILDCFG   := $(COMMONBUILDCFG)
+
+APPBUILDCFG    := $(COMMONBUILDCFG)
+
+###############################################################################
+else
+###############################################################################
+
+# Release build
+
+CC_FLAGS := --apcs norwpi/noswst \
+           --arm \
+           --no_unaligned_access \
+           --library_interface=aeabi_clib \
+           --cpu=Cortex-A9.no_neon.no_vfp \
+           --fpu=softvfp \
+           -c \
+           --li \
+           -Otime \
+           -Ono_memcpy
+
+AS_FLAGS := --Xref \
+           --ARM \
+           --LIttleend \
+           --cpu=Cortex-A9.no_neon.no_vfp \
+           --fpu=softvfp				
+
+AR_FLAGS := -r --create --diag_style=ide
+
+LD_FLAGS := --xref \
+           --map \
+           --list $(APPBIN).lst \
+           --symdefs $(APPBIN).sym \
+           --symbols \
+           --Output $(APPBIN) \
+           --remove \
+           --entry=ResetHandler \
+           --scatter $(SCATTER_FILE)
+
+ifeq ($(DEBUG_INFO),1)
+CC_FLAGS	+= "-g"
+LD_FLAGS    += "--bestdebug"
+endif
+
+COMMONBUILDCFG := $(CC_FLAGS) \
+                 "-DMX_ARM_ENABLED" \
+                 "-DLOWERARM"
+
+PHYBUILDCFG := $(COMMONBUILDCFG) \
+              "-DSCHEDULER" \
+              "-DUL_CEVA" \
+              "-DUSECEVA" \
+              "-DRT_API_PROC" \
+              "-DCPRI_TIMER_EMULATION" \
+              "-DUL_STATIC_LIST" \
+              "-DIXIA_IOT" \
+              "-DFDX_RT" \
+              "-DLTE_PHY_RT" \
+              "-DSDU_THREAD" \
+              "-DUSEFEC" \
+              "-DLTE" \
+              "-DPHY_API_PROTECTION" \
+              "-DLIST_BASED" \
+              "-DRT_MODE" \
+              -O2
+
+MXBUILDCFG := $(COMMONBUILDCFG) \
+              -O3 \
+              --no_depend_system_headers
+
+MACBUILDCFG := $(COMMONBUILDCFG) \
+			  -O2 \
+              "-DENODEB" \
+              "-DFDX_RT"
+              
+COREBUILDCFG := $(COMMONBUILDCFG) \
+			   -O3 \
+               "-DEXECUTION_FROM_TASK_LIST" \
+               "-DUSECEVA"
+
+APPBUILDCFG	:= $(COMMONBUILDCFG) \
+				-O2
+
+endif
+
+################################################################################
+# Custom options
+################################################################################
+
+
+ifneq ($(P1B_TARGET),)
+APPBUILDCFG += "-DCL_MAC_LWLC"
+endif
+
+ifneq ($(P1C_TARGET),)
+APPBUILDCFG += "-DCL_MAC_LWLC"
+endif
+
+ifeq ($(NODDR1),1)
+COREBUILDCFG += "-DNO_USE_DDR1"
+endif

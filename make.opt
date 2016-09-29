@@ -1,0 +1,617 @@
+# Makefile for eNode Project
+# For target host 
+TARGET                  :=x86
+# For target platfrom 
+TARGET                  :=arm
+# For target 4gmx 
+TARGET                  :=4gmx
+
+#Version number used for packaging/releasing; default is no versioning
+#Based on release, version can be given using 'make package VER=<>' command
+VER  := NO
+
+# Build Prefix used to print on console
+BUILD_PREFIX            := "=> Building"
+V                       := @
+
+# Archieve tool and Ar flags
+ARFLAGS             := -rv
+
+#Doc Tool Listing
+DOCTOOL             := doxygen
+
+# Test tool
+SPLINT              := splint
+
+#clean files
+RM                  := rm -f
+
+#This flag defines whether code coverage is supported at ENB
+export ENB_SUPPORT_CODE_COVERAGE  :=false
+
+#This flag defines whether SFTP, and SCP are supported at FTH
+FTH_SUPPORT_SECURE_TRANSFER  :=true
+
+# All Source,Include,Build,Lib,bin,objects and log directories 
+CURR_DIR        := .
+ROOT_DIR        := $(shell pwd)
+SCRIPTS_DIR     := $(ROOT_DIR)/build/scripts
+SNMP_DIR        := $(ROOT_DIR)/src/sih/net-snmp-5.5
+OS              := linux
+
+SRC_DIR         := $(CURR_DIR)/src
+LA_DIR          := $(CURR_DIR)/lowerarm
+SRC_DIR_ABS_PATH:= $(ROOT_DIR)/src
+INC_DIR         := $(ROOT_DIR)/src/inc
+BUILD_DIR       := $(ROOT_DIR)/build/
+LIB_DIR         := $(ROOT_DIR)/build/lib/$(TARGET)
+BIN_DIR         := $(ROOT_DIR)/build/bin/$(TARGET)
+OBJ_DIR         := $(ROOT_DIR)/build/obj/$(TARGET)
+LOG_DIR         := $(ROOT_DIR)/build/log
+
+CM_OBJ_DIR         := $(OBJ_DIR)/cm
+UEH_OBJ_DIR        := $(OBJ_DIR)/ueh
+UDH_OBJ_DIR        := $(OBJ_DIR)/udh
+SM_OBJ_DIR         := $(OBJ_DIR)/sm
+NH_OBJ_DIR         := $(OBJ_DIR)/nh
+SFI_OBJ_DIR        := $(OBJ_DIR)/sfi
+SSR_CP_OBJ_DIR     := $(OBJ_DIR)/ssr_cp
+SSR_GTP_OBJ_DIR    := $(OBJ_DIR)/ssr_gtp
+KW_OBJ_DIR         := $(OBJ_DIR)/kw
+RG_OBJ_DIR         := $(OBJ_DIR)/rg
+YS_OBJ_DIR         := $(OBJ_DIR)/ys
+PHY_OBJ_DIR        := $(OBJ_DIR)/phy
+SZ_OBJ_DIR         := $(OBJ_DIR)/sz
+SB_OBJ_DIR         := $(OBJ_DIR)/sb
+HI_OBJ_DIR         := $(OBJ_DIR)/hi
+EG_OBJ_DIR         := $(OBJ_DIR)/eg
+X2AP_OBJ_DIR       := $(OBJ_DIR)/x2ap
+MT_CP_OBJ_DIR      := $(OBJ_DIR)/mt_cp
+MT_GTP_OBJ_DIR     := $(OBJ_DIR)/mt_gtp
+PRM_OBJ_DIR        := $(OBJ_DIR)/prm
+LTH_OBJ_DIR        := $(OBJ_DIR)/lth
+PMH_OBJ_DIR        := $(OBJ_DIR)/pmh
+WIH_OBJ_DIR        := $(OBJ_DIR)/wih
+BSM_OBJ_DIR        := $(OBJ_DIR)/bsm
+DEH_OBJ_DIR        := $(OBJ_DIR)/deh
+CIH_OBJ_DIR        := $(OBJ_DIR)/cih
+FTH_OBJ_DIR        := $(OBJ_DIR)/fth
+MT_L2SIM_OBJ_DIR      := $(OBJ_DIR)/mt_l2sim
+L2SIM_OBJ_DIR      := $(OBJ_DIR)/l2sim
+SSR_L2SIM_OBJ_DIR     := $(OBJ_DIR)/ssr_l2sim
+
+#gcc flags to use when compiling code.
+CMN_CFLAGS         := -c -g -Wall -Wextra -Wundef -Waggregate-return -Winline -Wunreachable-code -Wno-pointer-sign -fPIC #-Werror
+CMN_CFLAGS_OAM     := -Werror
+ifeq ($(ENB_SUPPORT_CODE_COVERAGE),true)
+  CMN_CFLAGS       += -ftest-coverage -fprofile-arcs
+endif
+
+
+
+#CPUP Options
+LNXCOPTS  := -g -O2 -std=c99 -pipe -pedantic -Wall -Wno-comment -Wshadow -Wcast-qual -fPIC 
+LNXCOPTS  += -Wstrict-prototypes -Wmissing-prototypes -fno-strict-aliasing -fsigned-char 
+
+ifeq ($(ENB_SUPPORT_CODE_COVERAGE),true)
+  LNXCOPTS += -ftest-coverage -fprofile-arcs
+endif
+
+#Compile time Flags
+CFLAGS    :=  $(CMN_CFLAGS) -UL3MSGTRC_SUPPORTED -DSHM_SUPPORTED -UL2M_SUPPORTED #-DVIA_IMCS
+ifeq ($(L2SIM),on)
+  CFLAGS  +=  $(CMN_CFLAGS) -DPWAV_L2SIM 
+endif
+
+#Library Flags
+LFLAGS    := -L$(LIB_DIR) -lm -limc -llog -lsvnversion -lprint -lenumstr -ltlv -lcheck  -ltable -lconfig -lcfg -lrt -lpthread # -lxml2 
+ifeq ($(ENB_SUPPORT_CODE_COVERAGE),true)
+  LFLAGS += -lgcov
+endif
+
+# Which C compiler do you want to use?
+ifeq ($(TARGET),arm)
+  export PATH             := $(ROOT_DIR)/../tools/CodeSourcery/Sourcery_G++_Lite/bin/:$(PATH)
+  export CC               := arm-none-linux-gnueabi-gcc
+  export AR               := arm-none-linux-gnueabi-ar
+  export CXX              := arm-none-linux-gnueabi-g++
+else ifeq ($(TARGET),4gmx)
+  export PATH             := $(ROOT_DIR)/../tools/CodeSourcery/Sourcery_G++_Lite/bin/:$(PATH)
+  export CC               := arm-none-linux-gnueabi-gcc
+  export AR               := arm-none-linux-gnueabi-ar
+  export CXX              := arm-none-linux-gnueabi-g++
+else
+  export CC           := gcc
+  export CXX          := g++
+  export AR           := ar
+endif
+
+# Dummy Functions used for HOST
+ifeq ($(TARGET),arm)
+  LIB_PF_SRC                  :=libplatformtarget
+else ifeq ($(TARGET),x86)
+  LIB_PF_SRC                  :=libplatformhost
+else
+  LIB_PF_SRC                  :=libplatformtarget
+endif
+
+
+#CPUP make file
+		
+
+#-----------------------------------------------------------------------
+# macros for link options
+
+LNXENV=-DSUNOS -DSS -DSS_MT -DANSI -D_GNU_SOURCE -DSS_LINUX -D_REENTRANT -D__EXTENSIONS__  -DDEBUGNOEXIT #-DDEBUG_LEVEL=$(DEBUG)
+
+# object files: o     UNIX
+OBJ=o # object files, sunos
+
+STOPTS=-DENB 
+
+# MTSS defines
+MTOPTS=-DSS -DSS_MT -UCONRD -UNOFILESYS -DCONAVL
+
+# MOS defines
+MSOPTS=-DMS
+
+#SSI Files 
+SSOPTS=-DSS
+
+# EnodeB End to End Compile Options
+CMENBE2EOPTS_FT=-DCMINET_BSDCOMPAT -DSS_TICKS_SEC=1000 -DCMFILE_REORG_1 -DCM_INET2 \
+          -DCMFILE_REORG_2 -DSSINT2 -DHI_MULTI_THREADED \
+          -DSS_PERF -DSS_WL_REGION=1 -DNO_ERRCLS -DNOERRCHK -DxSS_M_PROTO_REGION \
+          -DCCPU_DEBUG_TRACE -DDEBUGP  -UCM_PASN_DBG -DS1AP_REL8A0 \
+          -ULTE_START_UL_DL_DATA -DSS_FLOAT -DRGR_RRM_TICK -ULTE_ENB_PAL -DYS_MSPD -UWIRESHARK_LOG \
+          -UUSE_PURE -DSLES9_PLUS -UTA_NEW -USI_NEW -URGR_SI_SCH -DPWAV \
+          -DEGTP_U \
+          -UNOFILESYS -ULTE_LNX_AFFINITY -URGR_V1 -UCOUNTER_CHECK \
+          -USS_4GMX_UCORE -DSS_DRVR_SUPPORT -DUEH_SIBS_ENBLD -DHI_NO_CHK_RES -UMSPD -ULSZV1\
+          -DDISABLE_RRCSEC -DNHU_VER2  -DEGTPU_HDR_ALWAYS_PRSNT 
+
+# EnodeB End to End Compile Options
+CMENBE2EOPTS_4GMX=-DCMINET_BSDCOMPAT -DSS_TICKS_SEC=1000 -DCMFILE_REORG_1 -DCM_INET2 \
+          -DCMFILE_REORG_2 -DSSINT2 -DHI_MULTI_THREADED \
+          -DSS_PERF -DSS_WL_REGION=1 -DNO_ERRCLS -DNOERRCHK -DxSS_M_PROTO_REGION \
+           -DCCPU_DEBUG_TRACE  -DDEBUGP \
+          -UCM_PASN_DBG -DS1AP_REL8A0 \
+          -ULTE_START_UL_DL_DATA -DSS_FLOAT -DRGR_RRM_TICK -ULTE_ENB_PAL -DTFU_UPGRADE\
+          -DSLES9_PLUS  -DSS_DRVR_SUPPORT -DUEH_SIBS_ENBLD  \
+          -DHI_NO_CHK_RES -DMSPD -UUE_RAD_CAP -DLTEPHY_MSPD \
+          -DDISABLE_RRCSEC -DPWAV -DPWAV_TS -DCL_MAC_LWLC\
+          -DEGTP_U -DNHU_VER2 -DSZ_ENB -USZ_MME -DEGTPU_HDR_ALWAYS_PRSNT\
+          -DMSPD_HARQ_ENABLE -DVE_SUPPORT_RLC_UM_MODE -DVE_SB_SCTP -UUEH_DL_CQI -DLTEMAC_MIMO -DSZTV2 \
+          -DVE_SRB2_SUPPORT -DLEGV2 -DEGTP_U_REL_9 -UPWAV_MEM -DNHU_VER1 -ULNH_VER1 -DRGR_V1 -DRGR_V2 -DRGR_CQI_REPT -URG_SI_SCH -ULTERRC_REL9 -DCTF_AS_SEC_ENB -USPACC_DBG -USS_HISTOGRAM_SUPPORT -UPWAV_MEM_INFO_PRINT_ENABLE -DTENB_AS_SECURITY -DMS_MBUF_CORRUPTION #Add CL_MAC_LWLC for L2Split
+
+ifneq ($(L2SIM), on)
+CMENBE2EOPTS_4GMX += -ULTE_L2_MEAS -ULTE_L2_MEAS_STUB
+endif  
+
+CMENBE2EOPTS_GTP=-DSS_4GMX_UCORE
+
+ifeq ($(TARGET), 4gmx)
+	ifeq ($(EXE), cp)
+		CMENBE2EOPTS := $(CMENBE2EOPTS_4GMX)
+	else
+		CMENBE2EOPTS := $(CMENBE2EOPTS_4GMX) $(CMENBE2EOPTS_GTP)
+	endif
+else
+	CMENBE2EOPTS = $(CMENBE2EOPTS_FT)
+endif
+
+CMOPTS=$(CMENBE2EOPTS)
+
+# The options below are used to pass on to the actual product compilations
+# Just this one variable is passed for individual compilations and hence
+# all the needed options are added from various other defined option macros
+
+#ALL PAL layer options
+TFUOPTS=-DTFU_VER_2 -UTFU_TDD -DLCTFU
+LTFOPTS=-USM -DLCTFMILTF -DLCLTF
+ifeq ($(TARGET), 4gmx)
+LTFOPTS += -DSM
+endif
+#TFOPTS=-DTF $(CTFOPTS) $(RGROPTS) -DLCTFU -DLCTFUITFU -DTFU_VER_2 -UTFU_TDD -DRG -DLTE_PAL_ENB
+TFOPTS=-DTF $(TFUOPTS) $(LTFOPTS) -DDL_STS -UTTI_PROC -URLC_STATUS_GEN \
+        -UUL_PROC
+# All LTE MAC product options
+CRGOPTS= -DLCNHLICRG -DLCCRG -DLCRGUICRG
+RGUOPTS=-DRG -DKW -DLCKWLIRGU -DLCRGU -DLCRGUIRGU -DCCPU_OPT
+LRGOPTS=-DLCSMMILRG -DLCLRG -DRG -DLCRGMILRG
+ifneq ($(L2SIM), on)
+ifeq ($(TARGET), 4gmx)
+LRGOPTS += -DSM
+endif
+endif
+RGROPTS=-DRG -DLCUEHLIRGR -DLCRGR -DLWLCUEHLIRGR -DLCRGUIRGR
+
+ifeq ($(TARGET), 4gmx)
+RGOPTS =-DRG $(RGUOPTS) $(CRGOPTS) $(LRGOPTS) $(RGROPTS) $(TFUOPTS) -URG_DEBUG -UTTI_PROC -UPROC_DL -USCH_TTI_PROC -UTOM -UPAL_MAC_PROC -UUL_PROC_MAC -DLCRGLITFU -DRG_DL_DELTA_CHANGE -DRG_CMNCH_SCHDELTA_CHANGE -URG_ULSCHED_AT_CRC -DTFU_RECPREQ_DELTA_CHANGE -DTFU_DL_DELTA_CHANGE -DTFU_UL_DELTA_CHANGE -DTFU_DLHQFBK_DELTA_CHANGE
+else
+RGOPTS =-DRG -DRG_PHASE2_SCHED  $(RGUOPTS) $(CRGOPTS) $(LRGOPTS) $(RGROPTS) $(TFUOPTS) -URG_DEBUG -UTTI_PROC -UPROC_DL -USCH_TTI_PROC -UTOM -UPAL_MAC_PROC -UUL_PROC_MAC -DLCRGLITFU -URG_DL_DELTA_CHANGE -URG_CMNCH_SCHDELTA_CHANGE -URG_ULSCHED_AT_CRC -UTFU_RECPREQ_DELTA_CHANGE -UTFU_DL_DELTA_CHANGE -UTFU_UL_DELTA_CHANGE -UTFU_DLHQFBK_DELTA_CHANGE
+endif
+
+# All LTE EGTP-U product options
+EGTOPTS=-DEG -DLCEGT -DLCEGUIEGT -DCCPU_OPT -DLCEULIEGT
+LEGOPTS=-DLCSMMILEG -DLCLEG -DEG -DLCEGMILEG -DLCSMEGMILEG
+ifeq ($(TARGET), 4gmx)
+LEGOPTS += -DSM
+endif
+EGOPTS=-DEG $(EGTOPTS) $(LEGOPTS) -UEG_DEBUG -DLCEGLIHIT 
+
+# All l2sim options
+L2SMOPTS=-DSS_LINUX
+
+#All Convergence Layer options
+ifneq ($(L2SIM), on)
+LCLOPTS=-DLCLCL -DSM -DCL
+else
+LCLOPTS=-DLCLCL -DCL
+endif
+CLOPTS=-DCL $(LCLOPTS) -DLCCLMILCL 
+
+#All RLC product options
+CKWOPTS=-DLCNHLICKW -DLCCKW -DLCKWUICKW
+ifneq ($(L2SIM), on)
+KWUOPTS=-DKW -DNH -DLCKWUIKWU -DLCKWU -DLCNHLIKWU -DCCPU_OPT
+else
+KWUOPTS=-DKW -DLCKWUIKWU -DLCKWU -DLCNHLIKWU -DCCPU_OPT
+endif
+
+LKWOPTS=-DKW -DLCKWMILKW -DLCLKW
+ifneq ($(L2SIM), on)
+ifeq ($(TARGET), 4gmx)
+LKWOPTS += -DSM
+endif
+endif
+
+LPJOPTS=-DPJ -DLCPJMILPJ -DLCLPJ
+ifneq ($(L2SIM), on)
+ifeq ($(TARGET), 4gmx)
+LPJOPTS += -DSM
+endif
+endif
+
+ifneq ($(L2SIM), on)
+PJUUEHOPTS=-DPJ -DNH -DLCPJU  -DLCUEHLIPJU -DLCPJUIPJU
+else
+PJUUEHOPTS=-DPJ -DLCPJU  -DLCUEHLIPJU -DLCPJUIPJU
+endif
+PJUNHOPTS=-DPJ  -DLCPJU  -DLCNHLIPJU -DLCPJUIPJU
+
+ifneq ($(L2SIM), on)
+CPJOPTS=-DLCCPJ -DNH -DKW -DLCNHLICPJ -DLCPJUICPJ
+else
+CPJOPTS=-DLCCPJ -DKW -DLCNHLICPJ -DLCPJUICPJ
+endif
+KWOPTS=-DKW $(CKWOPTS) $(KWUOPTS) $(CPJOPTS) $(LPJOPTS) $(LKWOPTS) $(RGUOPTS) $(PJUNHOPTS) $(PJUUEHOPTS) -URLC_STATUS_GEN -UUL_PROC_MAC
+
+#ALL RRC product options
+LNHOPTS=-DNH -DLCLNH -DLCSMMILNH -DLCSMNHMILNH -DLCNHMILNH
+ifeq ($(TARGET), 4gmx)
+LNHOPTS += -DSM
+endif
+NHUOPTS=-DLCNHU -DVE -DNX -DLCVELINHU -DLCNHUINHU -ULNH_VER1 
+NHOPTS=-DNH $(LNHOPTS) $(NHUOPTS) $(CRGOPTS) $(CKWOPTS) $(CPJOPTS) $(KWUOPTS) $(PJUNHOPTS)\
+       -DRX -DRNC_INTEG_CCPU 
+
+#ALL RRC application product options
+LUEHOPTS=-DUEH -DLCLUEH -DLCSMMILUEH -DLCUEHMILUEH -DLCUEHLINHU
+ifeq ($(TARGET), 4gmx)
+LUEHOPTS += -DSM
+endif
+CTFOPTS=-DLCCTF -DUEH -DLCUEHLICTF -DLCTFUICTF -DCTF_AS_SEC_ENB
+UEHOPTS=-DUEH $(LUEHOPTS) $(NHUOPTS) $(CTFOPTS) $(RGROPTS) $(PJUUEHOPTS) $(SZTOPTS) $(EGTOPTS) -DLCNHUINHU
+
+
+#All product options
+SZTOPTS=-DSZ -DUZ -DLCUZLISZT -DLWLCUZLISZT -DLCSZUISZT -DLCSZT -DPTSZUISZT -DS1AP_REL8A0 -DDEBUGP -DCM_PASN_CRIT_HANDL
+LSZOPTS=-DLCLSZ -DLCSCT -DSM -DSZ -DLCSMSZMILSZ  -DLCSZMILSZ
+TFOPTS=-DTF $(CTFOPTS) $(RGROPTS) -DLCTFU -DLCTFUITFU -DTFU_VER_2 -UTFU_TDD -DRG -DLTE_PAL_ENB
+
+#All SCTP product options
+LSBOPTS=-DLCLSB -DSM -DSB -DLSB2 -DLSB3 -DLSB6 -DLSB4  -DLSB8 -DHI_REL_1_4
+SCTOPTS=-DSB  -DLCSBUISCT -DLCSZLISCT -DLCCZLISCT
+HITOPTS=-DLCSBLIHIT -DLCHIUIHIT -DHI_REL_1_4 -DLCEGLIHIT 
+SBOPTS = $(LSBOPTS) $(HITOPTS) $(SCTOPTS) -DLCSBMILSB -DLCSMSBMILSB -DSB_CHECKSUM_CRC -DSB_CHECKSUM 
+
+SZOPTS=-DSZ $(SZTOPTS) $(LSZOPTS) $(SCTOPTS) -DLCSZMILSZ -DSM \
+       -DSZ_ENB -DSZ_DYNAMIC_PEER -DSZ_USTA
+CZOPTS=-DCZ $(CZTOPTS) $(LCZOPTS) $(SCTOPTS) -DLCCZMILCZ -DSM \
+       -DCZ_ENB -DCZ_DYNAMIC_PEER -DCZ_USTA
+
+#All TUCL product options
+LHIOPTS=-DLCHIMILHI -DSM -DLCLHI
+HIOPTS= $(LHIOPTS) $(HITOPTS) -DHI -DLCHIMILHI -DSM -DLCSMHIMILHI -DEG -DHI_NO_CHK_RES
+
+#ALL RRC product options
+LRXOPTS=-DRX  -DLCLRX
+ifeq ($(TARGET), 4gmx)
+LRXOPTS += -DSM
+endif
+
+SMOPTS= -DLCSMMILCL -DLCCLMILCL
+
+#-----------------------------------------------------------------------
+# macros for sw and include directories
+#
+MS_PATH=$(LA_DIR)/ltephy/mindSpeed/uppercore/TurnerProject/
+
+MS_LC_PHY_DIR=$(LA_DIR)/ltephy/mindSpeed/lowercore/PHY/LTE/C-Code/
+
+#######################################################################
+# for linking with TurnerProject
+LNXMSLIBPATH= -L$(MS_PATH)PHYSTUB/STUB #-L$(MS_PATH)OSAL/LINUX -L$(MS_PATH)BSP/LINUX
+# for linking with only phystub
+LNXLIBPATH := -L$(BUILD_DIR)/$(TARGET)/lib/
+#######################################################################
+
+
+MT_DIR=$(SRC_DIR)/mtuarm
+CM_DIR=$(SRC_DIR)/cmuarm
+UEH_DIR=$(SRC_DIR)/cprm/ueh
+UEH_INC_DIR=$(SRC_DIR)/cprm/ueh/inc
+UDH_INC_DIR=$(SRC_DIR)/cprm/ueh/udh
+SM_INC_DIR=$(SRC_DIR)/cprm/sm
+TF_DIR=$(SRC_DIR)/pal
+YS_DIR=$(LA_DIR)/lteclms
+MS_CM_DIR=$(LA_DIR)/ltephy/mindSpeed/uppercore/Common
+MS_PHYLTE_DIR=$(LA_DIR)/ltephy/mindSpeed/uppercore/PHY/LTE/C-Code
+MS_TP_DIR=$(LA_DIR)/ltephy/mindSpeed/uppercore/TurnerProject
+MS_TP_BSP_DIR=$(LA_DIR)/ltephy/mindSpeed/uppercore/TurnerProject/BSP
+MS_LC_DIR=$(LA_DIR)/ltephy/mindSpeed/lowercore/T4KDev/SYSCORE/SERVICES
+NH_DIR=$(SRC_DIR)/rrc
+SFI_DIR=$(SRC_DIR)/sfi
+SZ_DIR=$(SRC_DIR)/s1ap
+CZ_DIR=$(SRC_DIR)/x2ap
+SB_DIR=$(SRC_DIR)/sctp
+HI_DIR=$(SRC_DIR)/tucl
+EG_DIR=$(SRC_DIR)/egtpu
+RG_DIR=$(LA_DIR)/ltemac
+KW_DIR=$(LA_DIR)/lterlcpdcp
+CM_CMINC=../../common/include
+BSM_DIR=$(SRC_DIR)/inc
+LIBCFG_DIR=$(SRC_DIR)/inc/libconfig
+LIBENUM_DIR=$(SRC_DIR)/libenumstr
+IMC_DIR=$(SRC_DIR)/inc/libimc
+SSR_DIR=$(SRC_DIR)/ssr
+PP_DIR=$(SRC_DIR)/pseudophy
+
+CM_LIB_DIR=.
+UEH_LIB_DIR=.
+
+#enobeb protocol library files
+BLD_LNX_CM_OBJS=$(SY_DIR)/liblnxcm.a
+BLD_LNX_MT_CP_OBJS=$(SY_DIR)/liblnxmt_cp.a
+BLD_LNX_MT_GTP_OBJS=$(SY_DIR)/liblnxmt_gtp.a
+BLD_LNX_MT_L2SIM_OBJS=$(SY_DIR)/liblnxmt_l2sim.a
+BLD_LNX_KW_OBJS=$(SY_DIR)/liblnxkw.a
+BLD_LNX_RG_OBJS=$(SY_DIR)/liblnxrg.a
+BLD_LNX_YS_OBJS=$(SY_DIR)/liblnxys.a
+BLD_LNX_UEH_E2E_OBJS=$(SY_DIR)/liblnxe2eueh.a
+BLD_LNX_UDH_OBJS=$(SY_DIR)/liblnxe2eudh.a
+BLD_LNX_SM_OBJS= $(SY_DIR)/liblnxsm.a
+BLD_LNX_NH_OBJS=$(SY_DIR)/liblnxnh.a
+BLD_LNX_SFI_OBJS=$(SY_DIR)/libsfi.a
+BLD_LNX_SSR_CP_OBJS=$(SY_DIR)/liblnxssr_cp.a
+BLD_LNX_SSR_GTP_OBJS=$(SY_DIR)/liblnxssr_gtp.a
+BLD_LNX_SZ_OBJS=$(SY_DIR)/liblnxsz.a
+
+ifeq ($(LTE_HO_SUPPORT),-DLTE_HO_SUPPORT)
+BLD_LNX_CZ_OBJS=$(SY_DIR)/liblnxcz.a
+endif
+
+BLD_LNX_SB_OBJS=$(SY_DIR)/liblnxsb.a
+BLD_LNX_HI_OBJS=$(SY_DIR)/liblnxhi.a
+BLD_LNX_EG_OBJS=$(SY_DIR)/liblnxeg.a
+BLD_LNX_PP_OBJS=$(SY_DIR)/liblnxpp.a
+
+
+
+# linker options:
+LNXLOPTS=-lpthread -lnsl -lrt -lm -limc -llog -lsvnversion -lconfig -lcfg -lprint -lRRMprint -lenumstr -ltlv -export-dynamic 
+
+ifeq ($(ENB_SUPPORT_CODE_COVERAGE),true)
+  LNXLOPTS       += -lgcov
+endif
+
+# for gprof
+#LNXLOPTS=-lpthread -lnsl -lrt -lm -losal -lsctp -lgcov -pg
+
+# for linking with TurnerProject
+LNXMSLOPTS= -lnsl -lm  -lbsp -losal -lphystub -lrt -lpthread -limc -llog -lsvnversion -lconfig -lcfg -lprint -lenumstr -ltlv
+
+
+# include options:
+LNXIOPTS  := -I$(MT_DIR) -I$(CM_DIR) -I$(MS_CM_DIR)  -I$(MS_TP_DIR) -I$(MS_TP_BSP_DIR) 
+LNXIOPTS  += -I$(EG_DIR) -I$(SZ_DIR) -I$(KW_DIR) -I$(UEH_INC_DIR) -I$(SM_INC_DIR) -I$(BSM_DIR) 
+LNXIOPTS  += -I$(SFI_DIR) -I$(SSR_DIR) -I$(LIBCFG_DIR) -I$(IMC_DIR) -I$(LIBENUM_DIR)
+LNXIOPTS  += -I$(MS_PHYLTE_DIR) -I$(CZ_DIR)
+#LNXIOPTS  += -I$(MS_LC_DIR)/PHY/LTE/C-Code -I$(MS_LC_DIR)/T4KDev/SYSCORE/SERVICES 
+#LNXIOPTS  += -I$(MS_LC_DIR)/PHY/LTE/Arm  -I$(MS_LC_DIR)/T4KDev/4GMX/Inc #-I$(MS_PHYLTE_DIR)
+LNXLIBIOPTS  =  -I$(CM_LIB_DIR)
+
+# include options:
+LNX_FT_IOPTS  := -I$(MS_LC_PHY_DIR) -I$(MT_DIR) -I$(CM_DIR) -I$(MS_CM_DIR)  -I$(MS_TP_DIR) -I$(MS_TP_BSP_DIR) 
+LNX_FT_IOPTS  += -I$(EG_DIR) -I$(SZ_DIR) -I$(KW_DIR) -I$(UEH_INC_DIR) -I$(SM_INC_DIR) -I$(BSM_DIR) 
+LNX_FT_IOPTS  += -I$(SFI_DIR) -I$(SSR_DIR) -I$(LIBCFG_DIR) -I$(IMC_DIR) -I$(LIBENUM_DIR) 
+LNX_FT_IOPTS  += -I$(MS_LC_DIR) #-I$(MS_LC_DIR)/PHY/LTE/C-Code 
+
+# compiler options:
+
+# MTSS defines
+CCLNXMTOPTS=$(DEBUGPOPTS) $(LNXENV) $(MTOPTS) $(CMOPTS) $(STOPTS) -DOP_SSI_SAM
+
+# SM defines 
+CCLNXSMOPTS= $(LNXENV) $(SMOPTS) $(CMOPTS) $(STOPTS)
+
+# NH defines 
+CCLNXNHOPTS=  $(LNXENV) $(NHOPTS) $(CMOPTS) -DNH_TRACE_ENABLED
+
+#SFI defines
+CCLNXSFIOPTS=  $(LNXENV) $(CMOPTS) -DEGTP_U
+
+#SSR defines
+CCLNXSSROPTS=  $(LNXENV) $(CMOPTS) -DEGTP_U
+
+#KW defines
+CCLNXKWOPTS= $(LNXENV) $(KWOPTS)  $(STOPTS) $(CMOPTS)
+
+#RG defines 
+CCLNXRGOPTS= $(LNXENV) $(RGOPTS)  $(STOPTS) $(CMOPTS)
+
+#TF defines 
+CCLNXTFOPTS= $(LNXENV) $(TFOPTS)  $(STOPTS) $(CMOPTS) -DYS_MS_PHY 
+
+#EG defines 
+CCLNXEGOPTS= $(LNXENV) $(EGOPTS)  $(STOPTS) $(CMOPTS)
+
+#SZ defines
+CCLNXSZOPTS= $(LNXENV) $(SZOPTS)  $(STOPTS) $(CMOPTS)  -DDEBUGP -DSZ_DEBUG #-DTRC3
+
+#UEH defines 
+CCLNXUEHOPTS= $(LNXENV) $(UEHOPTS)  $(STOPTS) $(CMOPTS) 
+
+#SB defines 
+CCLNXSBOPTS= $(LNXENV) $(SBOPTS)  $(STOPTS) $(CMOPTS)
+
+#HI defines 
+CCLNXHIOPTS= $(LNXENV) $(HIOPTS)  $(STOPTS) $(CMOPTS)
+
+#common options 
+CCLNXCMOPTS= $(LNXENV) $(CMOPTS) $(SMOPTS) \
+             $(MKUOPTS) $(CMKOPTS)  \
+             $(CRLOPTS) $(RLUOPTS)  $(STOPTS) \
+             $(CTCOPTS) $(TCUOPTS) $(LRXOPTS) 
+
+ifeq ($(TARGET), 4gmx)
+LNX_CM_IOPTS = $(LNXIOPTS)
+else
+LNX_CM_IOPTS = $(LNX_FT_IOPTS)
+endif
+
+#l2sim options
+L2SIM_UEHLCOPTS=-DUEH -DLCLUEH -DLCSMMILUEH -DLCUEHMILUEH -DLCNHU -ULCNHUINHU \
+          -DLCCTF -DLCUEHLICTF -DLCTFUICTF -DLCUEHLIRGR -DLCRGR -DLWLCUEHLIRGR -DLCRGUIRGR \
+          -DLCPJU  -DLCUEHLIPJU -DLCPJUIPJU \
+          -DSZ -DLCUZLISZT -DLWLCUZLISZT -DLCSZUISZT -DLCSZT -DPTSZUISZT -DEBUGP \
+          -DLCEGT -DLCEGUIEGT -DCCPU_OPT -DLCEULIEGT -DNHU_VER1
+
+LNXENBE2EBINCP=enb_e2e_cp
+LNXENBE2EBINGTP=enb_e2e_gtp
+LNXENBE2EBINRADIOUP=enb_e2e_radioup
+LNXENBE2EBINL2SIM=enb_e2e_l2sim
+
+BASENAME=cpup
+MAKENAME=$(BASENAME).mak
+
+#PWAV Library files
+COMMON_LIB_FILES    += $(LIB_DIR)/libimc.a $(LIB_DIR)/libcfg.a $(LIB_DIR)/libtlv.a $(LIB_DIR)/libprint.a $(LIB_DIR)/libRRMprint.a
+COMMON_LIB_FILES    += $(LIB_DIR)/libtable.a $(LIB_DIR)/libenumstr.a $(LIB_DIR)/liblog.a $(LIB_DIR)/libsvnversion.a
+
+#Library Header files
+C_INC_DIR           := -I$(INC_DIR) -I$(INC_DIR)/libimc -I$(INC_DIR)/libcurl -I$(INC_DIR)/libcheck 
+C_INC_DIR           += -I$(INC_DIR)/libconfig -I$(INC_DIR)/libtecla -I$(SRC_DIR_ABS_PATH)/libcfg  -I$(SRC_DIR_ABS_PATH)/libtlv
+C_INC_DIR           += -I$(INC_DIR)/libfcgi -I$(SRC_DIR_ABS_PATH)/libenumstr -I$(SRC_DIR_ABS_PATH)/libtable -I$(SRC_DIR_ABS_PATH)/libprint
+C_INC_DIR           += -I$(SRC_DIR_ABS_PATH)/$(LIB_PF_SRC) -I$(SRC_DIR)/libRRMprint
+C_INC_DIR           += -I$(SRC_DIR_ABS_PATH)/cmuarm
+
+#Module Header files
+ALL_INC_DIR      := $(C_INC_DIR)
+ALL_INC_DIR      += -I$(SRC_DIR)/bsm -I$(SRC_DIR)/cih -I$(SRC_DIR)/deh -I$(SRC_DIR)/rh_sim
+ALL_INC_DIR	     += -I$(SRC_DIR)/prm -I$(SRC_DIR)/../../utils/tput_tester 
+#ALL_INC_DIR     += -I$(SRC_DIR)/sfi -I$(SRC_DIR)/sih -I$(SRC_DIR)/tucl -I$(SRC_DIR)/ueh -I$(SRC_DIR)web 
+#ALL_INC_DIR     += -I$(SRC_DIR)/wih -I$(SRC_DIR)/cprm/ueh/inc/ -I$(SRC_DIR)/inc 
+#ALL_INC_DIR     += -I$(SRC_DIR)/cprm -I$(SRC_DIR)/cprm/s1mgr -I$(SRC_DIR)/cprm/ueh
+
+
+# common include files(no makedepend) CM folder
+CM_INC=\
+    $(CM_DIR)/envdep.h         $(CM_DIR)/envind.h         \
+    $(CM_DIR)/envopt.h                                    \
+    $(CM_DIR)/gen.h            $(CM_DIR)/gen.x            \
+    $(CM_DIR)/cm_hash.x        $(CM_DIR)/cm_hash.h        \
+    $(CM_DIR)/cm_lte.x         $(CM_DIR)/cm_lte.h        \
+    $(CM_DIR)/cm5.h            $(CM_DIR)/cm5.x            \
+    $(CM_DIR)/cm_umts.h        $(CM_DIR)/cm_umts.x        \
+    $(CM_DIR)/cm_err.h         $(CM_DIR)/cm_lib.x         \
+    $(CM_DIR)/cm_mblk.h        $(CM_DIR)/cm_mblk.x        \
+    $(CM_DIR)/cm_tkns.h        $(CM_DIR)/cm_tkns.x        \
+    $(CM_DIR)/cm_llist.h       $(CM_DIR)/cm_llist.x       \
+    $(CM_DIR)/cm_hash.h        $(CM_DIR)/cm_hash.x        \
+    $(CM_DIR)/cm_inet.h        $(CM_DIR)/cm_inet.x        \
+    $(CM_DIR)/cm_gen.h         $(CM_DIR)/cm_gen.x         \
+    $(CM_DIR)/cm_tpt.h         $(CM_DIR)/cm_tpt.x         \
+    $(CM_DIR)/cm_dns.h         $(CM_DIR)/cm_dns.x         \
+    $(CM_DIR)/ssi.h            $(CM_DIR)/ssi.x            \
+    $(CM_DIR)/nhu.h            $(CM_DIR)/nhu.x            \
+    $(CM_DIR)/crg.h            $(CM_DIR)/crg.x            \
+    $(CM_DIR)/egt.h            $(CM_DIR)/egt.x            \
+    $(CM_DIR)/hit.h            $(CM_DIR)/hit.x            \
+    $(CM_DIR)/kwu.h            $(CM_DIR)/kwu.x            \
+    $(CM_DIR)/szt.h            $(CM_DIR)/szt.x            \
+    $(CM_DIR)/czt.h            $(CM_DIR)/czt.x            \
+    $(CM_DIR)/sct.h            $(CM_DIR)/sct.x            \
+    $(CM_DIR)/tfu.h            $(CM_DIR)/tfu.x            \
+    $(CM_DIR)/rgr.h            $(CM_DIR)/rgr.x            \
+    $(CM_DIR)/pju.h            $(CM_DIR)/pju.x            \
+    $(CM_DIR)/cm_pint.h        $(CM_DIR)/cm_pint.x        \
+    $(CM_DIR)/cm_perr.h                                   \
+    $(CM_DIR)/nhu_pk.x         $(CM_DIR)/nhu_unpk.x       \
+    $(CM_DIR)/nhu_asn.h        $(CM_DIR)/nhu_asn.x       \
+    $(CM_DIR)/szt_pk.x         $(CM_DIR)/szt_unpk.x       \
+    $(CM_DIR)/czt_pk.x         $(CM_DIR)/czt_unpk.x       \
+    $(CM_DIR)/szt_asn.h         $(CM_DIR)/szt_asn.x       \
+    $(CM_DIR)/czt_asn.h         $(CM_DIR)/czt_asn.x       \
+    $(CM_DIR)/szt_asn.h        $(CM_DIR)/szt_asn.x       \
+    $(CM_DIR)/leg.h            $(CM_DIR)/leg.x            \
+    $(CM_DIR)/lhi.h            $(CM_DIR)/lhi.x            \
+    $(CM_DIR)/lkw.h            $(CM_DIR)/lkw.x            \
+    $(CM_DIR)/lnh.h            $(CM_DIR)/lnh.x            \
+    $(CM_DIR)/lys.h            $(CM_DIR)/lys.x            \
+    $(CM_DIR)/lrg.h            $(CM_DIR)/lrg.x            \
+    $(CM_DIR)/lsb.h            $(CM_DIR)/lsb.x            \
+    $(CM_DIR)/lsz.h            $(CM_DIR)/lsz.x            \
+    $(CM_DIR)/lcz.h            $(CM_DIR)/lcz.x            \
+    $(CM_DIR)/lueh.h           $(CM_DIR)/lueh.x            \
+    $(CM_DIR)/ludh.h                                      \
+    $(CM_DIR)/lpj.h            $(CM_DIR)/lpj.x            \
+    $(CM_DIR)/cm_pasn.x                                   \
+    $(CM_DIR)/cm_mem.h         $(CM_DIR)/cm_mem.x         \
+	
+	
+#ALL_SRC_FILES      := $(wildcard *.c */*.c */*/*.c */*/*/*.c) used for make depend
+ALL_SRC_FILES       := $(wildcard $(SRC_DIR)/bsm/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/cih/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/deh/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/rh_sim/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/fth/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/lth/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/pmh/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/prm/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/sih/*.c)
+
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libcfg/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libimc/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/liblog/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libsvnversion/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/$(LIB_PF_SRC)/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libtable/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libenumstr/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libprint/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libRRMprint/*.c)
+ALL_SRC_FILES       += $(wildcard $(SRC_DIR)/libtlv/*.c)
+
+#ALL_SRC_FILES      += $(SRC_DIR)/ueh/*.c $(SRC_DIR)web/*.c 
+#ALL_SRC_FILES      += -I$(SRC_DIR)/wih -I$(SRC_DIR)/cprm/ueh/inc -I$(SRC_DIR)/tucl -I$(SRC_DIR)/sfi
+
+
+SNMP-DEFAULT-VERSION  :="2" 
+SNMP-DEFAULT-LOGFILE-LOCATION  :="/var/log/snmpd.log"
+SNMP-DEFAULT-PERSISTENT-DIR-LOCATION  :="/var/net-snmp/"
+SNMP-SYS-CONTACT   :="pwregistry@pwav.com"
+SNMP-SYS-LOCATION  :="hyderabad"
+SNMP-MODULES       :="lte/sih lte/alarmHistory lte/activeAlarmStatus lte/enbStatus lte/swInstallHistory lte/traceControl lte/swInstall lte/swActivation lte/fileUpload lte/moduleStatus lte/traceStatus lte/componentStatus lte/swActivationStatus lte/swPackageStatus lte/cellStatus lte/traceHistory lte/enbAdmin lte/cellAdmin lte/enbRegConfig lte/enbConfig lte/traceConfig lte/fileDownload lte/fileDownloadStatus lte/fileUploadStatus lte/schedulerConfig lte/sysInfo1Config lte/sysInfo2Config lte/cellConfig lte/phyConfig lte/radioHeadConfig lte/pmCounterLogConfig lte/enbNonAlarmNotifications lte/enbAlarms lte/logConfig lte/qosConfig lte/eutraHoConfig lte/eutraNeighCellConfig lte/sysInfo3Config lte/timersConfig lte/msgTrace lte/eventThresholds lte/macGenCounters lte/macUplaneCounters lte/rlcGenCounters lte/pdcpGenCounters lte/pdcpUplaneCounters lte/gtpGenCounters lte/fileEventHistory lte/activeUeStatus lte/activeRabStatus lte/rabHistory lte/ueEventHistory lte/pmLogFileStatus lte/moduleLogFileStatus lte/locationStatus lte/rrcGenCounters lte/rrcCellCounters lte/s1apGenCounters lte/sctpGenCounters lte/enbAddresses lte/radioHeadStatus lte/s1apPeerNodeCounters lte/mmeConfig lte/rrmCounters lte/ethernetCounters lte/ipCounters lte/ledStatus lte/gpsStatus lte/sonConfig lte/srsConfigDedicated lte/securityConfig lte/ueEventHistoryLogConfig"
+#SNMP_OLD_BUILD :=$(shell grep "LTCC='" $(SNMP_DIR)/config.status | cut -d"'" -f2)
+BUILD-ARCH-OS-TYPE  := i686-pc-$(OS)

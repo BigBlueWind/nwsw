@@ -1,0 +1,169 @@
+ -- @file    RRC-GEN-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+RRC-GEN-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                 FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Counter32          FROM SNMPv2-SMI;
+
+rrcGenCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the Statistics counters for RRC General."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 127 }
+
+rrcGenCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF RrcGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the Statistics counters for RRC General.
+            This is a SINGLE ROW Table"
+       ::= { rrcGenCounters 1 }
+
+rrcGenCountersEntry OBJECT-TYPE
+       SYNTAX      RrcGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains Statistics counters objects for RRC."
+       INDEX  { index }
+       ::= { rrcGenCountersTable 1 }
+
+RrcGenCountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       numEstbCon          Counter32,
+       numFailCon          Counter32,
+       numReConfigSucc     Counter32,
+       numReConfigFail     Counter32,
+       numUnExptMsg        Counter32,
+       numLwLyFail         Counter32,
+       numDecErr           Counter32,
+       numEncErr           Counter32,
+       numPdcpErr          Counter32,
+       numRlcErr           Counter32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { rrcGenCountersEntry 1 }
+
+numEstbCon OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of established RRC Connections]"
+       ::= { rrcGenCountersEntry 2 }
+
+numFailCon OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              Number of Failed RRC Connections]"
+       ::= { rrcGenCountersEntry 3 }
+
+numReConfigSucc OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of successful RRC Reconfiguration]"
+       ::= { rrcGenCountersEntry 4 }
+
+numReConfigFail OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Failed RRC Reconfiguration]"
+       ::= { rrcGenCountersEntry 5 }
+
+numUnExptMsg OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Unexpected Messages received]"
+       ::= { rrcGenCountersEntry 6 }
+
+numLwLyFail OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of lower layer failures]"
+       ::= { rrcGenCountersEntry 7 }
+
+numDecErr OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Erroneous Messages received]"
+       ::= { rrcGenCountersEntry 8 }
+
+numEncErr OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+              Number of messages with encoding errors]"
+       ::= { rrcGenCountersEntry 9 }
+
+numPdcpErr OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of PDCP Errors]"
+       ::= { rrcGenCountersEntry 10 }
+
+numRlcErr OBJECT-TYPE
+       SYNTAX      Counter32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of RLC Errors]"
+       ::= { rrcGenCountersEntry 11 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { rrcGenCountersEntry 12 }
+
+END

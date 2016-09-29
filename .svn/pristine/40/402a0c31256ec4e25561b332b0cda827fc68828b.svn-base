@@ -1,0 +1,240 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<style type="text/css" lang="css">
+@import '../css/styles.css';
+    </style>
+<script type="text/javascript" src="../script/jquery.js"></script>
+<script type="text/javascript" src="../script/lte_set_get.js"></script>
+<script type="text/javascript" src="../script/mapping.js"></script>
+
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    var startTime = "";
+    var endTime = "";
+    var query = "";
+    var rand = "";
+    var table = "";
+    var change = 0;
+    var numOfRows = 0;
+
+    $(document).ready(function() {
+        table = document.getElementById("msgTraceTable");
+        rand = (new Date()).valueOf();
+        query = "key=msgTrace&rand=" + rand;
+
+        $("#btnApply").click(function() {
+            change = 0;
+            SetMsgTrace(table.rows.length);
+        });
+
+        startTime = new Date();
+        GetMsgTrace();
+
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#msgTrace", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });
+    
+    function GetMsgTrace() {
+        $.post(sessionID + "-LTEWebGet.fcgi", query,
+           function(response) {
+               endTime = new Date();
+               if (response != null || response != undefined) {
+                   if (response.result == "SUCCESS") {
+                       numOfRows = response.data.row.length;
+                       var rowCount = table.rows.length;
+                       for (var i = 0, j = 0; j < rowCount; j++) {
+                           table.deleteRow(i);
+                       }
+                       rowCount = table.rows.length;
+                       table.width = "820px";
+                       table.border = "0";
+                       table.cellpadding = "0";
+                       table.cellspacing = "0";
+                       table.overflow = "auto"
+                       for (i = 0; i < response.data.row.length; i++) {
+                           rowCount = table.rows.length;
+                           var row = table.insertRow(rowCount);
+                           if (rowCount % 2 == 1) {
+                               row.className = "conTblRowBg2"
+                           }
+                           else {
+                               row.className = "conTblRowBg1"
+                           }
+
+                           var cell1 = row.insertCell(0);
+                           cell1.align = "center";
+                           cell1.width = "10%";
+                           cell1.innerHTML = i + 1;
+
+                           var cell2 = row.insertCell(1);
+                           cell2.align = "center";
+                           cell2.width = "42%";
+                           cell2.id = "msgId" + (i + 1);
+                           cell2.innerHTML = response.data.row[i].col[0].value;
+
+                           var cell3 = row.insertCell(2);
+                           cell3.align = "center";
+                           cell3.width = "21%";
+                           var element3 = document.createElement("select");
+                           element3.id = "msgTraceLevel" + (i + 1);
+                           addOption(element3, "Disable", 1);
+                           addOption(element3, "MsgIdOnly", 2);
+                           addOption(element3, "MsgWithParams", 3);
+                           element3.value = response.data.row[i].col[1].value;
+                           cell3.appendChild(element3);
+                           $('body').append("<input type='hidden' id='msgTraceLevelHidden" + (i + 1) + "' value='" + response.data.row[i].col[1].value + "' />");
+
+                           var cell4 = row.insertCell(3);
+                           cell4.align = "center";
+                           cell4.width = "20%";
+                           var element4 = document.createElement("select");
+                           element4.id = "msgTraceDirection" + (i + 1);
+                           addOption(element4, "MsgIn", 1);
+                           addOption(element4, "MsgOut", 2);
+                           addOption(element4, "MsgInBothDirec", 3);
+                           element4.value = response.data.row[i].col[2].value;
+                           cell4.appendChild(element4);
+                           $('body').append("<input type='hidden' id='msgTraceDirectionHidden" + (i + 1) + "' value='" + response.data.row[i].col[2].value + "' />");
+
+                       }
+                       eTime = new Date();
+                       STATUS("GET", "msgTrace", startTime, endTime, response.result, response.data);
+                   }
+                   else {
+                       STATUS("GET", "msgTrace", startTime, endTime, response.result, response.data);
+                   }
+               }
+               else {
+                    parent.window.location.replace("lte_login.htm");
+               }             
+           }
+            , "json");
+
+    }
+    function SetMsgTrace(requestnum) {
+        if (requestnum > 0) {
+            var i = numOfRows - requestnum;            
+            if (($("#msgTraceLevelHidden" + (i + 1)).val() == $("#msgTraceLevel" + (i + 1)).val()) && ($("#msgTraceDirectionHidden" + (i + 1)).val() == $("#msgTraceDirection" + (i + 1)).val())) {
+                requestnum--;
+                SetMsgTrace(requestnum);
+                if (change == 0 && requestnum == 0) {
+                    //$("#cmdMsg").html("No Fields Updated.......!").css("color", "red");
+                    alert("Command NOT dispatched, as no parameter value is modified.");
+                } 
+                return;
+            }
+            change++;
+            $("#cmdMsg").html("");
+            startTime = new Date();
+            request = "key=msgTrace&webGuiRow=" + (i + 1);
+            if ($("#msgTraceLevelHidden" + (i + 1)).val() != $("#msgTraceLevel" + (i + 1)).val())
+                request = request + "&msgTraceLevel=" + $("#msgTraceLevel" + (i + 1)).val(); 
+            if($("#msgTraceDirectionHidden" + (i + 1)).val() != $("#msgTraceDirection" + (i + 1)).val())
+                request = request + "&msgTraceDirection=" + $("#msgTraceDirection" + (i + 1)).val();
+            $.post(sessionID + "-LTEWebSet.fcgi", request,
+                    function(response) {
+                        endTime = new Date();
+                        if (response != null && response != "undefined") {
+                            if (response.result == "SUCCESS") {
+                                for (var j = 0; j < response.data.row[0].col.length; j++) {
+                                    if ($('#' + response.data.row[0].col[j].param + (i + 1)).is('input, select')) {
+                                        $('#' + response.data.row[0].col[j].param + (i + 1)).val(response.data.row[0].col[j].value);
+                                        $('#' + response.data.row[0].col[j].param + 'Hidden' + (i + 1)).val(response.data.row[0].col[j].value);
+                                    }
+                                    else if ($('#' + response.data.row[0].col[j].param + (i + 1)).is('td, text'))
+                                        $('#' + response.data.row[0].col[j].param + (i + 1)).text(response.data.row[0].col[j].value);
+                                }
+                                STATUS('SET', "msgTrace", startTime, endTime, response.result, response.data);
+                                requestnum--;
+                                SetMsgTrace(requestnum);
+                            }
+                            else {
+                                STATUS('SET', "msgTrace", startTime, endTime, response.result, response.data);
+                                SetMsgTrace(0);
+                            }
+                        }
+                        else {
+                            STATUS('SET', "msgTrace", startTime, endTime, "FAIL", "INVALID DATA");
+                            SetMsgTrace(0);
+                        }
+                    }, "json");
+        }
+    }
+
+</script>
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title">Configuration&nbsp; > Message Tracing</span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%'  border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+</table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px" >
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input type='button' value='Apply' name='btnApply' id='btnApply' />
+                        <input type='button' value='Help' name='btnHelp' id='btnHelp' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="height: 615px;width:820px; margin-left: 10px">
+        <form id="msgTrace" action="">
+        <table width='800px' cellspacing='0' cellpadding='0' border='0' class="tblBorder">            
+                <tr>
+                    <td align='center' width='10%' class='tblTitleBg'>
+                        S.No
+                    </td>
+                    <td align='center' width='42%' class='tblTitleBg'>
+                        Message Id
+                    </td>
+                    <td align='center' width='21%' class='tblTitleBg'>
+                        &nbsp;Trace Level&nbsp;
+                    </td>
+                    <td align='center' width='20%' class='tblTitleBg'>
+                        Trace Direction
+                    </td>
+                </tr>
+                <tr class="formheadingborder">
+                <td colspan="4">
+                </td>
+                </tr>
+            <tr>
+                <td colspan="4">
+                    <div style="width: 820px; overflow-x: hidden; overflow-y: scroll; height: 615px;
+                        border-bottom: 1px; scrollbar-base-color: rgb(155, 153, 207); scrollbar-arrow-color: black">
+                        <table id="msgTraceTable" width="100%" border="0" cellpadding="2" cellspacing="0">
+                            <tbody>
+                                <tr style="">
+                                    <th align='center' width='10%' nowrap="1">
+                                    </th>
+                                    <th align='center' width='42%' nowrap="1">
+                                    </th>
+                                    <th align='center' width='21%' nowrap="1">
+                                    </th>
+                                    <th align='center' width='20%' nowrap="1">
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>            
+        </table>
+        </form>
+    </div>
+</body>
+</html>

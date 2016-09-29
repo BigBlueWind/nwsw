@@ -1,0 +1,152 @@
+ -- @file    ACTIVE-RAB-STATUS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+ACTIVE-RAB-STATUS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                  FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+activeRabStatus MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the bearers, their QCI values, bytes transferred"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 117 }
+
+activeRabStatusTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF ActiveRabStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the bearers, their QCI values, bytes transferred
+            This is a MULTI ROW Table"
+       ::= { activeRabStatus 1 }
+
+activeRabStatusEntry OBJECT-TYPE
+       SYNTAX      ActiveRabStatusEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains active RAB objects."
+       INDEX  { index }
+       ::= { activeRabStatusTable 1 }
+
+ActiveRabStatusEntry ::= 
+   SEQUENCE {
+       index              RowNumber,
+       internalUeId       Unsigned32,
+       rabIdentity        Unsigned32,
+       drbIdentity        Unsigned32,
+       rabQci             Unsigned32,
+       rabSetupTime       DateAndTimeStamp,
+       dlGtpTunnelId      Unsigned32,
+       ulGtpTunnelId      Unsigned32,
+       gtpKiloBytesDL     Unsigned32,
+       gtpKiloBytesUL     Unsigned32
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique Identifier of each row]"
+       ::= { activeRabStatusEntry 1 }
+
+internalUeId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNB Internal Indeity of the UE
+             This is set when RRC Connection Request is received. ]"
+       ::= { activeRabStatusEntry 2 }
+
+rabIdentity OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB Identity
+             This is updated when RAB is setup]"
+       ::= { activeRabStatusEntry 3 }
+
+drbIdentity OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RB Identity for the RAB
+             This is updated when RAB is setup]"
+       ::= { activeRabStatusEntry 4 }
+
+rabQci OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             QCI of the E-RAB]"
+       ::= { activeRabStatusEntry 5 }
+
+rabSetupTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB establishment timestamp in this eNB in YYYYMMDDHHNNSSTTT format.]"
+       ::= { activeRabStatusEntry 6 }
+
+dlGtpTunnelId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Downlink GTP Tunnel-ID for the RAB]"
+       ::= { activeRabStatusEntry 7 }
+
+ulGtpTunnelId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Uplink GTP Tunnel-ID for the RAB]"
+       ::= { activeRabStatusEntry 8 }
+
+gtpKiloBytesDL OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total DL kilo bytes at GTP level for this RAB]"
+       ::= { activeRabStatusEntry 9 }
+
+gtpKiloBytesUL OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total UL kilo bytes at GTP level for this RAB]"
+       ::= { activeRabStatusEntry 10 }
+
+END

@@ -1,0 +1,106 @@
+#
+# Makefile to build MAC library
+#
+# (c) 2010-2011 Mindspeed Technologies
+#
+
+include makecfg
+
+AS  = armasm
+LD  = armlink
+AR  = armar
+CC  = armcc
+
+ROOT = ..\..\T4KDev
+
+FEC = $(ROOT)\SYSCORE\drivers\FEC
+APP = $(ROOT)\SYSCORE\SERVICES
+MX  = $(ROOT)\4GMX
+DRV = $(ROOT)\SYSCORE\drivers
+SYSCORE=$(ROOT)\SYSCORE
+MACSRC=$(CURDIR)
+PHYSRC=..\..\PHY\LTE\C-Code
+PHYCMNSRC=..\..\PHY\Common\C-Code
+RTPHYSRC=..\..\PHY\LTE\Arm\Prj\LtePhyRt
+COMMON=..\..\Common
+LTEMACDIR = ../
+BUILDDIRNAME = obj
+BUILDDIR = ./obj
+
+MX_ARM_SRC = $(MX)\ARM\src
+MX_ARM_INC = $(MX)\ARM\inc
+MX_SRC	   = $(MX)\src
+MX_INC	   = $(MX)\inc
+
+VPATH = $(LTEMACDIR)
+
+INC = 	-I"$(MX_ARM_SRC)"   \
+	-I"$(MX_ARM_INC)"   \
+	-I"$(MX_SRC)"       \
+	-I"$(MX_INC)" \
+        -I"$(FEC)" \
+        -I"$(COMMON)" \
+	-I"$(SYSCORE)" \
+	-I"$(DRV)" \
+	-I"$(DRV)/CPRI" \
+	-I"$(DRV)/FEC" \
+	-I"$(DRV)/MAP" \
+	-I"$(APP)" \
+	-I"$(PHYSRC)" \
+	-I"$(PHYCMNSRC)" \
+	-I"$(RTPHYSRC)" \
+	-I"$(MACSRC)" \
+	-I"$(LTEMACDIR)" \
+	-I../../TranscedeLibs/api -I../TranscedeLibs/api 
+
+CFLAGS = $(CC_FLAGS) $(BUILDCFG) $(LOWLATENCY) $(INC)
+
+
+SRC = \
+	enbMacEntry.c \
+	enbMacIface.c \
+	enbApiHdlr.c \
+	enbMac.c \
+	enbMac2PhyIface.c \
+	enbMacDlScheduler.c \
+	LteTestTables.c \
+	LteMacTestCfgMgr.c \
+	enbMacUlScheduler.c  \
+	api_log_1ms.c \
+	dci_decode.c \
+	dci_encode.c \
+	MacUtils.c \
+	bs_static_config.c \
+	e_tm.c \
+	e_tm_tables.c \
+	lte_harq.c \
+	lte_pdcch.c \
+	lte_pucch.c \
+	lte_pdsch.c \
+	lte_pusch.c \
+	lte_phich.c \
+	lte_pbch.c \
+	lte_modulation.c \
+	lte_scheduler.c \
+	lte_vectors.c \
+	lte_rnti.c \
+	lte_if.c \
+	lte_mac_state.c \
+	lte_nmm_state.c
+
+OBJ := $(patsubst %.c, $(BUILDDIR)/%.o,$(notdir $(SRC)))
+
+$(LTEMACLIB): $(BUILDDIR) $(OBJ) 
+	@$(AR) $(AR_FLAGS) $@ $(OBJ)
+
+$(BUILDDIR):
+	-mkdir $(BUILDDIRNAME)
+	
+$(BUILDDIR)/%.o : %.c
+	@echo Compiling $<
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+clean: 
+	@del *.o
+	@del $(LTEMACLIB)
+	

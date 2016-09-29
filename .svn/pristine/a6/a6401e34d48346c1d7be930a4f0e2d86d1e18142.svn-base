@@ -1,0 +1,107 @@
+
+include T4KDev/LTERT/buildcfg
+
+IPERFBUILDDIR := $(SYSCOREIPERFDIR)/$(BUILDDIR)
+
+IPERFLIB := $(IPERFBUILDDIR)/iperf.a
+
+VPATH := $(SYSCOREIPERFDIR)
+
+# C sources
+C_SRCS := \
+timer.c \
+timer_ext.c \
+error.c \
+Extractor.c \
+gnu_getopt.c \
+gnu_getopt_long.c \
+Locale.c \
+netdb.c \
+ReportCSV.c \
+ReportDefault.c \
+Reporter.c \
+snprintf.c \
+SocketAddr.c \
+sockets.c \
+stdio_ext.c \
+string.c \
+tcp_window_size.c \
+Thread.c \
+argv_parser.c
+
+CPP_SRCS := \
+Launch.cpp \
+List.cpp \
+Listener.cpp \
+main.cpp \
+PerfSocket.cpp \
+Server.cpp \
+Client.cpp \
+Settings.cpp 
+
+# Object files
+C_OBJS = $(patsubst %.c,$(IPERFBUILDDIR)/%.o,$(notdir $(C_SRCS)))
+CPP_OBJS = $(patsubst %.cpp,$(IPERFBUILDDIR)/%.o,$(notdir $(CPP_SRCS)))
+
+INC := -I"$(SYSCOREIPERFDIR)/include" \
+       -I"$(SYSCORESERVICESDIR)" \
+	   -I"$(OS4GMXINCDIR)" \
+	   -I"$(OS4GMXARMINCDIR)" \
+	   -I"$(SYSCOREDRIVERSDIR)" \
+	   -I"$(SYSCORENETWORKDIR)"
+ 
+OBJS = $(C_OBJS) $(CPP_OBJS)
+
+CFLAGS = $(COREBUILDCFG) $(INC)
+
+.PHONY : all
+all : $(PCF) $(IPERFLIB)
+
+ifeq ($(GENDEP),1)
+DEPFILE = $(IPERFBUILDDIR)/iperf.dep
+CLEANDEP = clean_dep
+else
+-include $(IPERFBUILDDIR)/iperf.dep
+endif
+
+$(IPERFLIB) : $(IPERFBUILDDIR) $(CLEANDEP) $(OBJS)
+	@echo Creating $(IPERFLIB)
+	@$(AR) $(AR_FLAGS) $(IPERFLIB) $(OBJS)
+
+$(IPERFBUILDDIR)/%.o : %.c
+	@echo $<
+	@$(CC) $(CFLAGS) -o"$@" "$<"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(IPERFBUILDDIR)/%.o : %.cpp
+	@echo $<
+	@$(CC) $(CFLAGS) -o"$@" "$<"
+ifeq ($(GENDEP),1)
+	@$(CC) -M --no_depend_system_headers $(CFLAGS) -o"$@" "$<" >>$(DEPFILE)
+endif
+
+$(IPERFBUILDDIR)/%.o : %.s
+	@echo $<
+	@$(AS) $(AS_FLAGS) -o"$@" "$<"
+
+$(IPERFBUILDDIR):
+	@$(MKDIR) $(IPERFBUILDDIR)
+
+.PHONY : $(PCF)
+$(PCF) :
+	@echo $(CFLAGS)
+	@echo $(DELIMETER)
+
+.PHONY : clean_dep
+clean_dep :
+	@$(RM) $(DEPFILE)
+	
+.PHONY : clean
+clean:
+	@@$(RM) $(OBJS)
+
+.PHONY : xclean
+xclean: clean
+	@$(RM) $(IPERFLIB)

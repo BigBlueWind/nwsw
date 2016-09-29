@@ -1,0 +1,370 @@
+<html>
+<head>
+<style type='text/css' lang='css'>
+@import '../css/styles.css';          
+</style>
+<script type='text/javascript' src='../script/jquery.js'></script>
+<script type='text/javascript' src='../script/jquery_tooltip.js'></script>
+<script type='text/javascript' src='../script/validate.js'></script>
+<script type='text/javascript' src='../script/lte_set_get.js'></script>
+<script type="text/javascript">
+    var sessionID = parent.sessionID;
+    $(document).ready(function() {
+        $(document).bind("contextmenu", function(e) { alert("Due to security reason,Right Click is not allowed."); return false; });
+        var fn = function(e) {
+            return DisableRefresh(e);
+        }
+        document.onkeydown = fn;
+
+        var sessionID = parent.sessionID;
+        $(':text, :password, select').each(function() {
+            $('body').append("<input type='hidden' id='" + this.id + "Hidden'/>");
+        });
+        LteGet("sysInfo1Config", null, ChkLock);
+
+        if (parent.frames["Top"].link == 1) {
+            $("#btnBack").hide();
+            $("#pageTitle").html("Configuration > SysInfo1");
+        }
+        else
+            if (parent.frames["Top"].link == 2) {
+            $("#pageTitle").html("Configuration > Cell > SysInfo1");
+        }
+        else
+            $("#pageTitle").html("Configuration > eNodeB > Cell > SysInfo1")
+
+
+        $("#btnBack").click(function() {
+            if (sessionID != null && sessionID != undefined)
+                window.location.href = sessionID + "-cell_config.htm";
+            parent.frames["Top"].link--;
+        });
+
+        $("#btnApply").click(function() {
+            var msg = "";
+            var change = "false";                  
+            
+            $('input, select').each(function() {
+                if ($(this).is(':text, :password, select') == true) {
+                    if ($(this).val() != $('#' + this.id + 'Hidden').val()) {
+                        change = 'true';
+                    }
+                }
+            });
+
+            if (change == 'true') {
+                $('input, select').each(function() {
+                    if ($(this).is(':text, :password, select') == true) {
+                        if ($(this).val() == $('#' + this.id + 'Hidden').val()) {
+                            $(this).attr('disabled', true);
+                        }
+                        else {
+                            if ($(this).is(':text, :password') == true) {
+                                if (this.id == "qRxLevMinOffset" && $("#qRxLevMinOffsetChkb").is(":checked") == false)
+                                    msg = msg;
+                                else
+                                    msg = msg + validate(this.getAttribute("validate"), this.id, MapIdName(this.id), this.getAttribute("min"), this.getAttribute("max"));
+                            }
+                        }
+                    }
+                });
+                if (msg != "") 
+                {
+                    $(':text, :password, select').each(function() {
+                        $(this).attr('disabled', false);
+                    });
+                    if (parent.frames["Top"].isLocked == "unlocked")
+                        LockAttributes();
+                    alert(msg);
+                }
+                else
+                {
+                    if (parent.frames["Top"].isLocked == "unlocked")           
+                        $("#siWindowLength,#sysInfo1ProfileId").attr("disabled", true).css("background-color", "#E6E6E6");
+           
+                    $(':checkbox').each(function() {
+                        $(this).attr('disabled', true);
+                    });
+                    LteSet("sysInfo1Config", $("#sysInfo1Config"), $("#btnApply"), ChkLock);
+                }
+            }
+            else {
+                alert("Command NOT dispatched, as no parameter value is modified.");
+            }
+            
+        });
+        $("#qRxLevMinOffsetChkb").click(function() {
+            if (this.id == "qRxLevMinOffsetChkb")
+                EnableInput(this.id, "qRxLevMinOffset", "0");
+        });
+        $('#btnHelp').click(function() {
+        window.open(sessionID + "-help.htm#sysInfo1Config", '_blank', "width=800,height=600,status=no,toolbar=no,menubar=no,directories=no,location=no,resizable=no");
+        });
+    });
+
+    function ChkSpecialValues() {
+        $("#siWindowLength,#qRxLevMinOffsetChkb,#qRxLevMinOffset,#sysInfo1ProfileId").attr("disabled", false).css("background-color", "white");
+        if ($("#qRxLevMinOffset").val() == "0") {
+            $("#qRxLevMinOffsetChkb").attr("checked", false);
+            $("#qRxLevMinOffset").attr("readonly", true).css("background-color", "#E6E6E6");
+
+        }
+        else {
+            $("#qRxLevMinOffsetChkb").attr("checked", true);            
+            $("#qRxLevMinOffset").css("background-color", "white");
+        }        
+    }
+    function LockAttributes() {
+
+        $("#sysInfo1ProfileId").attr("title", "Lock eNodeB to Modify").attr("readonly", true).css("background-color", "#E6E6E6").simpletooltip();
+        FreezeList($("#siWindowLength"));
+        $("#siWindowLength").attr("title", "Lock eNodeB to Modify").css("background-color", "#E6E6E6").simpletooltip().bind("keydown keypress keyup change", function() {
+            if (parent.frames["Top"].isLocked == "unlocked")
+                FreezeList(this);
+        });
+    }
+
+    function MapIdName(fieldName) {
+        switch (fieldName) {
+            case "sysInfo1ProfileId": return "SIB1 Profile Identifier";
+            case "qRxLevMin": return "Minimum RX Level";
+            case "qRxLevMinOffset": return"Minimum RX Level Offset"; 
+        }
+    }  
+</script>
+
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td align="left" width="60%">
+                <span class="title" id="pageTitle"></span>
+            </td>
+            <td align="right" width="40%">
+                <span class="cmdMsg" id="cmdMsg"></span>
+            </td>
+        </tr>
+    </table>
+    <table width='100%' border='0' cellspacing='0' cellpadding='0'><tr><td align='left' valign='top' class='horline'><img src='../image/horline.gif' width='1' height='1'></td></tr>
+    </table>
+    <div style='margin-top: 10px; left: 10px;'>
+        <table cellspacing="0" cellpadding="1" border="0" width="1055px">
+            <tbody>
+                <tr>
+                    <td align="right" class="txtPageTitle">
+                        <input id="btnBack" name="btnBack" type="button" value="Back" />
+                        <input id="btnApply" name="btnApply" type="button" value="Apply" />
+                        <input id="btnHelp" name="btnHelp" type="button" value="Help" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="margin-left:10px; width: 530px; height:615px">
+        <form name='sysInfo1Config' id='sysInfo1Config' action=''>
+        <table width='100%' class='tblBorder' cellspacing='0' cellpadding='0' border='0'>
+            <tr>
+                <td class='tblTitleBg' align='left'>
+                    &nbsp SysInfo1 Configuration
+                </td>
+            </tr>
+            <tr style="height: 2px; background-color: #D2CEBC">
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table width='100%' cellspacing='0' cellpadding='2' border='0'>
+                        <tr class="conTblRowBg1">
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SIB1 Profile Identifier
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="sysInfo1ProfileId" name="sysInfo1ProfileId" type="text" class="lteinput" validate="IntRangeChk" min="0" max="0" />&nbsp;(0 ~ 0)                                
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; Reselection
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Barred Cell Intra-Frequency Cell Reselection
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="intraFreqReselection" name="intraFreqReselection" class="lteinput">
+                                    <option value="0">ALLOWED</option>
+                                    <option value="1">NOT ALLOWED</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Minimum RX Level
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="qRxLevMin" name="qRxLevMin" type="text" class="lteinput" validate="IntRangeChk" min="-70" max="-22" />&nbsp;(-70 ~ -22)
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                Minimum RX Level Offset
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <input id="qRxLevMinOffset" name="qRxLevMinOffset" type="text" class="lteinput" validate="IntRangeChk" min="1" max="8"/>&nbsp;(1 ~ 8)&nbsp;
+                                <input id="qRxLevMinOffsetChkb" type="checkbox" />
+                                Used
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>  
+                        <tr class='tblSubTitleBg'>
+                            <td colspan='5'>
+                                &nbsp; SI Configuration
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SIB2 Scheduling Periodicity
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="sib2Periodicity" name="sib2Periodicity" class="lteinput">
+                                    <option value="0">80ms</option>
+                                    <option value="1">160ms</option>
+                                    <option value="2">320ms</option>
+                                    <option value="3">640ms</option>
+                                    <option value="4">1280ms</option>
+                                    <option value="5">2560ms</option>
+                                    <option value="6">5120ms</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SIB3 Scheduling Periodicity
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="sib3Periodicity" name="sib3Periodicity" class="lteinput">                                    
+                                    <option value="0">80ms</option>
+                                    <option value="1">160ms</option>
+                                    <option value="2">320ms</option>
+                                    <option value="3">640ms</option>
+                                    <option value="4">1280ms</option>
+                                    <option value="5">2560ms</option>
+                                    <option value="6">5120ms</option>
+                                    <option value="7">Disabled</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>            
+                        <tr class='conTblRowBg1'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                SIB4 Scheduling Periodicity
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="sib4Periodicity" name="sib4Periodicity" class="lteinput">
+                                    <option value="0">80ms</option>
+                                    <option value="1">160ms</option>
+                                    <option value="2">320ms</option>
+                                    <option value="3">640ms</option>
+                                    <option value="4">1280ms</option>
+                                    <option value="5">2560ms</option>
+                                    <option value="6">5120ms</option>
+                                    <option value="7">Disabled</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>                                  
+                        <tr class='conTblRowBg2'>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                System Information Window Length
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                :&nbsp;
+                            </td>
+                            <td nowrap="nowrap">
+                                <select id="siWindowLength" name="siWindowLength" class="lteinput">
+                                    <option value="0">1ms</option>
+                                    <option value="1">2ms</option>
+                                    <option value="2">5ms</option>
+                                    <option value="3">10ms</option>
+                                    <option value="4">15ms</option>
+                                    <option value="5">20ms</option>
+                                    <option value="6">40ms</option>
+                                </select>
+                            </td>
+                            <td nowrap="nowrap" class="rowcell">
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</body>
+</html>

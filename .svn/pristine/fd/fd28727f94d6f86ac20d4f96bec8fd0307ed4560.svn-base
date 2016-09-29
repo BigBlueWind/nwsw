@@ -1,0 +1,165 @@
+ -- @file    FILE-UPLOAD-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:47 PM
+ --
+
+FILE-UPLOAD-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, String256, FileUploadCommand, FileTransferProtocol, FileTransferRate          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, IpAddress                                           FROM SNMPv2-SMI
+       TruthValue                                                                                    FROM SNMPv2-TC;
+
+fileUpload MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Allows operator to upload a file from enb"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 3 }
+
+fileUploadTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF FileUploadEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Allows operator to upload a file from enb
+            This is a SINGLE ROW Table"
+       ::= { fileUpload 1 }
+
+fileUploadEntry OBJECT-TYPE
+       SYNTAX      FileUploadEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to a particular file upload."
+       INDEX  { index }
+       ::= { fileUploadTable 1 }
+
+FileUploadEntry ::= 
+   SEQUENCE {
+       index                 RowNumber,
+       fileUploadCommand     FileUploadCommand,
+       fileName              String256,
+       loginId               String256,
+       password              String256,
+       destinationIp         IpAddress,
+       protocolUsed          FileTransferProtocol,
+       destinationPort       Unsigned32,
+       maxUploadSpeed        FileTransferRate,
+       remoteFileName        String256,
+       deleteAfterUpload     TruthValue
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique identifier of row]"
+       ::= { fileUploadEntry 1 }
+
+fileUploadCommand OBJECT-TYPE
+       SYNTAX      FileUploadCommand
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             1:upload: upload file from BS to remote host.
+             2:uploadCancel: cancel an ongoing upload]"
+       ::= { fileUploadEntry 2 }
+
+fileName OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             File to upload from ENB
+             ]"
+       ::= { fileUploadEntry 3 }
+
+loginId OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             loginId at the server to which the file has to be uploaded.]"
+       ::= { fileUploadEntry 4 }
+
+password OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             password at the server. For example, password to be used for ftp-login
+             NOTE: Being password, it is be displayed as *****.]"
+       ::= { fileUploadEntry 5 }
+
+destinationIp OBJECT-TYPE
+       SYNTAX      IpAddress
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             IP address of the computer to which file should be uploaded.
+             Source is always ENB.]"
+       ::= { fileUploadEntry 6 }
+
+protocolUsed OBJECT-TYPE
+       SYNTAX      FileTransferProtocol
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Protocol used for file upload session FTP, SFTP & SCP are supported.
+             1:FTP, 2:SCP, 3:SFTP]"
+       ::= { fileUploadEntry 7 }
+
+destinationPort OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Port number used by the protocol at the destination/server.]"
+       ::= { fileUploadEntry 8 }
+
+maxUploadSpeed OBJECT-TYPE
+       SYNTAX      FileTransferRate
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             If set, BS will limit upload speed to this value.]"
+       ::= { fileUploadEntry 9 }
+
+remoteFileName OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Destination File name for the uploaded file.]"
+       ::= { fileUploadEntry 10 }
+
+deleteAfterUpload OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             If set to TRUE, file will be deleted from eNB filesystem after upload operation.]"
+       ::= { fileUploadEntry 11 }
+
+END

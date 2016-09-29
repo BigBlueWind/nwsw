@@ -1,0 +1,159 @@
+ -- @file    S1AP-GEN-COUNTERS-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+S1AP-GEN-COUNTERS-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                                        FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32, Integer32          FROM SNMPv2-SMI;
+
+s1apGenCounters MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It lists the general statistics counter for S1AP General."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 130 }
+
+s1apGenCountersTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF S1apGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It lists the general statistics counter for S1AP General.
+            This is a SINGLE ROW Table"
+       ::= { s1apGenCounters 1 }
+
+s1apGenCountersEntry OBJECT-TYPE
+       SYNTAX      S1apGenCountersEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains general statistics counter objects for S1AP."
+       INDEX  { index }
+       ::= { s1apGenCountersTable 1 }
+
+S1apGenCountersEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       nmbConn             Integer32,
+       nmbFailConn         Integer32,
+       maxMemAlloc         Unsigned32,
+       nmbDecErr           Integer32,
+       nmbEncErr           Integer32,
+       nmbAudReq           Integer32,
+       nmbAudConn          Integer32,
+       nmbAudPeer          Integer32,
+       nmbAudFlc           Integer32,
+       lastCollectedAt     DateAndTimeStamp
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { s1apGenCountersEntry 1 }
+
+nmbConn OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             total number of connections established]"
+       ::= { s1apGenCountersEntry 2 }
+
+nmbFailConn OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of failed connection establishments]"
+       ::= { s1apGenCountersEntry 3 }
+
+maxMemAlloc OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             maximum memory allocated]"
+       ::= { s1apGenCountersEntry 4 }
+
+nmbDecErr OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of Erroneous messages received]"
+       ::= { s1apGenCountersEntry 5 }
+
+nmbEncErr OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             number of encode messages errors]"
+       ::= { s1apGenCountersEntry 6 }
+
+nmbAudReq OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of Times Audit initiated]"
+       ::= { s1apGenCountersEntry 7 }
+
+nmbAudConn OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of connections scanned during audit]"
+       ::= { s1apGenCountersEntry 8 }
+
+nmbAudPeer OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of connecitons audited during audit]"
+       ::= { s1apGenCountersEntry 9 }
+
+nmbAudFlc OBJECT-TYPE
+       SYNTAX      Integer32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Number of connections deleted after audit]"
+       ::= { s1apGenCountersEntry 10 }
+
+lastCollectedAt OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Last time when the counter data was collected]"
+       ::= { s1apGenCountersEntry 11 }
+
+END

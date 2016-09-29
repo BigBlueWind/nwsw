@@ -1,0 +1,90 @@
+ -- @file    FILE-EVENT-HISTORY-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+FILE-EVENT-HISTORY-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, FileStatus, String256          FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY                   FROM SNMPv2-SMI
+       TruthValue                                     FROM SNMPv2-TC;
+
+fileEventHistory MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Shows the file operation status, for the last 10 file based activities."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 114 }
+
+fileEventHistoryTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF FileEventHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Shows the file operation status, for the last 10 file based activities.
+            This is a MULTI ROW Table"
+       ::= { fileEventHistory 1 }
+
+fileEventHistoryEntry OBJECT-TYPE
+       SYNTAX      FileEventHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains file event log objects."
+       INDEX  { index }
+       ::= { fileEventHistoryTable 1 }
+
+FileEventHistoryEntry ::= 
+   SEQUENCE {
+       index             RowNumber,
+       fileName          String256,
+       fileStatus        FileStatus,
+       wasSuccessful     TruthValue
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Row number. Uniquely identifies each row.]"
+       ::= { fileEventHistoryEntry 1 }
+
+fileName OBJECT-TYPE
+       SYNTAX      String256
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Name of the file with its absolute path/location]"
+       ::= { fileEventHistoryEntry 2 }
+
+fileStatus OBJECT-TYPE
+       SYNTAX      FileStatus
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             File based operation for which command request was received or automatic action was taken]"
+       ::= { fileEventHistoryEntry 3 }
+
+wasSuccessful OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Indicates if the procedure was successfully performed or not]"
+       ::= { fileEventHistoryEntry 4 }
+
+END

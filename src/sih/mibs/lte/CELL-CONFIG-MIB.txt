@@ -1,0 +1,696 @@
+ -- @file    CELL-CONFIG-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 2/14/2013 11:40:18 AM
+ --
+
+CELL-CONFIG-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, ProfileId, Mcc, Mnc                                     FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32, Integer32          FROM SNMPv2-SMI
+       TruthValue                                                   FROM SNMPv2-TC;
+
+cellConfig MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "Contains the cell specific parameters"
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 53 }
+
+cellConfigTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF CellConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "Contains the cell specific parameters
+            This is a SINGLE ROW Table"
+       ::= { cellConfig 1 }
+
+cellConfigEntry OBJECT-TYPE
+       SYNTAX      CellConfigEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry containing information applicable to cell configuration."
+       INDEX  { cellId }
+       ::= { cellConfigTable 1 }
+
+CellConfigEntry ::= 
+   SEQUENCE {
+       cellId                            Unsigned32,
+       cellType                          INTEGER,
+       plmnMCC                           Mcc,
+       plmnMNC                           Mnc,
+       tac                               Unsigned32,
+       freqBandInd                       Unsigned32,
+       dlBandwidth                       INTEGER,
+       dlEarfcn                          Unsigned32,
+       ulBandwidth                       INTEGER,
+       ulEarfcn                          Unsigned32,
+       cellReservedForOperatorUse        INTEGER,
+       maxConnectedUes                   Unsigned32,
+       acBarringEmergency                TruthValue,
+       acBarrMoSigEnabled                TruthValue,
+       acBarrMoSigFactor                 INTEGER,
+       acBarrMoSigTime                   INTEGER,
+       acBarrMoSigSpecialAC              OCTET STRING,
+       acBarrMoDataEnabled               TruthValue,
+       acBarrMoDataFactor                INTEGER,
+       acBarrMoDataTime                  INTEGER,
+       acBarrMoDataSpecialAC             OCTET STRING,
+       startRnti                         Unsigned32,
+       rsrpFilterCoefficient             INTEGER,
+       schedulerProfileId                ProfileId,
+       phyProfileId                      ProfileId,
+       phyLayerId                        Unsigned32,
+       phyCellIdentityGroup              Unsigned32,
+       pMax                              Integer32,
+       ueResponseTimer                   INTEGER,
+       rrcConnRejWaitTime                Unsigned32,
+       ueInactivityCheckIntervalSecs     Unsigned32,
+       sysInfo1ProfileId                 ProfileId,
+       sysInfo2ProfileId                 ProfileId,
+       sysInfo3ProfileId                 ProfileId,
+       siReTxCnt                         Unsigned32,
+       antInfoTxMode                     INTEGER,
+       initialUlCqi                      Unsigned32,
+       pucchResourceSize                 Unsigned32,
+       cqiPeriodicityIdx                 INTEGER,
+       sriPeriodicityIdx                 INTEGER,
+       ueCqiBasedRlfDetectionTimer       INTEGER,
+       ueCfgMacCollatedCqiCount          Unsigned32
+   }
+
+cellId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 255 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Cell Identity. The final value of Cell Identity is constructed by taking 20MSB from eNBConfig->eNBIdentity and 8 LSB from CellId]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { cellConfigEntry 1 }
+
+cellType OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   verysmall(0),
+                   small(1),
+                   medium(2),
+                   large(3)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Verysmall is Pico or Femto.]
+           [Change_Condition : RW ]"
+       DEFVAL { verysmall }
+       ::= { cellConfigEntry 2 }
+
+plmnMCC OBJECT-TYPE
+       SYNTAX      Mcc
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Mobile country code (3 digits)]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "000" }
+       ::= { cellConfigEntry 3 }
+
+plmnMNC OBJECT-TYPE
+       SYNTAX      Mnc
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Mobile network code. It is 2 or 3 digits]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { "00" }
+       ::= { cellConfigEntry 4 }
+
+tac OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Tracking Area Code for the cell]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 100 }
+       ::= { cellConfigEntry 5 }
+
+freqBandInd OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 25 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Frequency Band Indicator for FDD mode according to 3GPP.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 13 }
+       ::= { cellConfigEntry 6 }
+
+dlBandwidth OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-1dot4MHz(0),
+                   e-3MHz(1),
+                   e-5MHz(2),
+                   e-10MHz(3),
+                   e-15MHz(4),
+                   e-20MHz(5)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Dl Channel bandwidth. Range is 1.4,3,5,10, 15,20 MHz ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { e-10MHz }
+       ::= { cellConfigEntry 7 }
+
+dlEarfcn OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ARFCN for downlink E-UTRA carrier frequency. The number is as per the band configured for the cell using the table defined in 36.101. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 5230 }
+       ::= { cellConfigEntry 8 }
+
+ulBandwidth OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   e-1dot4MHz(0),
+                   e-3MHz(1),
+                   e-5MHz(2),
+                   e-10MHz(3),
+                   e-15MHz(4),
+                   e-20MHz(5),
+                   notDefined(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             UL Channel bandwidth. Range is 1.4,3,5,10,15, 20 MHz .This also translates into RB configuration : Value 1.4MHz corresponds to 6 resource blocks, 3MHz corresponds to 15 resource blocks, 5MHz
+             corresponds to 25 resource blocks, 10MHz to 50 resource blocks and so on. If for FDD this parameter is set to NotDefined, the uplink
+             bandwidth is considered equal to the downlink bandwidth and corresponding IE is not broadcast in SIB2 in the cell]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { notDefined }
+       ::= { cellConfigEntry 9 }
+
+ulEarfcn OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 65535 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             ARFCN for uplink E-UTRA carrier frequency. The number is as per the band configured for the cell using the table defined in 36.101. If absent, the (default) value determined from the default TX-RX frequency separation defined in TS 36.101 [42, table 5.7.3-1] applies.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 23230 }
+       ::= { cellConfigEntry 10 }
+
+cellReservedForOperatorUse OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   reserved(0),
+                   notReserved(1)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This parameter specifies whether the cell is reserved for operator use or not.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { notReserved }
+       ::= { cellConfigEntry 11 }
+
+maxConnectedUes OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 100 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Maximum number of connected mode UE in the cell.
+             Used for admission control.
+             Limit can be subject to licensing.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 20 }
+       ::= { cellConfigEntry 12 }
+
+acBarringEmergency OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Access class barring for AC 10. FALSE means access allowed.]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { cellConfigEntry 13 }
+
+acBarrMoSigEnabled OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             AC Barring used for MO signaling. If set to FALSE< the AC barring for MO Signaling data is not included in SIB2.]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { cellConfigEntry 14 }
+
+acBarrMoSigFactor OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   p00(0),
+                   p05(1),
+                   p10(2),
+                   p15(3),
+                   p20(4),
+                   p25(5),
+                   p30(6),
+                   p40(7),
+                   p50(8),
+                   p60(9),
+                   p70(10),
+                   p75(11),
+                   p80(12),
+                   p85(13),
+                   p90(14),
+                   p95(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Access barring factor for mobiled originated Signaling. If the random number drawn by the UE is lower than this value, access is allowed. Otherwise the access is barred. The values are interpreted in the range [0,1): p00 = 0, p05 = 0.05, p10 = 0.10,...,p95 = 0.95.]
+           [Change_Condition : RW ]"
+       DEFVAL { p95 }
+       ::= { cellConfigEntry 15 }
+
+acBarrMoSigTime OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   s4(0),
+                   s8(1),
+                   s16(2),
+                   s32(3),
+                   s64(4),
+                   s128(5),
+                   s256(6),
+                   s512(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Mean access barring time for mobile originated signaling, in seconds]
+           [Change_Condition : RW ]"
+       DEFVAL { s4 }
+       ::= { cellConfigEntry 16 }
+
+acBarrMoSigSpecialAC OBJECT-TYPE
+       SYNTAX      OCTET STRING
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Access class barring for AC 11-15 for mobile originated signaling. The first/ leftmost bit is for AC 11, the second bit is for AC 12, and so on.]
+           [Change_Condition : RW ]"
+       DEFVAL { "00000" }
+       ::= { cellConfigEntry 17 }
+
+acBarrMoDataEnabled OBJECT-TYPE
+       SYNTAX      TruthValue
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             AC Barring used for MO data calls. If set to FALSE< the AC barring for MO data callsis not included in SIB2.]
+           [Change_Condition : RW ]"
+       DEFVAL { false }
+       ::= { cellConfigEntry 18 }
+
+acBarrMoDataFactor OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   p00(0),
+                   p05(1),
+                   p10(2),
+                   p15(3),
+                   p20(4),
+                   p25(5),
+                   p30(6),
+                   p40(7),
+                   p50(8),
+                   p60(9),
+                   p70(10),
+                   p75(11),
+                   p80(12),
+                   p85(13),
+                   p90(14),
+                   p95(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Access barring factor for mobiled originated data calls. If the random number drawn by the UE is lower than this value, access is allowed. Otherwise the access is barred. The values are interpreted in the range [0,1): p00 = 0, p05 = 0.05, p10 = 0.10,...,p95 = 0.95. ]
+           [Change_Condition : RW ]"
+       DEFVAL { p95 }
+       ::= { cellConfigEntry 19 }
+
+acBarrMoDataTime OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   s4(0),
+                   s8(1),
+                   s16(2),
+                   s32(3),
+                   s64(4),
+                   s128(5),
+                   s256(6),
+                   s512(7)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Mean access barring time for mobile originated data calls, in seconds]
+           [Change_Condition : RW ]"
+       DEFVAL { s4 }
+       ::= { cellConfigEntry 20 }
+
+acBarrMoDataSpecialAC OBJECT-TYPE
+       SYNTAX      OCTET STRING
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Access class barring for AC 11-15 for mobile originated data calls. The first/ leftmost bit is for AC 11, the second bit is for AC 12, and so on.]
+           [Change_Condition : RW ]"
+       DEFVAL { "00000" }
+       ::= { cellConfigEntry 21 }
+
+startRnti OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 61 .. 65503 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Lower bound value for RNTI allocated in the cell. RNTIs allocated from this pool are C-RNTI, SPS C-RNTI & Temporary C-RNTI. As per Mac spec section 7.1 Max crnti should be FFF3 , here we are allowing FFF3-20 because 20 is reserved for Handover/UL grant purposes. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 104 }
+       ::= { cellConfigEntry 22 }
+
+rsrpFilterCoefficient OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   fc0(1),
+                   fc1(2),
+                   fc2(3),
+                   fc3(4),
+                   fc4(5),
+                   fc5(6),
+                   fc6(7),
+                   fc7(8),
+                   fc8(9),
+                   fc9(10),
+                   fc11(11),
+                   fc13(12),
+                   fc15(13),
+                   fc17(14),
+                   fc19(15)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Specifies the filtering coefficient for RSRP measurements used to calculate path loss, which is used for uplink power control.]
+           [Change_Condition : RW ]"
+       DEFVAL { fc3 }
+       ::= { cellConfigEntry 23 }
+
+schedulerProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Scheduler Profile Identifier reference. This is the Profile Id of the SchedulerConfig table that is mapped to this cell (for MAC/scheduler configuration)]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 24 }
+
+phyProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PHY Profile Identifier reference. This is the Profile Id of the PHYConfig table that is mapped to this cell (for PHY configuration)]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 25 }
+
+phyLayerId OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 2 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Physical Layer Identity used at physical layer. This together with PhysicalCellGroupId makes the unique physical cell Identity (0..504). ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 26 }
+
+phyCellIdentityGroup OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 167 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Physical Cell-group Identity used at physical layer. This together with PhysicalCellId makes the unique physical cell Identity (0..504). ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 27 }
+
+pMax OBJECT-TYPE
+       SYNTAX      Integer32 (-30 .. 33 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The parameter P-Max is used to limit the UE's uplink transmission power on a carrier frequency and is used to calculate the parameter Pcompensation defined in TS 36.304. Corresponds to parameter PEMAX_H in TS 36.101. ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 23 }
+       ::= { cellConfigEntry 28 }
+
+ueResponseTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms50(0),
+                   ms100(1),
+                   ms200(2),
+                   ms500(3),
+                   ms1000(4),
+                   ms2000(5),
+                   ms5000(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Timer to supervise the RRC message from UE in response to the RRC message sent by eNodeB. The values are in terms of ms, i.e. ms50 means 50ms, ms100 means 100ms and so on.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms5000 }
+       ::= { cellConfigEntry 29 }
+
+rrcConnRejWaitTime OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 1 .. 16 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Time for which UE should wait before re-trying RRC Connection attempt. Value is in seconds.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 2 }
+       ::= { cellConfigEntry 30 }
+
+ueInactivityCheckIntervalSecs OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 600 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The interval in seconds at which ENB shall check for UE-inactivity. If there is (no UL data from UE to ENB) and (no DL data from SGW to ENB for that UE) for this duration, the UE will be considered to be 'inactive'.
+             Note: This timer should be interpreted as 'inactivity for at least this duration', rather than 'inactivity for exactly this duration'.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 31 }
+
+sysInfo1ProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SIB1 Profile Reference. This defines the SIB1 Profile (configuration table) that is used by this cell]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 32 }
+
+sysInfo2ProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SIB2 Profile Reference. This defines the SIB2 Profile (configuration table) that is used by this cell]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 33 }
+
+sysInfo3ProfileId OBJECT-TYPE
+       SYNTAX      ProfileId
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             SIB3 Profile Reference. This defines the SIB3 Profile (configuration table) that is used by this cell]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 34 }
+
+siReTxCnt OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 5 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Retransmission count for the SI messages.
+             NOTE : It should be less than the siWindowLength in sysInfo2Config]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { cellConfigEntry 35 }
+
+antInfoTxMode OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   tm1(0),
+                   tm2(1),
+                   tm3(2),
+                   tm4(3),
+                   tm5(4),
+                   tm6(5),
+                   tm7(6)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PhysicalConfigDedicated->AntennaInfoDedicated->transmissionMode]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { tm3 }
+       ::= { cellConfigEntry 36 }
+
+initialUlCqi OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Assumed UL CQI. ENB assumes this value in absence of CQI reports from UE.
+             TODO: Add the mapping to MCS Table here.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 3 }
+       ::= { cellConfigEntry 37 }
+
+pucchResourceSize OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 10 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             PUCCH resource size . PUCCH resource-size or N^(2)_RB (in RBs).]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 1 }
+       ::= { cellConfigEntry 38 }
+
+cqiPeriodicityIdx OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   cP2(0),
+                   cP5(1),
+                   cP10(2),
+                   cP20(3),
+                   cP40(4),
+                   cP80(5),
+                   cP160(6),
+                   cP32(7),
+                   cP64(8),
+                   cP128(9)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             refer 36.213 Table 7.2.2-1A]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { cP40 }
+       ::= { cellConfigEntry 39 }
+
+sriPeriodicityIdx OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   sP5(0),
+                   sP10(1),
+                   sP20(2),
+                   sP40(3),
+                   sP80(4)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             refer 36.213 Table 10.1-5]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { sP20 }
+       ::= { cellConfigEntry 40 }
+
+ueCqiBasedRlfDetectionTimer OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   ms0(0),
+                   ms500(1),
+                   ms1000(2),
+                   ms2000(3),
+                   ms5000(4),
+                   ms10000(5),
+                   ms20000(6),
+                   ms30000(7),
+                   ms40000(8),
+                   ms50000(9)
+       }
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Timer to detect the Rlf based on the CQI report form MAC ]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { ms0 }
+       ::= { cellConfigEntry 41 }
+
+ueCfgMacCollatedCqiCount OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 50 )
+       MAX-ACCESS  read-write
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             The number of CQIs to be collated in MAC before sending the report to RRM.]
+           [Change_Condition : RW-LO ]"
+       DEFVAL { 0 }
+       ::= { cellConfigEntry 42 }
+
+END

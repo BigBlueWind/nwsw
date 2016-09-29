@@ -1,0 +1,176 @@
+ -- @file    RAB-HISTORY-MIB.txt
+ -- @section Copyright Powerwave Technologies, Inc., 2010
+ --
+ -- Author: Powerwave
+ -- Generated on : 10/1/2012 5:40:49 PM
+ --
+
+RAB-HISTORY-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+       lte, RowNumber, DateAndTimeStamp                  FROM LTE-MIB
+       OBJECT-TYPE, MODULE-IDENTITY, Unsigned32          FROM SNMPv2-SMI;
+
+rabHistory MODULE-IDENTITY
+       LAST-UPDATED "201103021852Z"
+       ORGANIZATION
+              "Powerwave Technologies Inc."
+       CONTACT-INFO
+              "Powerwave Technologies Inc.
+               pwregistry@pwav.com"
+       DESCRIPTION
+              "It is the log of rabs that were setup and have now been released."
+       REVISION   "201103021852Z"
+       DESCRIPTION "Initial Version."
+::= { lte 118 }
+
+rabHistoryTable OBJECT-TYPE
+       SYNTAX      SEQUENCE OF RabHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+           "It is the log of rabs that were setup and have now been released.
+            This is a MULTI ROW Table"
+       ::= { rabHistory 1 }
+
+rabHistoryEntry OBJECT-TYPE
+       SYNTAX      RabHistoryEntry
+       MAX-ACCESS  not-accessible
+       STATUS      current
+       DESCRIPTION
+             "An entry which contains rab history objects."
+       INDEX  { index }
+       ::= { rabHistoryTable 1 }
+
+RabHistoryEntry ::= 
+   SEQUENCE {
+       index               RowNumber,
+       internalUeId        Unsigned32,
+       rabIdentity         Unsigned32,
+       drbIdentity         Unsigned32,
+       rabQci              Unsigned32,
+       rabSetupTime        DateAndTimeStamp,
+       rabReleaseTime      DateAndTimeStamp,
+       rabReleaseCause     INTEGER,
+       dlGtpTunnelId       Unsigned32,
+       ulGtpTunnelId       Unsigned32,
+       gtpKiloBytesDL      Unsigned32,
+       gtpKiloBytesUL      Unsigned32
+   }
+
+index OBJECT-TYPE
+       SYNTAX      RowNumber
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Unique Identifier of each row]"
+       ::= { rabHistoryEntry 1 }
+
+internalUeId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             eNB Internal Indeity of the UE
+             This is set when RRC Connection Request is received. ]"
+       ::= { rabHistoryEntry 2 }
+
+rabIdentity OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB Identity
+             This is updated when RAB is setup]"
+       ::= { rabHistoryEntry 3 }
+
+drbIdentity OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 15 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             RB Identity for the RAB
+             This is updated when RAB is setup]"
+       ::= { rabHistoryEntry 4 }
+
+rabQci OBJECT-TYPE
+       SYNTAX      Unsigned32 ( 0 .. 255 )
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             QCI of the E-RAB]"
+       ::= { rabHistoryEntry 5 }
+
+rabSetupTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB establishment timestamp in this eNB in YYYYMMDDHHNNSSTTT format.]"
+       ::= { rabHistoryEntry 6 }
+
+rabReleaseTime OBJECT-TYPE
+       SYNTAX      DateAndTimeStamp
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             E-RAB release timestamp in this eNB in YYYYMMDDHHNNSSTTT format. If RAB is still active, this field is set to - Active]"
+       ::= { rabHistoryEntry 7 }
+
+rabReleaseCause OBJECT-TYPE
+       SYNTAX      INTEGER {
+                   notApplicable(0),
+                   unspecified(1),
+                   ueContextReleased(2)
+       }
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             This is the cause for setup / release / failure of this RAB. The RAB could be part of the RAB list included in incoming handover or could be requestd by EPC via explicit signaling (Initial Context Setup or E-RAB Setup procedures). If the RAB is still active, then the cause is set to - NotApplicable]"
+       ::= { rabHistoryEntry 8 }
+
+dlGtpTunnelId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Downlink GTP Tunnel-ID for the RAB]"
+       ::= { rabHistoryEntry 9 }
+
+ulGtpTunnelId OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Uplink GTP Tunnel-ID for the RAB]"
+       ::= { rabHistoryEntry 10 }
+
+gtpKiloBytesDL OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total DL kilo bytes at GTP level for this RAB]"
+       ::= { rabHistoryEntry 11 }
+
+gtpKiloBytesUL OBJECT-TYPE
+       SYNTAX      Unsigned32
+       MAX-ACCESS  read-only
+       STATUS      current
+       DESCRIPTION
+           "[Parameter_Description :
+             Total UL kilo bytes at GTP level for this RAB]"
+       ::= { rabHistoryEntry 12 }
+
+END
